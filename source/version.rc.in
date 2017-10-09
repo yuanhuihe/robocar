@@ -1,0 +1,34 @@
+#include "windows.h"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION @META_VERSION_MAJOR@,@META_VERSION_MINOR@,@META_VERSION_PATCH@,0
+ PRODUCTVERSION @META_VERSION_MAJOR@,@META_VERSION_MINOR@,@META_VERSION_PATCH@,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS VS_FF_DEBUG|VS_FF_PRERELEASE
+#else
+ FILEFLAGS 0L
+#endif
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE 0x7L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4" 
+        BEGIN
+            VALUE "CompanyName", "@META_CORP_NAME@\0"
+            VALUE "FileDescription", "@META_PROJECT_DESCRIPTION@\0"
+            VALUE "FileVersion", "@META_VERSION@\0"
+            VALUE "InternalName", "@META_NAME@ \0"
+            VALUE "LegalCopyright", "Copyright (C) 2015-@CURRENT_YEAR@ @META_CORP_NAME@\0"
+            VALUE "OriginalFilename", "@META_NAME@.dll\0"
+            VALUE "ProductName", "@META_PROJECT_NAME@\0"
+            VALUE "ProductVersion", "@META_NAME_VERSION@\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1252
+    END
+END
