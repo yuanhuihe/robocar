@@ -3,9 +3,9 @@
 # External dependencies
 # 
 
-find_package(ZMQ REQUIRED)
-find_package(CZMQ REQUIRED)
-find_package(ZYRE REQUIRED)
+#find_package(ZMQ REQUIRED)
+#find_package(CZMQ REQUIRED)
+#find_package(ZYRE REQUIRED)
 #find_package(Qt5 COMPONENTS Widgets Network)
 #find_package(Qt5LinguistTools)
 
@@ -106,8 +106,8 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        Shlwapi
-        Psapi
+        #Shlwapi
+        #Psapi
         ${DEFAULT_LIBRARIES}
         ${ZMQ_LIBRARY}
         ${CZMQ_LIBRARY}
@@ -116,9 +116,9 @@ target_link_libraries(${target}
         ${Qt5Network_LIBRARIES}
         ${META_PROJECT_NAME}::fiblib
         ${META_PROJECT_NAME}::baselib
-        ws2_32
-        Wininet
-        Iphlpapi
+        #ws2_32
+        #Wininet
+        #Iphlpapi
     )
 
 # 

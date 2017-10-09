@@ -7,9 +7,9 @@
 
 #pragma once
 
-#ifndef _USE_VSCODE_
-#define _USE_VSCODE_ // just for fix compile error in vs code.
-#endif // _USE_VSCODE_
+// #ifndef _USE_VSCODE_
+// #define _USE_VSCODE_ // just for fix compile error in vs code.
+// #endif // _USE_VSCODE_
 
 #define SPDLOG_VERSION "0.13.0"
 
