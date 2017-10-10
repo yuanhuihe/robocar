@@ -41,8 +41,6 @@ file(GLOB headers
     "router/*.h"
     "${PROJECT_SOURCE_DIR}/source/include/Logger.h"
     "${PROJECT_SOURCE_DIR}/source/include/CRCCode.h"
-    "${PROJECT_SOURCE_DIR}/thirdparty/utility/HighPerfTimer.h"
-    "${PROJECT_SOURCE_DIR}/thirdparty/utility/Utility.h"
 )
 
 file(GLOB sources
@@ -50,8 +48,6 @@ file(GLOB sources
     "router/*.cpp"
     "${PROJECT_SOURCE_DIR}/source/include/Logger.cpp"
     "${PROJECT_SOURCE_DIR}/source/include/CRCCode.cpp"
-    "${PROJECT_SOURCE_DIR}/thirdparty/utility/HighPerfTimer.cpp"
-    "${PROJECT_SOURCE_DIR}/thirdparty/utility/Utility.cpp"
 )
 
 
@@ -116,6 +112,7 @@ target_link_libraries(${target}
         ${Qt5Network_LIBRARIES}
         ${META_PROJECT_NAME}::fiblib
         ${META_PROJECT_NAME}::baselib
+        ${META_PROJECT_NAME}::walkdriver
         #ws2_32
         #Wininet
         #Iphlpapi

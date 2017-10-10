@@ -1,6 +1,6 @@
 
 #include <iostream>
-#include <fiblib/Fibonacci.h>
+#include <walkdriver/walkdriver.h>
 #include <chrono>
 #include <thread>
 #include <atomic>
@@ -41,9 +41,11 @@ std::string random_string( size_t length, std::function<char(void)> rand_char )
 int main(int /*argc*/, char* /*argv*/[])
 {
     // Calculate and print fibonacci number
-    std::cout << "Fibonacci library" << std::endl;
+    std::cout << "walkdriver library" << std::endl;
     std::cout << "========================================" << std::endl;
-    std::cout << "Fibonacci(8) = " << fiblib::Fibonacci()(8) << std::endl;
+
+    WalkDriver::WalkSystem* wsys = WalkDriver::WalkSystem::InitSystem();
+
     std::cout << std::endl;
     const auto ch_set = charset();
     std::default_random_engine rng(std::random_device{}());
