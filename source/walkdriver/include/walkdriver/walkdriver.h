@@ -55,11 +55,8 @@ namespace WalkDriver
         *  @brief
         *    Enum all executive bodies
         *
-        *  @param[in] i
-        *    Index
-        *
         *  @return
-        *    Value of the i'th fibonacci number
+        *    Found executive device
         */
         ExecutiveDevice* enumExecutiveBody();
     };
