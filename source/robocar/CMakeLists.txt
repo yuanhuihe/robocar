@@ -80,11 +80,11 @@ set_target_properties(${target}
 
 target_include_directories(${target}
     PRIVATE
-        ${ZMQ_INCLUDE_DIR}
-        ${CZMQ_INCLUDE_DIR}
-        ${ZYRE_INCLUDE_DIR}
-        ${Qt5Widgets_INCLUDES}
-        ${Qt5Network_INCLUDES}
+        #${ZMQ_INCLUDE_DIR}
+        #${CZMQ_INCLUDE_DIR}
+        #${ZYRE_INCLUDE_DIR}
+        #${Qt5Widgets_INCLUDES}
+        #${Qt5Network_INCLUDES}
         ${DEFAULT_INCLUDE_DIRECTORIES}
         ${PROJECT_BINARY_DIR}/source/include
         ${PROJECT_SOURCE_DIR}/source/include
@@ -105,11 +105,11 @@ target_link_libraries(${target}
         #Shlwapi
         #Psapi
         ${DEFAULT_LIBRARIES}
-        ${ZMQ_LIBRARY}
-        ${CZMQ_LIBRARY}
-        ${ZYRE_LIBRARY}
-        ${Qt5Widgets_LIBRARIES}
-        ${Qt5Network_LIBRARIES}
+        #${ZMQ_LIBRARY}
+        #${CZMQ_LIBRARY}
+        #${ZYRE_LIBRARY}
+        #${Qt5Widgets_LIBRARIES}
+        #${Qt5Network_LIBRARIES}
         ${META_PROJECT_NAME}::fiblib
         ${META_PROJECT_NAME}::baselib
         ${META_PROJECT_NAME}::walkdriver
