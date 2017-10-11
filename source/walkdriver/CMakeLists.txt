@@ -39,6 +39,7 @@ file(GLOB sources
     "${source_path}/*.c"
     "${source_path}/*.cpp"
     "${source_path}/*.hpp"
+    "${PROJECT_SOURCE_DIR}/source/include/_utility.hpp"
 )
 
 # Group source files

@@ -2,6 +2,10 @@
 
 #include <string>
 #include <time.h>
+#include <experimental/filesystem>
+#include <filesystem>
+#include <iostream>
+#include <fstream>
 
 inline bool ends_with(std::string const & value, std::string const & ending)
 {
@@ -46,4 +50,41 @@ void generateUuid(char *guidStr)
 
     //*pGuidStr++ = '}';
     *pGuidStr = '\0';
+}
+
+bool is_dir_exit(char* path)
+{
+    std::error_code errorCode;
+    bool error = false;
+    std::experimental::filesystem::path myDirectory = path;
+    if (std::experimental::filesystem::path::is_directory(myDirectory, errorCode))
+    {
+        if (std::experimental::filesystem::path::exists(myDirectory, errorCode))
+        {
+            // Process existing directory.
+        }
+        else
+        {
+            error = true;
+        }
+    }
+    else
+    {
+        error = true;
+    }
+
+    if (error)
+    {
+        std::cout << errorCode.message() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+
+bool is_file_exit(char* file)
+{
+    std::ifstream _file(file);
+    return _file.good();
 }
