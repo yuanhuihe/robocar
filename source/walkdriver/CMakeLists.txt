@@ -40,6 +40,8 @@ file(GLOB sources
     "${source_path}/*.cpp"
     "${source_path}/*.hpp"
     "${PROJECT_SOURCE_DIR}/source/include/_utility.hpp"
+    "${PROJECT_SOURCE_DIR}/source/include/configxml.h"
+    "${PROJECT_SOURCE_DIR}/source/include/configxml.cpp"
 )
 
 # Group source files
@@ -112,7 +114,9 @@ set_target_properties(${target}
 
 target_include_directories(${target}
     PRIVATE
+		${PROJECT_SOURCE_DIR}/source/include
         ${PROJECT_BINARY_DIR}/source/include
+		${PROJECT_SOURCE_DIR}/thirdparty
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_BINARY_DIR}/include
 

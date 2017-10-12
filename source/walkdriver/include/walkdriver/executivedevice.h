@@ -24,7 +24,16 @@ namespace WalkDriver
         *    Destructor
         */
         virtual ~ExecutiveDevice();
-        
+
+        /**
+        *  @brief
+        *    Get type of this executive device
+        *
+        *  @return
+        *    Type of the device
+        */
+        virtual ExecutiveDeviceType getType() = 0;
+
         /**
         *  @brief
         *    Do work
@@ -32,7 +41,7 @@ namespace WalkDriver
         *  @return
         *    Code of running result
         */
-        virtual unsigned int execute() = 0;
+        virtual unsigned int execute(MoveType moveType, MoveSpeed speed) = 0;
     };
 
 } // namespace WalkDriver

@@ -15,7 +15,7 @@ namespace WalkDriver
     */
     class WALKDRIVER_API WalkSystem
     {
-    private:
+    public:
         /**
         *  @brief
         *    Constructor
@@ -28,16 +28,17 @@ namespace WalkDriver
         */
         virtual ~WalkSystem();
 
-    public:
-
         /**
         *  @brief
         *    Initialze and return the driver system object if initialized successfully. Other wise return null.
         *
+        *  @param[in] chassisType
+        *    Tpye of walk system.
+        *
         *  @return
         *    Object of the driver system
         */
-        static WalkSystem* InitSystem();
+        static WalkSystem* InitSystem(ChassisType chassisType);
 
         /**
         *  @brief
@@ -58,7 +59,7 @@ namespace WalkDriver
         *  @return
         *    Found executive device
         */
-        ExecutiveDevice* enumExecutiveBody();
+        virtual ExecutiveDevice* enumExecutiveBody() = 0;
     };
 
 

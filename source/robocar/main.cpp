@@ -44,7 +44,7 @@ int main(int /*argc*/, char* /*argv*/[])
     std::cout << "walkdriver library" << std::endl;
     std::cout << "========================================" << std::endl;
 
-    WalkDriver::WalkSystem* wsys = WalkDriver::WalkSystem::InitSystem();
+    WalkDriver::WalkSystem* wsys = WalkDriver::WalkSystem::InitSystem(WalkDriver::CT_MotorSystem);
 
     std::cout << std::endl;
     const auto ch_set = charset();
