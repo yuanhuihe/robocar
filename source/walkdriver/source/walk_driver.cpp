@@ -1,25 +1,23 @@
 
 #include <walkdriver/walkdriver.h>
-#include "motorsystem.hpp"
-#include "footwalksystem.hpp"
+#include <fsgpio/fsgpio.h>
+#include "motor_system.hpp"
+#include "foot_walksystem.hpp"
 #include <tuple>
 #include <string>
 
 namespace WalkDriver
 {
-    std::tuple<ChassisType, std::string> ChassisTypeMap[] = {
-        { CT_MotorSystem,"MotorSystem.xml" },
-        { CT_FootWalkSystem,"FootWalkSystem.xml" }
-    };
-
     WalkSystem* g_walkSys = nullptr;
 
     WalkSystem::WalkSystem()
     {
+        FSGPIO::GPIOLibInit();
     }
 
     WalkSystem::~WalkSystem()
     {
+        FSGPIO::GPIOLibRelease();
     }
     
     WalkSystem* WalkSystem::InitSystem(ChassisType chassisType)
@@ -37,11 +35,6 @@ namespace WalkDriver
             case WalkDriver::CT_Unknown:
             default:
                 break;
-            }
-
-            if (g_walkSys)
-            {
-                g_walkSys->enumExecutiveBody();
             }
         }
         return g_walkSys;

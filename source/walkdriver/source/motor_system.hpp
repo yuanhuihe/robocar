@@ -3,7 +3,8 @@
 
 #include <walkdriver/walkdriver.h>
 #include "configxml.h"
-
+#include "_inl.hpp"
+#include "_utility.hpp"
 
 namespace WalkDriver
 {
@@ -11,8 +12,13 @@ namespace WalkDriver
     {
     public:
         MotorSystem()
+            : cfg(xmlbus::WALK_SYSTEM)
         {
+            std::string file = get_curr_dir() + "MotorSystem.xml";
+            cfg.load_xml(file);
 
+            // TBDTBDTBDTBDTBDTBDTBDTBDTBDTBD
+            cfg.get_walk_device();
         }
         virtual ~MotorSystem()
         {
@@ -21,19 +27,12 @@ namespace WalkDriver
 
         ExecutiveDevice* enumExecutiveBody()
         {
-            //// 2. ¼ÓÔØÅäÖÃÎÄ¼þ
-            //XmlBus::Get()->Load();
-            ////MotorSystem.xml
-            xmlbus::config cfg;
-            std::string file = "MotorSystem.xml";
-            cfg.load_xml(file);
-
 
             return nullptr;
         }
 
     private:
-
+        xmlbus::config cfg;
     };
 
 } // namespace WalkDriver

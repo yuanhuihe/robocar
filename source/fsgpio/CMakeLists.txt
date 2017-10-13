@@ -11,7 +11,7 @@
 # 
 
 # Target name
-set(target walkdriver)
+set(target fsgpio)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")
@@ -32,16 +32,12 @@ set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 file(GLOB headers
     "${include_path}/*.h"
-    "${include_path}/*.hpp"
 )
 
 file(GLOB sources
     "${source_path}/*.c"
     "${source_path}/*.cpp"
     "${source_path}/*.hpp"
-    "${PROJECT_SOURCE_DIR}/source/include/_utility.hpp"
-    "${PROJECT_SOURCE_DIR}/source/include/configxml.h"
-    "${PROJECT_SOURCE_DIR}/source/include/configxml.cpp"
 )
 
 # Group source files
@@ -51,8 +47,6 @@ source_group_by_path(${include_path} "\\\\.h$|\\\\.hpp$"
     ${header_group} ${headers})
 source_group_by_path(${source_path}  "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
     ${source_group} ${sources})
-
-
 # 
 # Create library
 # 
@@ -103,8 +97,8 @@ generate_export_header(${target}
 
 set_target_properties(${target}
     PROPERTIES
-        ${DEFAULT_PROJECT_OPTIONS}
-        FOLDER "${IDE_FOLDER}"
+	    ${DEFAULT_PROJECT_OPTIONS}
+	    FOLDER "${IDE_FOLDER}"
 )
 
 
@@ -114,19 +108,18 @@ set_target_properties(${target}
 
 target_include_directories(${target}
     PRIVATE
-		${PROJECT_SOURCE_DIR}/source/include
-        ${PROJECT_BINARY_DIR}/source/include
-		${PROJECT_SOURCE_DIR}/thirdparty
+	    ${PROJECT_BINARY_DIR}/source/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${CMAKE_CURRENT_BINARY_DIR}/include
-
+	    ${CMAKE_CURRENT_BINARY_DIR}/include
+	    ${PROJECT_SOURCE_DIR}/source/include
+	    ${PROJECT_SOURCE_DIR}/thirdparty
     PUBLIC
-        ${DEFAULT_INCLUDE_DIRECTORIES}
+	    ${DEFAULT_INCLUDE_DIRECTORIES}
 
     INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-        $<INSTALL_INTERFACE:include>
+	    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+	    $<INSTALL_INTERFACE:include>
 )
 
 
@@ -136,8 +129,6 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        ${META_PROJECT_NAME}::fsgpio
-
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
@@ -153,8 +144,8 @@ target_compile_definitions(${target}
     PRIVATE
 
     PUBLIC
-        $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:${target_upper}_STATIC_DEFINE>
-        ${DEFAULT_COMPILE_DEFINITIONS}
+    	$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:${target_upper}_STATIC_DEFINE>
+	    ${DEFAULT_COMPILE_DEFINITIONS}
 
     INTERFACE
 )
@@ -166,9 +157,9 @@ target_compile_definitions(${target}
 
 target_compile_options(${target}
     PRIVATE
-
+	
     PUBLIC
-        ${DEFAULT_COMPILE_OPTIONS}
+    	${DEFAULT_COMPILE_OPTIONS}
 
     INTERFACE
 )

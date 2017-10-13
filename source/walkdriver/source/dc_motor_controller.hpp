@@ -1,5 +1,5 @@
 
-#include "executivecontroller.hpp"
+#include "executive_controller.hpp"
 
 
 namespace WalkDriver
@@ -12,15 +12,12 @@ namespace WalkDriver
         }
         ~DCMotorController()
         {
-            delete controller;
         }
         
         virtual int setPin(int index, ElectricalLevel lvl)
         {
 
         }
-
-
     }
     
 

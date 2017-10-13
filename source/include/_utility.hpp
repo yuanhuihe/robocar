@@ -6,6 +6,27 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <mutex>
+#include <vector>
+#include <memory>
+#include <atomic>
+#include <functional>
+#include <sys/types.h>
+#if WIN32 
+#include <Winbase.h>            // GetModuleFileNameA
+#include <io.h>  
+#include <process.h>  
+#else
+#include <unistd.h>
+#endif /* WIN32 */  
+
+#include <sys/stat.h>
+#include <limits.h>
+#include <stdio.h>
+
+
+#define PATH_MAX 255
 
 inline bool ends_with(std::string const & value, std::string const & ending)
 {
@@ -54,32 +75,7 @@ void generateUuid(char *guidStr)
 
 bool is_dir_exit(char* path)
 {
-    std::error_code errorCode;
-    bool error = false;
-    std::experimental::filesystem::path myDirectory = path;
-    if (std::experimental::filesystem::path::is_directory(myDirectory, errorCode))
-    {
-        if (std::experimental::filesystem::path::exists(myDirectory, errorCode))
-        {
-            // Process existing directory.
-        }
-        else
-        {
-            error = true;
-        }
-    }
-    else
-    {
-        error = true;
-    }
-
-    if (error)
-    {
-        std::cout << errorCode.message() << std::endl;
-        return false;
-    }
-
-    return true;
+    return false;
 }
 
 
@@ -87,4 +83,31 @@ bool is_file_exit(char* file)
 {
     std::ifstream _file(file);
     return _file.good();
+}
+
+std::string get_curr_dir()
+{
+    char path[PATH_MAX];
+    char dest[PATH_MAX];
+    memset(dest, 0, sizeof(dest)); // readlink does not null terminate!
+#if WIN32
+    GetModuleFileNameA(NULL, dest, PATH_MAX);
+    int i = strlen(dest) - 1;
+    while (dest[i] != '\\' && i >= 0)
+    {
+        dest[i] = 0;
+        i--;
+    }
+#else
+    struct stat info;
+    pid_t pid = getpid();
+    sprintf(path, "/proc/%d/exe", pid);
+    if (readlink(path, dest, PATH_MAX) == -1)
+        perror("readlink");
+    else {
+        printf("%s\n", dest);
+    }
+#endif
+
+    return std::string(dest);
 }

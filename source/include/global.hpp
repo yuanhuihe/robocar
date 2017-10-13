@@ -147,3 +147,21 @@ enum ConfigType {
 	CT_SYN,
     CT_MAX
 };
+
+
+
+#define MAX_PINS 64
+struct DEV_CONTROLLER
+{
+    int pin_count;
+    int pin_gpio_map[MAX_PINS][1];
+};
+struct DEV
+{
+    int id;
+    char name[64];
+    int dev_type;
+    DEV_CONTROLLER ctrl;
+};
+
+

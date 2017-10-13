@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "_inl.hpp"
+#include "global.hpp"
 #include "xml_define.h"
 #include "xml_parser.hpp"
 #include "config_def.hpp"
@@ -14,7 +14,7 @@ namespace xmlbus
 class config : public XML_Helper
 {
 public:
-    config();
+    config(xmlType_ type);
     ~config();
 
     // GET =========================================================================================
@@ -23,6 +23,8 @@ public:
     std::string get_language_cfg();                             // get language
     bool getConsoleStatus();                                    // get console status
     std::string getRootPath();                                  // get root path
+
+    bool get_walk_device();
 
     // SET =========================================================================================
     bool set_broker_cfg(CFG_BROKER& broker);                    // if exist modify broker, else add broker

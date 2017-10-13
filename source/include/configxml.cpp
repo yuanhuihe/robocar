@@ -9,9 +9,9 @@
 namespace xmlbus
 {
 
-config::config()
+config::config(xmlType_ type)
 {
-    set_curr_xml_type(xmlType_::APP_CONFIG);
+    set_curr_xml_type(type);
 }
 
 config::~config()
@@ -301,4 +301,43 @@ bool config::setRootPath(std::string path)
     return true;
 }
 
+
+/*
+ * @brief set/add root path
+ * @return set/add status
+ */
+bool config::get_walk_device()
+{
+    if (!xml_res)
+    {
+        print_error(__LINE__, "get load xml status error when get_walk_device");
+        return false;
+    }
+    pugi::xml_node _node = get_path_node("walkdevice/executives/dev");
+    while (_node)
+    {
+        DEV dev;
+        dev.id = atoi(_node.child_value("id"));
+        snprintf(dev.name, sizeof(dev.name) - 1, "%s", _node.child_value("name"));
+        dev.dev_type = atoi(_node.child_value("dev_type"));
+
+        pugi::xml_node ctrl = _node.child("controller");
+        pugi::xml_node pins = ctrl.child("pins");
+        pugi::xml_node pin = pins.child("pin");
+        int i = 0;
+        while (pin && i < MAX_PINS)
+        {
+            int index = atoi(pin.child_value("index"));
+            dev.ctrl.pin_gpio_map[i][index] = atoi(pin.child_value("gpio"));
+            i++;
+
+            pin = pin.next_sibling();
+        }
+        dev.ctrl.pin_count = i;
+
+        _node = _node.next_sibling();
+    }
+
+    return true;
+}
 }

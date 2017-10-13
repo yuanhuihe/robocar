@@ -25,6 +25,7 @@ endif(WIN32)
 set(IDE_FOLDER "DLL")
 add_subdirectory(baselib)
 add_subdirectory(fiblib)
+add_subdirectory(fsgpio)
 add_subdirectory(walkdriver)
 
 

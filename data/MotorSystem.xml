@@ -43,8 +43,8 @@
 			<dev_type>1</dev_type>
 			<controller>
 				<pins>
-					<pin index="2" gpio="33"/>
-					<pin index="3" gpio="31"/>
+					<pin index="0" gpio="33"/>
+					<pin index="1" gpio="31"/>
 				</pins>
 			</controller>
 			<log>
@@ -67,13 +67,14 @@
 				<level>0</level>
 			</log>
 		</dev>
+		<dev>
 			<id>3</id>
 			<name>right_back</name>
 			<dev_type>1</dev_type>
 			<controller>
 				<pins>
-					<pin index="2" gpio="11"/>
-					<pin index="3" gpio="12"/>
+					<pin index="0" gpio="11"/>
+					<pin index="1" gpio="12"/>
 				</pins>
 			</controller>
 			<log>
@@ -82,4 +83,4 @@
 			</log>
 		</dev>
 	</executives>
-</alice>
+</walkdevice>
