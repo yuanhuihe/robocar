@@ -1,6 +1,6 @@
 
 #include <walkdriver/walkdriver.h>
-#include <walkdriver/ExecutiveDevice.h>
+#include <walkdriver/executive_device.h>
 #include "dc_motor_controller.hpp"
 
 namespace WalkDriver
@@ -12,7 +12,12 @@ namespace WalkDriver
         {
             controller = new DCMotorController();
         }
-        ~DCMotor()
+        DCMotor(DEV_INFO devInfo)
+        {
+            controller = new DCMotorController();
+            controller->setGPIOMap(devInfo);
+        }
+        virtual ~DCMotor()
         {
             delete controller;
             controller = nullptr;
@@ -21,6 +26,16 @@ namespace WalkDriver
         virtual ExecutiveDeviceType getType()
         {
             return type;
+        }
+        
+        virtual bool avaliable()
+        {
+            return controller->avaliable();
+        }
+        
+        virtual void reset()
+        {
+            
         }
 
         virtual unsigned int execute(MoveType moveType, MoveSpeed speed)
@@ -73,7 +88,7 @@ namespace WalkDriver
             controller->setPin(0, ZeroLevel);
             controller->setPin(1, ZeroLevel);
         }
-    }
+    };
     
 
 } // namespace WalkDriver

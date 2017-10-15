@@ -1,6 +1,6 @@
 
 #include <walkdriver/walkdriver.h>
-#include <walkdriver/ExecutiveDevice.h>
+#include <walkdriver/executive_device.h>
 
 
 namespace WalkDriver
@@ -8,9 +8,9 @@ namespace WalkDriver
     // electrical level
     enum ElectricalLevel
     {
-        NegativeLevel = -1,     // ¸ºµçÆ½
-        ZeroLevel,              // ÁãµçÆ½
-        PositiveLevel,          // ÕýµçÆ½
+        NegativeLevel = -1,     // ï¿½ï¿½ï¿½ï¿½Æ½
+        ZeroLevel,              // ï¿½ï¿½ï¿½Æ½
+        PositiveLevel,          // ï¿½ï¿½ï¿½ï¿½Æ½
     };
 
     class ExecutiveController
@@ -20,13 +20,19 @@ namespace WalkDriver
         {
 
         }
-        ~ExecutiveController()
+        virtual ~ExecutiveController()
         {
 
         }
+
+        virtual void reset() = 0;
+
+        virtual int setGPIOMap(DEV_INFO devInfo) = 0;
         
         virtual int setPin(int index, ElectricalLevel lvl) = 0;
-    }
+
+        virtual bool avaliable() = 0;
+    };
     
 
 } // namespace WalkDriver

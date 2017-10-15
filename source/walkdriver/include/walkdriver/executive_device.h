@@ -24,7 +24,7 @@ namespace WalkDriver
         *    Destructor
         */
         virtual ~ExecutiveDevice();
-
+        
         /**
         *  @brief
         *    Get type of this executive device
@@ -33,6 +33,21 @@ namespace WalkDriver
         *    Type of the device
         */
         virtual ExecutiveDeviceType getType() = 0;
+        
+        /**
+        *  @brief
+        *    Check to make sure wether the device is avaliable.
+        *
+        *  @return
+        *    'true' will be returned if this device is avaliable.
+        */
+        virtual bool avaliable() = 0;
+        
+        /**
+        *  @brief
+        *    Reset to initial state
+        */
+        virtual void reset() = 0;
 
         /**
         *  @brief

@@ -24,7 +24,7 @@ public:
     bool getConsoleStatus();                                    // get console status
     std::string getRootPath();                                  // get root path
 
-    bool get_walk_device();
+    bool get_walk_device(std::vector<DEV_INFO>& devs);
 
     // SET =========================================================================================
     bool set_broker_cfg(CFG_BROKER& broker);                    // if exist modify broker, else add broker

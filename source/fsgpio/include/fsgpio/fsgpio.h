@@ -41,7 +41,7 @@ namespace FSGPIO
     *   Pin will be write.
     *
     *  @return
-    *    0 means successful, -1 means error occured.
+    *    -1 means error occured. Otherwise the retured value is readed from gpio.
     */
     FSGPIO_API int GPIORead(int pin);
 
@@ -53,7 +53,7 @@ namespace FSGPIO
     *   Pin will be write.
     *
     *  @return
-    *    0 means successful, -1 means error occured.
+    *    -1 means error occured, 0 means successful.
     */
     FSGPIO_API int GPIOWrite(int pin, int value);
 

@@ -4,7 +4,7 @@
 
 #include <walkdriver/walkdriver_api.h>
 #include <walkdriver/walkdriver_def.h>
-#include <walkdriver/executivedevice.h>
+#include <walkdriver/executive_device.h>
 
 
 namespace WalkDriver
@@ -59,7 +59,8 @@ namespace WalkDriver
         *  @return
         *    Found executive device
         */
-        virtual ExecutiveDevice* enumExecutiveBody() = 0;
+        virtual ExecutiveDevice* enumFirstExecutiveBody() = 0;
+        virtual ExecutiveDevice* enumNextExecutiveBody() = 0;
     };
 
 

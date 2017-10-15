@@ -306,7 +306,7 @@ bool config::setRootPath(std::string path)
  * @brief set/add root path
  * @return set/add status
  */
-bool config::get_walk_device()
+bool config::get_walk_device(std::vector<DEV_INFO>& devs)
 {
     if (!xml_res)
     {
@@ -316,7 +316,9 @@ bool config::get_walk_device()
     pugi::xml_node _node = get_path_node("walkdevice/executives/dev");
     while (_node)
     {
-        DEV dev;
+        DEV_INFO dev;
+        memset(&dev, 0, sizeof(dev));
+        
         dev.id = atoi(_node.child_value("id"));
         snprintf(dev.name, sizeof(dev.name) - 1, "%s", _node.child_value("name"));
         dev.dev_type = atoi(_node.child_value("dev_type"));
@@ -327,13 +329,16 @@ bool config::get_walk_device()
         int i = 0;
         while (pin && i < MAX_PINS)
         {
-            int index = atoi(pin.child_value("index"));
-            dev.ctrl.pin_gpio_map[i][index] = atoi(pin.child_value("gpio"));
+            int index = atoi(pin.first_attribute().value());
+            int gpio = atoi(pin.last_attribute().value());
+            dev.ctrl.pin_gpio_map[i][index] = gpio;
             i++;
 
             pin = pin.next_sibling();
         }
         dev.ctrl.pin_count = i;
+
+        devs.push_back(dev);
 
         _node = _node.next_sibling();
     }

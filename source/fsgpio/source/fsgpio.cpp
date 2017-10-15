@@ -23,7 +23,7 @@ typedef SSIZE_T ssize_t;        // for ssize_t
 #include <unistd.h>
 #endif
 
-#include "fsgpio\fsgpio.h"
+#include "fsgpio/fsgpio.h"
 
 namespace FSGPIO
 {

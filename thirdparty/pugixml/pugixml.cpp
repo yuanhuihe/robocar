@@ -10665,6 +10665,8 @@ PUGI__NS_BEGIN
 				}
 			}break;
 			}
+			
+			return xpath_string::from_const("");
 		}
 
 		xpath_node_set_raw eval_node_set(const xpath_context& c, const xpath_stack& stack, nodeset_eval_t eval)

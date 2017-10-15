@@ -6,6 +6,7 @@
 #include <iostream>
 #include <functional>
 #include <algorithm>
+#include <vector>
 
 #include <walkdriver/walkdriver.h>
 
@@ -21,15 +22,30 @@ int main(int /*argc*/, char* /*argv*/[])
     // get system instance
     WalkDriver::WalkSystem* wsys = WalkDriver::WalkSystem::InitSystem(WalkDriver::CT_MotorSystem);
     
+    // device list
+    std::vector<WalkDriver::ExecutiveDevice*> motorList;
     
     // Enum executivable devices
-    WalkDriver::ExecutiveDevice* motor = wsys->enumExecutiveBody();
+    WalkDriver::ExecutiveDevice* motor = wsys->enumFirstExecutiveBody();
     while (motor)
     {
-
+        motorList.push_back(motor);
 
         // next device
-        motor = wsys->enumExecutiveBody();
+        motor = wsys->enumNextExecutiveBody();
+    }
+
+    if(motorList.size()>0)
+    {
+        while(true)
+        {
+            for(auto mot : motorList)
+            {
+                mot->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Normal);
+            }
+
+            std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(1000));
+        }
     }
 
     // time end

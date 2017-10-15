@@ -156,7 +156,7 @@ struct DEV_CONTROLLER
     int pin_count;
     int pin_gpio_map[MAX_PINS][1];
 };
-struct DEV
+struct DEV_INFO
 {
     int id;
     char name[64];

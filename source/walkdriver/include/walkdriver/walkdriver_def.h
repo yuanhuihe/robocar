@@ -5,11 +5,11 @@
 namespace WalkDriver
 {
     // Execute error types
-#define EET_OK                  0   // Ã»ÓÐ´íÎó
-#define EET_UnknownAction           1   // Î´Öª¶¯×÷ÀàÐÍ
-#define EET_ActionNotSupport        2   // Ö¸¶¨µÄ¶¯×÷²»Ö§³Ö
+#define EET_OK                  0   // Ã»ï¿½Ð´ï¿½ï¿½ï¿½
+#define EET_UnknownAction           1   // Î´Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define EET_ActionNotSupport        2   // Ö¸ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
 
-    // µ×ÅÌÀàÐÍ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     enum ChassisType
     {
         CT_Unknown = 0,
@@ -17,7 +17,7 @@ namespace WalkDriver
         CT_FootWalkSystem,
     };
 
-    // Ö´ÐÐ»ú¹¹ÀàÐÍ
+    // Ö´ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     enum ExecutiveDeviceType
     {
         EDT_Unknown = 0,
@@ -26,7 +26,7 @@ namespace WalkDriver
         EDT_Steering_Gear,
     };
 
-    // ÒÆ¶¯ÀàÐÍ
+    // ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½
     enum MoveType
     {
         MT_Unknown = 0,
@@ -38,7 +38,7 @@ namespace WalkDriver
         MT_BackRigh,
     };
 
-    // ÒÆ¶¯ËÙ¶È
+    // ï¿½Æ¶ï¿½ï¿½Ù¶ï¿½
     enum MoveSpeed
     {
         SL_Stop,
@@ -52,4 +52,4 @@ namespace WalkDriver
 
 
 
-} // namespace fiblib
+} // namespace WalkDriver

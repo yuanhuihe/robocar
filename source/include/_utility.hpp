@@ -2,8 +2,6 @@
 
 #include <string>
 #include <time.h>
-#include <experimental/filesystem>
-#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,6 +15,7 @@
 #include <Winbase.h>            // GetModuleFileNameA
 #include <io.h>  
 #include <process.h>  
+#define PATH_MAX 255
 #else
 #include <unistd.h>
 #endif /* WIN32 */  
@@ -26,7 +25,6 @@
 #include <stdio.h>
 
 
-#define PATH_MAX 255
 
 inline bool ends_with(std::string const & value, std::string const & ending)
 {
@@ -75,6 +73,12 @@ void generateUuid(char *guidStr)
 
 bool is_dir_exit(char* path)
 {
+    // TBD
+
+
+
+
+    
     return false;
 }
 
@@ -88,26 +92,25 @@ bool is_file_exit(char* file)
 std::string get_curr_dir()
 {
     char path[PATH_MAX];
-    char dest[PATH_MAX];
-    memset(dest, 0, sizeof(dest)); // readlink does not null terminate!
+    memset(path, 0, sizeof(path));
 #if WIN32
-    GetModuleFileNameA(NULL, dest, PATH_MAX);
-    int i = strlen(dest) - 1;
-    while (dest[i] != '\\' && i >= 0)
+    GetModuleFileNameA(NULL, path, PATH_MAX);
+    int i = strlen(path) - 1;
+    while (path[i] != '\\' && i >= 0)
     {
-        dest[i] = 0;
+        path[i] = 0;
         i--;
     }
 #else
-    struct stat info;
-    pid_t pid = getpid();
-    sprintf(path, "/proc/%d/exe", pid);
-    if (readlink(path, dest, PATH_MAX) == -1)
-        perror("readlink");
-    else {
-        printf("%s\n", dest);
+    if (!getcwd(path, PATH_MAX))
+    {
+        perror("getcwd");
+    }
+    else
+    {
+        strncat(path, "/", PATH_MAX);
     }
 #endif
 
-    return std::string(dest);
+    return std::string(path);
 }

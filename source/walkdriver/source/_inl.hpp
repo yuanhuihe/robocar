@@ -7,8 +7,7 @@
 #include <atomic>
 #include <functional>
 #include <sys/types.h>
-#ifndef _UNISTD_H  
-#define _UNISTD_H  
+#if WIN32
 #include <io.h>  
 #include <process.h>  
 #else
