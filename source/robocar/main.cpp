@@ -43,7 +43,7 @@ int main(int /*argc*/, char* /*argv*/[])
             int i = 0;
             for(auto mot : motorList)
             {
-                std::cout << " motor " << std::endl;
+                std::cout << " motor " << i << ":" << std::endl;
                 mot->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Normal);
 
                 i++;
