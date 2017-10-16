@@ -327,12 +327,15 @@ bool config::get_walk_device(std::vector<DEV_INFO>& devs)
         pugi::xml_node pins = ctrl.child("pins");
         pugi::xml_node pin = pins.child("pin");
         int i = 0;
-        while (pin && i < MAX_PINS)
+        while (pin)
         {
             int index = atoi(pin.first_attribute().value());
             int gpio = atoi(pin.last_attribute().value());
-            dev.ctrl.pin_gpio_map[i][index] = gpio;
-            i++;
+            if( index < MAX_PINS)
+            {
+                dev.ctrl.pin_gpio_map[index] = gpio;
+                i++;
+            }
 
             pin = pin.next_sibling();
         }
