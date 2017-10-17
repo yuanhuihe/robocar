@@ -28,4 +28,4 @@
 # 编程相关
 ## GPIO映射表
 
-![WiringPi GPIO](./deploy/images/Raspberry Pi GPIO Pins.png)
+![WiringPi GPIO](/deploy/images/Raspberry Pi GPIO Pins.png)
