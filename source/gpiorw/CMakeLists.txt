@@ -129,8 +129,10 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        pthread
         wiringPi
+        pthread
+        rt          # shm_open
+        crypt       # crypt
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
