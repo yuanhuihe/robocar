@@ -12,7 +12,7 @@ namespace WalkDriver
 
     WalkSystem::WalkSystem()
     {
-        GPIORW::GPIOLibInit();
+        GPIORW::GPIOLibInit(GPIORW::GFT_WiringPi);
     }
 
     WalkSystem::~WalkSystem()
