@@ -28,4 +28,4 @@
 # 编程相关
 ## GPIO映射表
 
-![Alt WiringPi GPIO](https://raw.github.com/hyhrob/robocar/deploy/images/RaspberryPiGPIOPins.png)
+![](https://raw.github.com/hyhrob/robocar/deploy/images/RaspberryPiGPIOPins.png)
