@@ -29,3 +29,36 @@
 ## GPIO映射表
 
 ![](https://raw.github.com/hyhrob/robocar/deploy/images/RaspberryPiGPIOPins.png)
+
+
+# TMP
+## issue 1: shm_open() and crypt() link error
+> yuanhui@yuanhui-desktop:~/robocar$ cmake -H. -Bbuild -G"Unix Makefiles"
+> -- Lib baselib
+> -- Lib fiblib
+> -- Lib gpiorw
+> -- Lib walkdriver
+> -- App: robocar
+> -- Demo: gpio_test
+> -- Configuring done
+> -- Generating done
+> -- Build files have been written to: /home/yuanhui/robocar/build
+> yuanhui@yuanhui-desktop:~/robocar$ cmake --build build --config release --target all
+> [ 13%] Built target baselib
+> [ 26%] Built target fiblib
+> [ 33%] Linking CXX shared library ../../libgpiorw.so
+> [ 40%] Built target gpiorw
+> [ 46%] Linking CXX shared library ../../libwalkdriver.so
+> [ 66%] Built target walkdriver
+> [ 73%] Linking CXX executable ../../robocar
+> //usr/local/lib/libwiringPi.so: undefined reference to `shm_open'
+> //usr/local/lib/libwiringPi.so: undefined reference to `crypt'
+> collect2: error: ld returned 1 exit status
+> source/robocar/CMakeFiles/robocar.dir/build.make:123: recipe for target 'robocar' failed
+> make[2]: *** [robocar] Error 1
+> CMakeFiles/Makefile2:343: recipe for target 'source/robocar/CMakeFiles/robocar.dir/all' failed
+> make[1]: *** [source/robocar/CMakeFiles/robocar.dir/all] Error 2
+> Makefile:138: recipe for target 'all' failed
+> make: *** [all] Error 2
+> yuanhui@yuanhui-desktop:~/robocar$ 
+> 
