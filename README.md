@@ -24,3 +24,8 @@
 | raspberry pi 3b | pi 3b | x1   | ￥210 |                    |
 | 电机驱动板           |       | x2   | ￥9x2 | 一个驱动板带两路驱动         |
 | 移动平台            | 奥松4DW | x1   | ￥167 | 带车架、四个直流电机、6节5号电池盒 |
+
+# 编程相关
+## GPIO映射表
+
+![WiringPi GPIO](./deploy/images/Raspberry Pi GPIO Pins.png)

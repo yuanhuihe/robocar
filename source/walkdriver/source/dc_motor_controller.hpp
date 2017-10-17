@@ -1,6 +1,6 @@
 
 #include "executive_controller.hpp"
-#include <fsgpio/fsgpio.h>
+#include <gpiorw/gpiorw.h>
 
 namespace WalkDriver
 {
@@ -36,7 +36,7 @@ namespace WalkDriver
             if(avaliable())
             {
                 int gpio_id = pin_gpio_map[index];
-                return FSGPIO::GPIOWrite(gpio_id, lvl);
+                return GPIORW::GPIOWrite(gpio_id, lvl);
             }
                 
             return -1;

@@ -1,6 +1,6 @@
 /**
 * @brief
-*   GPIO controlling by file system.
+*   GPIO controlling interface.
 *
 * @author
 *   Yuanhui HE
@@ -10,10 +10,10 @@
 */
 #pragma once
 
-#include <fsgpio/fsgpio_api.h>
-#include <fsgpio/fsgpio_def.h>
+#include <gpiorw/gpiorw_api.h>
+#include <gpiorw/gpiorw_def.h>
 
-namespace FSGPIO
+namespace GPIORW
 {
     /**
     *  @brief
@@ -22,7 +22,7 @@ namespace FSGPIO
     *  @return
     *    0 means successful, -1 means error occured.
     */
-    FSGPIO_API void GPIOLibInit();
+    GPIORW_API void GPIOLibInit(GPIOFunctionType type);
 
     /**
     *  @brief
@@ -31,7 +31,7 @@ namespace FSGPIO
     *  @return
     *    0 means successful, -1 means error occured.
     */
-    FSGPIO_API void GPIOLibRelease();
+    GPIORW_API void GPIOLibRelease();
 
     /**
     *  @brief
@@ -43,7 +43,7 @@ namespace FSGPIO
     *  @return
     *    -1 means error occured. Otherwise the retured value is readed from gpio.
     */
-    FSGPIO_API int GPIORead(int pin);
+    GPIORW_API int GPIORead(int pin);
 
     /**
     *  @brief
@@ -55,7 +55,7 @@ namespace FSGPIO
     *  @return
     *    -1 means error occured, 0 means successful.
     */
-    FSGPIO_API int GPIOWrite(int pin, int value);
+    GPIORW_API int GPIOWrite(int pin, int value);
 
 
-} // namespace FSGPIO
+} // namespace GPIORW

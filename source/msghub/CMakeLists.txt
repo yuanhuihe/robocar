@@ -4,44 +4,47 @@
 # 
 
 # find_package(THIRDPARTY REQUIRED)
-
+find_package(ZMQ REQUIRED)
+find_package(CZMQ REQUIRED)
+find_package(MemQueue REQUIRED)
 
 # 
 # Library name and options
 # 
 
 # Target name
-set(target walkdriver)
+set(target streamhub)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")
 
 # Set API export file and macro
 string(TOUPPER ${target} target_upper)
-set(feature_file "include/${target}/${target}_features.h")
-set(export_file  "include/${target}/${target}_api.h")
+set(feature_file "include/${target}_features.h")
+set(export_file  "include/${target}_api.h")
 set(export_macro "${target_upper}_API")
 
 
 # 
 # Sources
 # 
-
 set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 file(GLOB headers
-    "${include_path}/*.h"
+    "${include_path}/*.h" 
     "${include_path}/*.hpp"
+	"${PROJECT_SOURCE_DIR}/source/include/_inl.hpp"
 )
-
 file(GLOB sources
-    "${source_path}/*.c"
-    "${source_path}/*.cpp"
+    "${source_path}/*.h"
     "${source_path}/*.hpp"
-    "${PROJECT_SOURCE_DIR}/source/include/_utility.hpp"
-    "${PROJECT_SOURCE_DIR}/source/include/configxml.h"
-    "${PROJECT_SOURCE_DIR}/source/include/configxml.cpp"
+    "${source_path}/*.cpp"
+    "${source_path}/arb/*.h"
+    "${source_path}/arb/*.cpp"
+    "${source_path}/OptiReader/*.h"
+    "${source_path}/OptiReader/*.cpp"
+    "${PROJECT_SOURCE_DIR}/source/include/*.cpp"
 )
 
 # Group source files
@@ -56,8 +59,6 @@ source_group_by_path(${source_path}  "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$"
 # 
 # Create library
 # 
-
-# Build library
 add_library(${target}
     ${sources}
     ${headers}
@@ -104,22 +105,30 @@ generate_export_header(${target}
 set_target_properties(${target}
     PROPERTIES
         ${DEFAULT_PROJECT_OPTIONS}
-        FOLDER "${IDE_FOLDER}"
+    FOLDER "${IDE_FOLDER}"
 )
 
 
 # 
 # Include directories
 # 
-
 target_include_directories(${target}
     PRIVATE
-		${PROJECT_SOURCE_DIR}/source/include
-        ${PROJECT_BINARY_DIR}/source/include
-		${PROJECT_SOURCE_DIR}/thirdparty
+		${MemQueue_INCLUDE_DIR}
+		${ZMQ_INCLUDE_DIR}
+		${CZMQ_INCLUDE_DIR}
+		${MAJORDOMO_INCLUDE_DIR}
+		${LIBG3_INCLUDE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_BINARY_DIR}/include
-
+		${PROJECT_BINARY_DIR}/source/include
+		${PROJECT_SOURCE_DIR}/source/include
+        ${PROJECT_SOURCE_DIR}/source/include/pattern
+		${PROJECT_SOURCE_DIR}/source/include/framework
+		${PROJECT_SOURCE_DIR}/thirdparty
+        ${PROJECT_SOURCE_DIR}/thirdparty/pugixml
+        ${PROJECT_SOURCE_DIR}/thirdparty/XmlParse
+        ${PROJECT_SOURCE_DIR}/thirdparty/memory/include
     PUBLIC
         ${DEFAULT_INCLUDE_DIRECTORIES}
 
@@ -127,23 +136,24 @@ target_include_directories(${target}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
         $<INSTALL_INTERFACE:include>
+        
 )
 
 
 # 
 # Libraries
 # 
-
 target_link_libraries(${target}
     PRIVATE
-        ${META_PROJECT_NAME}::gpiorw
-
+        ${DEFAULT_LIBRARIES}
+        ${ZMQ_LIBRARY}
+		${CZMQ_LIBRARY}
+		${MAJORDOMO_LIBRARY}
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
     INTERFACE
 )
-
 
 # 
 # Compile definitions

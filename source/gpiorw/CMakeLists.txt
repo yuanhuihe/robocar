@@ -11,7 +11,7 @@
 # 
 
 # Target name
-set(target fsgpio)
+set(target gpiorw)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")

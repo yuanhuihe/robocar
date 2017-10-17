@@ -1,6 +1,6 @@
 
 #include <walkdriver/walkdriver.h>
-#include <fsgpio/fsgpio.h>
+#include <gpiorw/gpiorw.h>
 #include "motor_system.hpp"
 #include "foot_walksystem.hpp"
 #include <tuple>
@@ -12,12 +12,12 @@ namespace WalkDriver
 
     WalkSystem::WalkSystem()
     {
-        FSGPIO::GPIOLibInit();
+        GPIORW::GPIOLibInit();
     }
 
     WalkSystem::~WalkSystem()
     {
-        FSGPIO::GPIOLibRelease();
+        GPIORW::GPIOLibRelease();
     }
     
     WalkSystem* WalkSystem::InitSystem(ChassisType chassisType)

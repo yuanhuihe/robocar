@@ -8,39 +8,39 @@
 #include <algorithm>
 #include <vector>
 
-#include <fsgpio/fsgpio.h>
+#include <gpiorw/gpiorw.h>
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-    std::cout << "            FSGPIO library demo         " << std::endl;
+    std::cout << "            GPIORW library demo         " << std::endl;
     std::cout << "========================================" << std::endl;
 
     // time start
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
     // none of anything return
-    FSGPIO::GPIOLibInit();
+    GPIORW::GPIOLibInit(GPIORW::GFT_WiringPi);
     std::cout << "GPIOLibInit" << std::endl;
 
     int pin = 37;
     int ret = 0;
     std::cout << "Test GPIO read/write pin " << pin << std::endl;
-    ret = FSGPIO::GPIORead(pin);
+    ret = GPIORW::GPIORead(pin);
     std::cout << "GPIORead: " << ret << std::endl;
-    ret = FSGPIO::GPIOWrite(pin, 1);
+    ret = GPIORW::GPIOWrite(pin, 1);
     std::cout << "GPIOWrite: " << 1 << " return: " << ret << std::endl;
-    ret = FSGPIO::GPIORead(pin);
+    ret = GPIORW::GPIORead(pin);
     std::cout << "GPIORead: " << ret << std::endl;
     std::cout << std::endl;
 
     pin = 35;
     ret = 0;
     std::cout << "Test GPIO read/write pin " << pin << std::endl;
-    ret = FSGPIO::GPIORead(pin);
+    ret = GPIORW::GPIORead(pin);
     std::cout << "GPIORead: " << ret << std::endl;
-    ret = FSGPIO::GPIOWrite(pin, 1);
+    ret = GPIORW::GPIOWrite(pin, 1);
     std::cout << "GPIOWrite: " << 1 << " return: " << ret << std::endl;
-    ret = FSGPIO::GPIORead(pin);
+    ret = GPIORW::GPIORead(pin);
     std::cout << "GPIORead: " << ret << std::endl;
     std::cout << std::endl;
 
@@ -51,7 +51,7 @@ int main(int /*argc*/, char* /*argv*/[])
     std::cout << std::endl;
 
 
-    FSGPIO::GPIOLibRelease();
+    GPIORW::GPIOLibRelease();
 
     std::cout << "Press 'Enter' to exit ...";
     getchar();
