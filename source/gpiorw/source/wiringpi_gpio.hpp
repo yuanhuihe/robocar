@@ -71,9 +71,15 @@ namespace GPIORW
             PinToWiringPi[39] = 29;
 
             if (wiringPiSetup() == -1)
+            {
+                fprintf(stderr, "wiringPiSetup failed\n");
                 return 1;
+            }
             else
+            {
+                fprintf(stderr, "wiringPiSetup successfully\n");
                 return 0;
+            }
         }
 
         virtual void Release()
@@ -89,7 +95,7 @@ namespace GPIORW
             }
 
             int wport = PinToWiringPi[pin];
-            pinMode(wport, INTPUT);
+            pinMode(wport, INPUT);
             return digitalRead(wport);
         }
 
@@ -101,7 +107,8 @@ namespace GPIORW
             }
             int wport = PinToWiringPi[pin];
             pinMode(wport, OUTPUT);
-            return digitalWrite(wport, value);
+            digitalWrite(wport, value);
+            return 0;
         }
 
     private:
