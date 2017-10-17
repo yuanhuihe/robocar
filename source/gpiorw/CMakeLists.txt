@@ -129,6 +129,7 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
+        pthread
         wiringPi
     PUBLIC
         ${DEFAULT_LIBRARIES}
