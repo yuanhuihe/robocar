@@ -109,6 +109,7 @@ namespace FSGPIO
         // check pin range
         if (pin < 0 || pin >= PIN_MAX_COUNT)
         {
+            fprintf(stderr, "Pin '%d' error\n", pin);
             return -1;
         }
 
@@ -118,9 +119,11 @@ namespace FSGPIO
             if (0 == GPIOExport(pin))
             {
                 isPinExported[pin] = 1;
+                fprintf(stderr, "Pin '%d' set as 'Exported'\n", pin);
             }
             else
             {
+                fprintf(stderr, "Pin '%d' set export failed\n", pin);
                 return -1;
             }
         }
@@ -132,9 +135,11 @@ namespace FSGPIO
             if (0 == GPIODirection(pin, direction))
             {
                 isPinExportedAsInput[pin] = dir;
+                fprintf(stderr, "Pin '%d' set as '%s' successfully\n", pin, (IN == direction ? "IN" : "OUT"));
             }
             else
             {
+                fprintf(stderr, "Pin '%d' set as '%s' failed\n", pin, (IN == direction ? "IN" : "OUT"));
                 return -1;
             }
         }

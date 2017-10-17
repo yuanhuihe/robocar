@@ -154,7 +154,7 @@ enum ConfigType {
 struct DEV_CONTROLLER
 {
     int pin_count;
-    int pin_gpio_map[MAX_PINS][1];
+    int pin_gpio_map[MAX_PINS];
 };
 struct DEV_INFO
 {

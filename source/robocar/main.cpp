@@ -39,12 +39,17 @@ int main(int /*argc*/, char* /*argv*/[])
     {
         while(true)
         {
+            std::cout << "Move forward: " << std::endl;
+            int i = 0;
             for(auto mot : motorList)
             {
-                mot->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Normal);
+                std::cout << " motor " << i << ":" << std::endl;
+                //mot->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Normal);
+
+                i++;
             }
 
-            std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(1000));
+            std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(1000));
         }
     }
 
