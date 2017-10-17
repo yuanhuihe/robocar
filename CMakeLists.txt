@@ -45,7 +45,7 @@ set(WriterCompilerDetectionHeaderFound NOTFOUND)
 
 include(GenerateExportHeader)
 include(ExternalProject)
-include(CMakeToolsHelpers)
+#include(CMakeToolsHelpers)
 
 
 # This module is only available with CMake >=3.1, so check whether it could be found
