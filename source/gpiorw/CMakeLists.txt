@@ -129,12 +129,6 @@ target_include_directories(${target}
 	
 target_link_libraries(${target}
     PRIVATE
-		-lwiringPi
-		-lwiringPiDev
-		-pthread
-		-lm
-        -lrt          # shm_open
-        -lcrypt       # crypt
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
@@ -177,6 +171,12 @@ target_compile_options(${target}
 
 target_link_libraries(${target}
     PRIVATE
+		-lwiringPi
+		-lwiringPiDev
+		-pthread
+		-lm
+        -lrt          # shm_open
+        -lcrypt       # crypt
 
     PUBLIC
         ${DEFAULT_LINKER_OPTIONS}
