@@ -84,6 +84,7 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
+		-lwiringPi
 		-pthread
 		-lm
         -lrt          # shm_open
