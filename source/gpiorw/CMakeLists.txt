@@ -163,7 +163,6 @@ target_compile_definitions(${target}
 
 target_compile_options(${target}
     PRIVATE
-		-Winline
 		-Wall
 		-pipe
 		-O3

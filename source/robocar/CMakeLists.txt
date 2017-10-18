@@ -111,7 +111,6 @@ target_compile_definitions(${target}
 target_compile_options(${target}
     PRIVATE		
     	${DEFAULT_COMPILE_OPTIONS}
-		-Winline
 		-Wall
 		-pipe
 		
