@@ -84,17 +84,14 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        ${DEFAULT_LIBRARIES}
-        ${META_PROJECT_NAME}::fiblib
-        ${META_PROJECT_NAME}::baselib
-        ${META_PROJECT_NAME}::walkdriver
 		-pthread
 		-lm
         -lrt          # shm_open
         -lcrypt       # crypt
-		
-    PUBLIC
         ${DEFAULT_LIBRARIES}
+        ${META_PROJECT_NAME}::fiblib
+        ${META_PROJECT_NAME}::baselib
+        ${META_PROJECT_NAME}::walkdriver
     )
 
 # 
@@ -113,13 +110,11 @@ target_compile_definitions(${target}
 
 target_compile_options(${target}
     PRIVATE		
+    	${DEFAULT_COMPILE_OPTIONS}
 		-Winline
 		-Wall
 		-pipe
-		-O3
 		
-    PUBLIC
-    	${DEFAULT_COMPILE_OPTIONS}
 )
 
 
@@ -129,8 +124,6 @@ target_compile_options(${target}
 
 target_link_libraries(${target}
     PRIVATE
-	
-    PUBLIC
         ${DEFAULT_LINKER_OPTIONS}
 )
 
