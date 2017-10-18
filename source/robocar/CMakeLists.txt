@@ -11,22 +11,6 @@
 
 # Target name
 set(target robocar)
-
-# Tell CMake to run moc when necessary:
-#set(CMAKE_AUTOMOC ON)
-
-# As moc files are generated in the binary dir, tell CMake
-# to always look for includes there:
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-#SET(Lang_files ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${target}_zh.ts)
-#SET(Lang_en_files ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${target}_en.ts)
-#QT5_CREATE_TRANSLATION(LangSrcs ${Lang_files})
-#QT5_CREATE_TRANSLATION(LangenSrcs ${Lang_en_files})
-
-#QT5_ADD_RESOURCES(QRC ${CMAKE_CURRENT_SOURCE_DIR}/${target}.qrc)
-#set(RC ${CMAKE_CURRENT_SOURCE_DIR}/${target}.rc)
-
 add_definitions(-DUNICODE -D_UNICODE)
 
 # Exit here if required dependencies are not met
@@ -56,13 +40,11 @@ file(GLOB sources
 # 
 
 # Build executable
-#add_executable(${target} WIN32 ${sources} ${headers} ${QRC} ${RC} ${LangSrcs} ${LangenSrcs})
 add_executable(${target} ${sources} ${headers} ${QRC} ${RC} ${LangSrcs} ${LangenSrcs})
 
 # Create namespaced alias
 add_executable(${META_PROJECT_NAME}::${target} ALIAS ${target})
 
-#qt5_use_modules(MotionClient Widgets Network )
 # 
 # Project options
 # 
@@ -110,7 +92,6 @@ target_link_libraries(${target}
 		-lm
         -lrt          # shm_open
         -lcrypt       # crypt
-		-lc
 		
     PUBLIC
         ${DEFAULT_LIBRARIES}
@@ -132,7 +113,9 @@ target_compile_definitions(${target}
 
 target_compile_options(${target}
     PRIVATE
-        ${DEFAULT_COMPILE_OPTIONS}
+		
+    PUBLIC
+    	${DEFAULT_COMPILE_OPTIONS}
 )
 
 
@@ -142,7 +125,7 @@ target_compile_options(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        ${DEFAULT_LINKER_OPTIONS}
+	
     PUBLIC
         ${DEFAULT_LINKER_OPTIONS}
 
@@ -159,6 +142,5 @@ install(TARGETS ${target}
     RUNTIME DESTINATION ${INSTALL_BIN} COMPONENT runtime
     BUNDLE  DESTINATION ${INSTALL_BIN} COMPONENT runtime
 )
-# Install QT language files
-file(GLOB QM ${CMAKE_CURRENT_BINARY_DIR}/*.qm)
-install(FILES ${QM} DESTINATION ${INSTALL_BIN}/langs COMPONENT runtime)
+
+

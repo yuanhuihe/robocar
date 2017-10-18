@@ -134,7 +134,6 @@ target_link_libraries(${target}
 		-lm
         -lrt          # shm_open
         -lcrypt       # crypt
-		-lc
 		
     PUBLIC
         ${DEFAULT_LIBRARIES}
