@@ -106,6 +106,9 @@ target_link_libraries(${target}
         ${META_PROJECT_NAME}::fiblib
         ${META_PROJECT_NAME}::baselib
         ${META_PROJECT_NAME}::walkdriver
+		
+    PUBLIC
+        ${DEFAULT_LIBRARIES}
     )
 
 # 
@@ -135,6 +138,10 @@ target_compile_options(${target}
 target_link_libraries(${target}
     PRIVATE
         ${DEFAULT_LINKER_OPTIONS}
+    PUBLIC
+        ${DEFAULT_LINKER_OPTIONS}
+
+    INTERFACE
 )
 
 
