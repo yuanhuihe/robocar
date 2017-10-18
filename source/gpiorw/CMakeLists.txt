@@ -140,8 +140,8 @@ target_link_libraries(${target}
         ${T_wiringPi}
         ${T_wiringPiDev}
         ${T_pthread}
-        -llibrt          # shm_open
-        -llibcrypt       # crypt
+        rt          # shm_open
+        crypt       # crypt
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
