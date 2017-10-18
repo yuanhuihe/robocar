@@ -4,8 +4,6 @@
 #include <thread>
 #include <atomic>
 #include <iostream>
-#include <functional>
-#include <algorithm>
 #include <vector>
 
 #include <walkdriver/walkdriver.h>
@@ -39,12 +37,12 @@ int main(int /*argc*/, char* /*argv*/[])
     {
         while(true)
         {
-            std::cout << "Move forward: " << std::endl;
+            std::cout << "\n\nMove forward: " << std::endl;
             int i = 0;
             for(auto mot : motorList)
             {
-                std::cout << " motor " << i << ":" << std::endl;
-                //mot->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Normal);
+                std::cout << "motor " << i << ":" << std::endl;
+                mot->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Normal);
 
                 i++;
             }

@@ -126,11 +126,17 @@ target_include_directories(${target}
 # 
 # Libraries
 # 
-
+set(T_wiringPi "wiringPi")
+set(T_pthread "pthread")
+if (MSVC)
+	set(T_wiringPi "")
+	set(T_pthread "")
+endif ()
+	
 target_link_libraries(${target}
     PRIVATE
-        wiringPi
-        pthread
+        ${T_wiringPi}
+        ${T_pthread}
         -lrt          # shm_open
         -lcrypt       # crypt
     PUBLIC

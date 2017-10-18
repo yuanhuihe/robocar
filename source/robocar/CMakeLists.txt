@@ -106,9 +106,6 @@ target_link_libraries(${target}
         ${META_PROJECT_NAME}::fiblib
         ${META_PROJECT_NAME}::baselib
         ${META_PROJECT_NAME}::walkdriver
-        pthread
-        -lrt          # shm_open
-        -lcrypt       # crypt
     )
 
 # 

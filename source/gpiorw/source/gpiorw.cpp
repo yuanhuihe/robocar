@@ -10,16 +10,22 @@
 #include "gpio_base.hpp"
 #include "fsgpio.hpp"
 #include "wiringpi_gpio.hpp"
+#include "win32debuggpio.hpp"
 
 
 namespace GPIORW
 {
     GPIOFunctionType maptype = GFT_WiringPi;
+#ifndef WIN32
     gpio_base* gpio = new WiringPiGPIO();
+#else
+    gpio_base* gpio = new Win32DebugGpio();
+#endif
 
 
     GPIORW_API void GPIOLibInit(GPIOFunctionType type)
     {
+#ifndef WIN32
         if (maptype != type)
         {
             delete gpio;
@@ -39,6 +45,7 @@ namespace GPIORW
                 break;
             }
         }
+#endif
 
         gpio->Init();
     }

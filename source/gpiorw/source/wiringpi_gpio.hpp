@@ -7,6 +7,9 @@
 */
 #pragma once
 
+#ifndef WIN32
+
+
 #include "_inl.hpp"
 #include "gpiorw/gpiorw.h"
 #include "gpio_base.hpp"
@@ -134,4 +137,7 @@ namespace GPIORW
 
     };
 
+
 } // namespace GPIORW
+
+#endif // !WIN32
