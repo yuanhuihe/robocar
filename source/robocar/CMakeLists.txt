@@ -40,7 +40,7 @@ file(GLOB sources
 # 
 
 # Build executable
-add_executable(${target} ${sources} ${headers} ${QRC} ${RC} ${LangSrcs} ${LangenSrcs})
+add_executable(${target} ${sources} ${headers})
 
 # Create namespaced alias
 add_executable(${META_PROJECT_NAME}::${target} ALIAS ${target})
@@ -112,7 +112,11 @@ target_compile_definitions(${target}
 # 
 
 target_compile_options(${target}
-    PRIVATE
+    PRIVATE		
+		-Winline
+		-Wall
+		-pipe
+		-O3
 		
     PUBLIC
     	${DEFAULT_COMPILE_OPTIONS}
@@ -128,8 +132,6 @@ target_link_libraries(${target}
 	
     PUBLIC
         ${DEFAULT_LINKER_OPTIONS}
-
-    INTERFACE
 )
 
 
