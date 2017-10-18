@@ -129,7 +129,7 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        wiringPiDev
+        wiringPi
         pthread
         -lrt          # shm_open
         -lcrypt       # crypt
