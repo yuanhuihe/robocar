@@ -1,8 +1,14 @@
 *临时用于文档和代码同步*
 
+---
+
 # Project robocar
 
 这是一个儿童教育机器人编程平台。
+
+
+
+---
 
 # purpose
 儿童机器人编程
@@ -25,7 +31,16 @@
 | 电机驱动板           |       | x2   | ￥9x2 | 一个驱动板带两路驱动         |
 | 移动平台            | 奥松4DW | x1   | ￥167 | 带车架、四个直流电机、6节5号电池盒 |
 
+
+
+
+
+
+
+---
+
 # 编程相关
+
 ## GPIO映射表
 
 ![](https://raw.github.com/hyhrob/robocar/deploy/images/RaspberryPiGPIOPins.png)
@@ -61,4 +76,4 @@
 > Makefile:138: recipe for target 'all' failed
 > make: *** [all] Error 2
 > yuanhui@yuanhui-desktop:~/robocar$ 
-> 
+>

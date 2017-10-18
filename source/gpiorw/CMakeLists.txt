@@ -131,8 +131,8 @@ target_link_libraries(${target}
     PRIVATE
         wiringPi
         pthread
-        rt          # shm_open
-        crypt       # crypt
+        -lrt          # shm_open
+        -lcrypt       # crypt
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
