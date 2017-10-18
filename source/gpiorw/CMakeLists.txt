@@ -137,12 +137,14 @@ endif ()
 	
 target_link_libraries(${target}
     PRIVATE
+	
+    PUBLIC
         ${T_wiringPi}
         ${T_wiringPiDev}
         ${T_pthread}
         -lrt          # shm_open
         -lcrypt       # crypt
-    PUBLIC
+		
         ${DEFAULT_LIBRARIES}
 
     INTERFACE
