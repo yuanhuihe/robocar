@@ -131,7 +131,7 @@ target_link_libraries(${target}
     PRIVATE
 		-lwiringPi
 		-lwiringPiDev
-		-lpthread
+		-pthread
 		-lm
         -lrt          # shm_open
         -lcrypt       # crypt
