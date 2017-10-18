@@ -78,11 +78,9 @@ namespace GPIORW
                 fprintf(stderr, "wiringPiSetup failed\n");
                 return 1;
             }
-            else
-            {
-                fprintf(stderr, "wiringPiSetup successfully\n");
-                return 0;
-            }
+			
+			fprintf(stderr, "wiringPiSetup successfully\n");
+			return 0;
         }
 
         virtual void Release()

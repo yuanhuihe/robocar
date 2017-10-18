@@ -32,6 +32,7 @@ namespace GPIORW
         {
             memset(isPinExported, 0, sizeof(isPinExported));
             memset(isPinExportedAsInput, 0, sizeof(isPinExportedAsInput));
+			return 0;
         }
 
         virtual void Release()
@@ -141,9 +142,9 @@ namespace GPIORW
             }
 
             bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin);
-            write(fd, buffer, bytes_written);
+            ssize_t ret = write(fd, buffer, bytes_written);
             close(fd);
-            return(0);
+            return (ret==bytes_written?0:-1);
         }
 
         int GPIODirection(int pin, int dir)
