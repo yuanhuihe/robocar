@@ -105,7 +105,7 @@ target_link_libraries(${target}
         ${DEFAULT_LIBRARIES}
         ${META_PROJECT_NAME}::fiblib
         ${META_PROJECT_NAME}::baselib
-        ${META_PROJECT_NAME}::walkdriver
+        #${META_PROJECT_NAME}::walkdriver
     )
 
 # 
