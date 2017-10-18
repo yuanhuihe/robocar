@@ -102,20 +102,13 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        #Shlwapi
-        #Psapi
         ${DEFAULT_LIBRARIES}
-        #${ZMQ_LIBRARY}
-        #${CZMQ_LIBRARY}
-        #${ZYRE_LIBRARY}
-        #${Qt5Widgets_LIBRARIES}
-        #${Qt5Network_LIBRARIES}
         ${META_PROJECT_NAME}::fiblib
         ${META_PROJECT_NAME}::baselib
         ${META_PROJECT_NAME}::walkdriver
-        #ws2_32
-        #Wininet
-        #Iphlpapi
+        pthread
+        -lrt          # shm_open
+        -lcrypt       # crypt
     )
 
 # 
