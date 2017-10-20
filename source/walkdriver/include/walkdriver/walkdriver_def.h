@@ -16,7 +16,7 @@ namespace WalkDriver
         CT_MotorSystem,
         CT_FootWalkSystem,
     };
-
+    
     // ִ�л�������
     enum ExecutiveDeviceType
     {
@@ -24,6 +24,33 @@ namespace WalkDriver
         EDT_DC_Motor,
         EDT_Stepper_Motor,
         EDT_Steering_Gear,
+    };
+    
+    // ִ�л�������
+    enum ExecutiveDevicePartType
+    {
+        EDPT_Unknown = 0,
+        EDPT_Head,
+        EDPT_LeftShoulder,
+        EDPT_RightShoulder,
+        EDPT_LeftUpperArm,
+        EDPT_RightUpperArm,
+        EDPT_LeftForearm,
+        EDPT_RightForearm,
+        EDPT_LeftHand,
+        EDPT_RightHand,
+        EDPT_Hip,
+        EDPT_LeftUpperLeg,
+        EDPT_RightUpperLeg,
+        EDPT_LeftLeg,
+        EDPT_RightLeg,
+        EDPT_LeftFoot,
+        EDPT_RightFoot,
+        //===================
+        EDPT_LeftFrontWheel,
+        EDPT_RightFrontWheel,
+        EDPT_LeftBackWheel,
+        EDPT_RightBackWheel,
     };
 
     // �ƶ�����
