@@ -4,7 +4,7 @@
 #include <atomic>
 #include <iostream>
 #include <vector>
-#include <io.h>
+#include <stdio.h>  // for fgets()
 #include <tuple>
 #include <string>
 
