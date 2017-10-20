@@ -32,9 +32,9 @@ void showTips()
     }
 }
 
-void tInputCtrlThead(int *inputCode)
+void tInputCtrlThead(int& inputCode)
 {
-    while (*inputCode != 6)
+    while (inputCode != 6)
     {
         char strInput[100];
         memset(strInput, 0, sizeof(strInput));
@@ -49,7 +49,7 @@ void tInputCtrlThead(int *inputCode)
             int code = atoi(strInput);
             if (code == std::get<0>(act) || strcmp(strInput, std::get<1>(act).c_str()) == 0)
             {
-                *inputCode = std::get<0>(act);
+                inputCode = std::get<0>(act);
                 bOK = true;
                 //std::cout << std::get<2>(act) << std::endl;                
                 break;
@@ -150,7 +150,7 @@ int main(int /*argc*/, char* /*argv*/[])
     // controlling by console inputs
     int preInput = 0;
     int inputCode = 0;
-    std::thread tInputCtrlThead(tInputCtrlThead, &inputCode);
+    std::thread tInputCtrlThead(tInputCtrlThead, std::ref(inputCode));
 
     bool bRunning = true;
     while(bRunning)
