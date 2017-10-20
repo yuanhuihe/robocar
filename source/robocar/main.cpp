@@ -13,13 +13,13 @@
 
 std::tuple<int, std::string, std::string> actionMap[]
 {
-    {0, "stop", "Stop"},
-    {1, "foreward", "Move Foreward"},
-    {2, "leftward", "Move Leftward"},
-    {3, "rightward", "Move Rightward"},
-    {4, "backward", "Move Backward"},
-    {5, "tips", "Tips"},
-    {6, "exit", "Exit this program"},
+    std::make_tuple(0, "stop", "Stop"),
+    std::make_tuple(1, "foreward", "Move Foreward"),
+    std::make_tuple(2, "leftward", "Move Leftward"),
+    std::make_tuple(3, "rightward", "Move Rightward"),
+    std::make_tuple(4, "backward", "Move Backward"),
+    std::make_tuple(5, "tips", "Tips" ),
+    std::make_tuple(6, "exit", "Exit this program"),
 };
 
 void showTips()
