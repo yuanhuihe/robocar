@@ -114,3 +114,30 @@ std::string get_curr_dir()
 
     return std::string(path);
 }
+
+std::wstring str2wstr(char* str)
+{
+    if (str == nullptr) return std::wstring();
+
+    size_t len = strlen(str) + 1;
+    size_t converted = 0;
+
+    wchar_t *wstr = (wchar_t*)malloc(len * sizeof(wchar_t));
+    mbstowcs_s(&converted, wstr, len, str, _TRUNCATE);
+    std::wstring w(wstr);
+
+    free(wstr);
+
+    return w;
+}
+
+std::string wstr2str(wchar_t* wStr)
+{
+    if (wStr == nullptr) return "";
+
+    std::wstring w(wStr);
+    std::string str;
+    str.assign(w.begin(), w.end());
+
+    return str;
+}
