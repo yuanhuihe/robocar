@@ -150,7 +150,7 @@ int main(int /*argc*/, char* /*argv*/[])
     // controlling by console inputs
     int preInput = 0;
     int inputCode = 0;
-    std::thread tInputCtrlThead(tInputCtrlThead, std::ref(inputCode));
+    std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode));
 
     bool bRunning = true;
     while(bRunning)
@@ -184,7 +184,7 @@ int main(int /*argc*/, char* /*argv*/[])
     std::chrono::duration<double, std::milli> elapsed = end-start;
     std::cout << "runtime " << elapsed.count() << " ms\n";
 
-    tInputCtrlThead.join();
+    tInputCtrlObj.join();
 
     // reset motors
     actionMoveStop(motorList);
