@@ -79,63 +79,8 @@
 >
 
 
-
-/home/yuanhui/robocar/source/robocar/main.cpp:106:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-     for (int i = 1; i<motorList.size(); i++)
-                      ^
-source/robocar/CMakeFiles/robocar.dir/build.make:62: recipe for target 'source/robocar/CMakeFiles/robocar.dir/main.cpp.o' failed
-make[2]: *** [source/robocar/CMakeFiles/robocar.dir/main.cpp.o] Error 1
-CMakeFiles/Makefile2:343: recipe for target 'source/robocar/CMakeFiles/robocar.dir/all' failed
-make[1]: *** [source/robocar/CMakeFiles/robocar.dir/all] Error 2
-Makefile:138: recipe for target 'all' failed
-make: *** [all] Error 2
-yuanhui@yuanhui-desktop:~/robocar$ git pull
-remote: Counting objects: 5, done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 5 (delta 3), reused 5 (delta 3), pack-reused 0
-Unpacking objects: 100% (5/5), done.
-From https://github.com/hyhrob/robocar
-   a8ec84f..9482895  master     -> origin/master
-Updating a8ec84f..9482895
-Fast-forward
- source/robocar/main.cpp | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-yuanhui@yuanhui-desktop:~/robocar$ cmake --build build --config release --target all
-[ 13%] Built target baselib
-[ 26%] Built target fiblib
-[ 40%] Built target gpiorw
-[ 66%] Built target walkdriver
-Scanning dependencies of target robocar
-[ 73%] Building CXX object source/robocar/CMakeFiles/robocar.dir/main.cpp.o
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, char*, char*>’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const _Elements& ...) [with _Elements = {int, char*, char*}]’
- };
- ^
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, char*, char*>’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const _Elements& ...) [with _Elements = {int, char*, char*}]’
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, char*, char*>’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const _Elements& ...) [with _Elements = {int, char*, char*}]’
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, char*, char*>’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const _Elements& ...) [with _Elements = {int, char*, char*}]’
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, char*, char*>’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const _Elements& ...) [with _Elements = {int, char*, char*}]’
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, char*, char*>’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const _Elements& ...) [with _Elements = {int, char*, char*}]’
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, char*, char*>’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const _Elements& ...) [with _Elements = {int, char*, char*}]’
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
-/home/yuanhui/robocar/source/robocar/main.cpp:23:1: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+/home/yuanhui/robocar/source/robocar/main.cpp:23:1: error: converting to ‘std::tuple<int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >’ from initializer list would use explicit constructor ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(_UElements&& ...) [with _UElements = {int, const char (&)[5], const char (&)[18]}; <template-parameter-2-2> = void; _Elements = {int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >}]’
 /home/yuanhui/robocar/source/robocar/main.cpp: In function ‘void actionMoveLeftward(std::vector<WalkDriver::ExecutiveDevice*>&)’:
 /home/yuanhui/robocar/source/robocar/main.cpp:79:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
      for(int i=0; i<motorList.size(); i++)
-                   ^
-/home/yuanhui/robocar/source/robocar/main.cpp: In function ‘void actionMoveRightward(std::vector<WalkDriver::ExecutiveDevice*>&)’:
-/home/yuanhui/robocar/source/robocar/main.cpp:88:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-     for (int i = 0; i<motorList.size(); i++)
-
 
