@@ -11,7 +11,7 @@
 
 #include <walkdriver/walkdriver.h>
 
-std::tuple<int, char*, char*> actionMap[]
+std::tuple<int, std::string, std::string> actionMap[]
 {
     {0, "stop", "Stop"},
     {1, "foreward", "Move Foreward"},
@@ -48,7 +48,7 @@ void tInputCtrlThead(int& inputCode)
         for (auto act : actionMap)
         {
             int code = atoi(strInput);
-            if (code == std::get<0>(act) || strcmp(strInput, std::get<1>(act)) == 0)
+            if (code == std::get<0>(act) || strcmp(strInput, std::get<1>(act).c_str()) == 0)
             {
                 inputCode = std::get<0>(act);
                 bOK = true;
