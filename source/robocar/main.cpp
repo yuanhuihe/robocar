@@ -11,7 +11,7 @@
 
 #include <walkdriver/walkdriver.h>
 
-std::tuple<int, char*, char*> actionMap[] =
+std::tuple<int, char*, char*> actionMap[]
 {
     {0, "stop", "Stop"},
     {1, "foreward", "Move Foreward"},
