@@ -6,7 +6,8 @@
 #include <vector>
 #include <stdio.h>  // for fgets()
 #include <tuple>
-#include <string>
+#include <string>       // std::string
+#include <string.h>     // memxxx/strlen()
 
 #include <walkdriver/walkdriver.h>
 
