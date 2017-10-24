@@ -32,47 +32,48 @@ namespace GPIORW
         virtual int Init()
         {
             memset(PinToWiringPi, 0, sizeof(PinToWiringPi));
+            //-----------Pin---wPiIO---Name------------------------------------------
             PinToWiringPi[0] = -1;  // Pin number is start from 1, 0 is not available
             PinToWiringPi[1] = -1;  // 3.3v DC Power
             PinToWiringPi[2] = -1;  // 5v DC Power
-            PinToWiringPi[3] = 2;   // GPIO 02(SDA1, I2C)
+            PinToWiringPi[3] = 8;   // GPIO 02(SDA1, I2C)
             PinToWiringPi[4] = -1;  // 5v DC Power
-            PinToWiringPi[5] = 3;   // GPIO 03(SCL1, I2C)
+            PinToWiringPi[5] = 9;   // GPIO 03(SCL1, I2C)
             PinToWiringPi[6] = -1;  // Ground
-            PinToWiringPi[7] = 4;   // GPIO 04(GPIO_GCLK)
-            PinToWiringPi[8] = 14;  // GPIO 14(TXD0)
+            PinToWiringPi[7] = 7;   // GPIO 04(GPIO_GCLK)
+            PinToWiringPi[8] = 15;  // GPIO 14(TXD0)
             PinToWiringPi[9] = -1;  // Ground
-            PinToWiringPi[10] = 15; // GPIO 15(RXD0)
-            PinToWiringPi[11] = 17; // GPIO 17(GPIO_GEN0)
-            PinToWiringPi[12] = 18; // GPIO 18(GPIO_GEN1)
-            PinToWiringPi[13] = 27; // GPIO 27(GPIO_GEN2)
+            PinToWiringPi[10] = 16; // GPIO 15(RXD0)
+            PinToWiringPi[11] = 0;  // GPIO 17(GPIO_GEN0)
+            PinToWiringPi[12] = 1;  // GPIO 18(GPIO_GEN1)
+            PinToWiringPi[13] = 2;  // GPIO 27(GPIO_GEN2)
             PinToWiringPi[14] = -1; // Ground
-            PinToWiringPi[15] = 22; // GPIO 22(GPIO_GEN3)
-            PinToWiringPi[16] = 23; // GPIO 23(GPIO_GEN4)
+            PinToWiringPi[15] = 3;  // GPIO 22(GPIO_GEN3)
+            PinToWiringPi[16] = 4;  // GPIO 23(GPIO_GEN4)
             PinToWiringPi[17] = -1; // 3.3v DC Power
-            PinToWiringPi[18] = 24; // GPIO 24(GPIO_GEN5)
-            PinToWiringPi[19] = 10; // GPIO 10(SPI_MOSI)
+            PinToWiringPi[18] = 5;  // GPIO 24(GPIO_GEN5)
+            PinToWiringPi[19] = 12; // GPIO 10(SPI_MOSI)
             PinToWiringPi[20] = -1; // Ground
-            PinToWiringPi[21] = 9;  // GPIO 09(SPI_MOSO)
-            PinToWiringPi[22] = 25; // GPIO 25(GPIO_GEN6)
-            PinToWiringPi[23] = 11; // GPIO 11(SPI_CLK)
-            PinToWiringPi[24] = 8;  // GPIO 08(SPI_CE0_N)
+            PinToWiringPi[21] = 13; // GPIO 09(SPI_MOSO)
+            PinToWiringPi[22] = 6;  // GPIO 25(GPIO_GEN6)
+            PinToWiringPi[23] = 14; // GPIO 11(SPI_CLK)
+            PinToWiringPi[24] = 10; // GPIO 08(SPI_CE0_N)
             PinToWiringPi[25] = -1; // Ground
-            PinToWiringPi[26] = 7;  // GPIO 07(SPI_CE1_N)
-            PinToWiringPi[27] = -1; // ID_SD(I2C ID EEPRO)
-            PinToWiringPi[28] = -1; // ID_SC(I2C ID EEPRO)
-            PinToWiringPi[29] = 5;  // GPIO 05
+            PinToWiringPi[26] = 11; // GPIO 07(SPI_CE1_N)
+            PinToWiringPi[27] = 30; // ID_SD(I2C ID EEPRO)
+            PinToWiringPi[28] = 31; // ID_SC(I2C ID EEPRO)
+            PinToWiringPi[29] = 21; // GPIO 05
             PinToWiringPi[30] = -1; // Ground
-            PinToWiringPi[31] = 6;  // GPIO 06
-            PinToWiringPi[32] = 12; // GPIO 12
-            PinToWiringPi[33] = 13; // GPIO 13
+            PinToWiringPi[31] = 22; // GPIO 06
+            PinToWiringPi[32] = 26; // GPIO 12
+            PinToWiringPi[33] = 23; // GPIO 13
             PinToWiringPi[34] = -1; // Ground
-            PinToWiringPi[35] = 19; // GPIO 19
-            PinToWiringPi[36] = 16; // GPIO 16
-            PinToWiringPi[37] = 26; // GPIO 26
-            PinToWiringPi[38] = 20; // GPIO 20
+            PinToWiringPi[35] = 24; // GPIO 19
+            PinToWiringPi[36] = 27; // GPIO 16
+            PinToWiringPi[37] = 25; // GPIO 26
+            PinToWiringPi[38] = 28; // GPIO 20
             PinToWiringPi[39] = -1; // Ground
-            PinToWiringPi[40] = 21; // GPIO 21
+            PinToWiringPi[40] = 29; // GPIO 21
 
             if (wiringPiSetup() == -1)
             {
