@@ -36,6 +36,15 @@ namespace WalkDriver
         
         /**
         *  @brief
+        *    Get part type of this device
+        *
+        *  @return
+        *    Part type of the device
+        */
+        virtual ExecutiveDevicePartType getPartType() = 0;
+        
+        /**
+        *  @brief
         *    Check to make sure wether the device is avaliable.
         *
         *  @return

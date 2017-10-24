@@ -24,8 +24,9 @@
 	<executives>
 		<dev>
 			<id>0</id>
-			<name>left_front</name>
 			<dev_type>1</dev_type>
+			<name>left_front</name>
+      <part_type>17</part_type>
 			<controller>
 				<pins>
 					<pin index="0" gpio="37"/>
@@ -39,8 +40,9 @@
 		</dev>
 		<dev>
 			<id>1</id>
-			<name>right_front</name>
 			<dev_type>1</dev_type>
+			<name>right_front</name>
+      <part_type>18</part_type>
 			<controller>
 				<pins>
 					<pin index="0" gpio="33"/>
@@ -54,8 +56,9 @@
 		</dev>
 		<dev>
 			<id>2</id>
-			<name>left_back</name>
 			<dev_type>1</dev_type>
+			<name>left_back</name>
+      <part_type>19</part_type>
 			<controller>
 				<pins>
 					<pin index="0" gpio="15"/>
@@ -69,8 +72,9 @@
 		</dev>
 		<dev>
 			<id>3</id>
-			<name>right_back</name>
 			<dev_type>1</dev_type>
+			<name>right_back</name>
+      <part_type>20</part_type>
 			<controller>
 				<pins>
 					<pin index="0" gpio="11"/>

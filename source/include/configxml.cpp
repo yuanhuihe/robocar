@@ -320,8 +320,9 @@ bool config::get_walk_device(std::vector<DEV_INFO>& devs)
         memset(&dev, 0, sizeof(dev));
         
         dev.id = atoi(_node.child_value("id"));
-        snprintf(dev.name, sizeof(dev.name) - 1, "%s", _node.child_value("name"));
         dev.dev_type = atoi(_node.child_value("dev_type"));
+        snprintf(dev.name, sizeof(dev.name) - 1, "%s", _node.child_value("name"));
+        dev.part_type = atoi(_node.child_value("part_type"));
 
         pugi::xml_node ctrl = _node.child("controller");
         pugi::xml_node pins = ctrl.child("pins");
@@ -333,7 +334,7 @@ bool config::get_walk_device(std::vector<DEV_INFO>& devs)
             int gpio = atoi(pin.last_attribute().value());
             if( index < MAX_PINS)
             {
-                dev.ctrl.pin_gpio_map[index] = gpio;
+                dev.ctrl.pin_map[index] = gpio;
                 i++;
             }
 

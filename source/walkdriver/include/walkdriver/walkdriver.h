@@ -61,6 +61,16 @@ namespace WalkDriver
         */
         virtual ExecutiveDevice* enumFirstExecutiveBody() = 0;
         virtual ExecutiveDevice* enumNextExecutiveBody() = 0;
+
+
+        /**
+        *  @brief
+        *    Get executive body
+        *
+        *  @return
+        *    Executive device
+        */
+        virtual ExecutiveDevice* getExecutiveBody(ExecutiveDevicePartType ptype) = 0;
     };
 
 

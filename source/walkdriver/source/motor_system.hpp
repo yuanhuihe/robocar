@@ -21,7 +21,7 @@ namespace WalkDriver
 
         }
 
-        ExecutiveDevice* enumFirstExecutiveBody()
+        virtual ExecutiveDevice* enumFirstExecutiveBody()
         {
             resetDevices();
 
@@ -42,7 +42,7 @@ namespace WalkDriver
             return nullptr;
         }
 
-        ExecutiveDevice* enumNextExecutiveBody()
+        virtual ExecutiveDevice* enumNextExecutiveBody()
         {
             enumPos++;
             if(enumPos<eDevs.size())
@@ -53,6 +53,18 @@ namespace WalkDriver
             {
                 return nullptr;
             }
+        }
+
+        virtual ExecutiveDevice* getExecutiveBody(ExecutiveDevicePartType ptype)
+        {
+            for (auto& item : eDevs)
+            {
+                if (item->getPartType() == ptype)
+                {
+                    return item;
+                }
+            }
+            return nullptr;
         }
 
     private:

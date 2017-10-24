@@ -14,6 +14,9 @@ namespace WalkDriver
         }
         DCMotor(DEV_INFO devInfo)
         {
+            type = (ExecutiveDeviceType)devInfo.dev_type;
+            ptype = (ExecutiveDevicePartType)devInfo.part_type;
+
             controller = new DCMotorController();
             controller->setGPIOMap(devInfo);
         }
@@ -26,6 +29,11 @@ namespace WalkDriver
         virtual ExecutiveDeviceType getType()
         {
             return type;
+        }
+
+        virtual ExecutiveDevicePartType getPartType()
+        {
+            return ptype;
         }
         
         virtual bool avaliable()
@@ -71,6 +79,7 @@ namespace WalkDriver
 
     protected:
         ExecutiveDeviceType type = EDT_DC_Motor;
+        ExecutiveDevicePartType ptype = EDPT_Unknown;
         ExecutiveController* controller;
 
         void moveFoward()

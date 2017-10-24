@@ -27,7 +27,12 @@ namespace WalkDriver
 
         virtual int setGPIOMap(DEV_INFO devInfo)
         {
-            memcpy(pin_gpio_map, devInfo.ctrl.pin_gpio_map, sizeof(pin_gpio_map));
+            memset(pin_map, -1, sizeof(pin_map));
+            for (int i = 0; i < devInfo.ctrl.pin_count; i++)
+            {
+                pin_map[i] = devInfo.ctrl.pin_map[i];
+            }
+
             return 0;
         }
         
@@ -35,15 +40,15 @@ namespace WalkDriver
         {
             if(avaliable())
             {
-                int gpio_id = pin_gpio_map[index];
-                return GPIORW::GPIOWrite(gpio_id, lvl);
+                int pin_id = pin_map[index];
+                return GPIORW::GPIOWrite(pin_id, lvl);
             }
                 
             return -1;
         }
 
     private:
-        int pin_gpio_map[MAX_PINS];
+        int pin_map[MAX_PINS];
     };
     
 

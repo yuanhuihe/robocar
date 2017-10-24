@@ -18,15 +18,20 @@ namespace WalkDriver
 
         }
 
-        ExecutiveDevice* enumFirstExecutiveBody()
+        virtual ExecutiveDevice* enumFirstExecutiveBody()
         {
 
             return nullptr;
         }
 
-        ExecutiveDevice* enumNextExecutiveBody()
+        virtual ExecutiveDevice* enumNextExecutiveBody()
         {
 
+            return nullptr;
+        }
+
+        virtual ExecutiveDevice* getExecutiveBody(ExecutiveDevicePartType ptype)
+        {
             return nullptr;
         }
 
