@@ -117,6 +117,7 @@ std::string get_curr_dir()
 
 std::wstring str2wstr(char* str)
 {
+    #if 0
     if (str == nullptr) return std::wstring();
 
     size_t len = strlen(str) + 1;
@@ -129,6 +130,8 @@ std::wstring str2wstr(char* str)
     free(wstr);
 
     return w;
+    #endif
+    return std::wstring();
 }
 
 std::string wstr2str(wchar_t* wStr)

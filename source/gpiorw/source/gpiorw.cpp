@@ -16,7 +16,7 @@
 namespace GPIORW
 {
     GPIOFunctionType maptype = GFT_WiringPi;
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
     gpio_base* gpio = new WiringPiGPIO();
 #else
     gpio_base* gpio = new Win32DebugGpio();
@@ -25,7 +25,7 @@ namespace GPIORW
 
     GPIORW_API void GPIOLibInit(GPIOFunctionType type)
     {
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
         if (maptype != type)
         {
             delete gpio;
