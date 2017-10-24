@@ -59,12 +59,21 @@ target_include_directories(${target}
 # Libraries
 # 
 
-target_link_libraries(${target}
-    PRIVATE
-        ${DEFAULT_LIBRARIES}
-        ${META_PROJECT_NAME}::gpiorw
-		-lwiringPi
-    )
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_link_libraries(${target}
+        PRIVATE
+            ${DEFAULT_LIBRARIES}
+            ${META_PROJECT_NAME}::gpiorw
+        )
+else ()
+    target_link_libraries(${target}
+        PRIVATE
+            ${DEFAULT_LIBRARIES}
+            ${META_PROJECT_NAME}::gpiorw
+            -lwiringPi
+        )
+endif ()
+
 
 # 
 # Compile definitions

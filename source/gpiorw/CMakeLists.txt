@@ -126,21 +126,31 @@ target_include_directories(${target}
 # 
 # Libraries
 # 
-	
-target_link_libraries(${target}
-    PRIVATE
-		-lwiringPi
-		-pthread
-		-lm
-        -lrt          # shm_open
-        -lcrypt       # crypt
-		
-    PUBLIC
-        ${DEFAULT_LIBRARIES}
 
-    INTERFACE
-)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_link_libraries(${target}
+        PRIVATE
+            
+        PUBLIC
+            ${DEFAULT_LIBRARIES}
 
+        INTERFACE
+    )
+else ()
+    target_link_libraries(${target}
+        PRIVATE
+            -lwiringPi
+            -pthread
+            -lm
+            -lrt          # shm_open
+            -lcrypt       # crypt
+            
+        PUBLIC
+            ${DEFAULT_LIBRARIES}
+
+        INTERFACE
+    )
+endif ()
 
 # 
 # Compile definitions
@@ -165,7 +175,7 @@ target_compile_options(${target}
     PRIVATE
 		-Wall
 		-pipe
-		-O3
+        
     PUBLIC
     	${DEFAULT_COMPILE_OPTIONS}
 

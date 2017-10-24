@@ -81,19 +81,28 @@ target_include_directories(${target}
 # 
 # Libraries
 # 
-
-target_link_libraries(${target}
-    PRIVATE
-		-lwiringPi
-		-pthread
-		-lm
-        -lrt          # shm_open
-        -lcrypt       # crypt
-        ${DEFAULT_LIBRARIES}
-        ${META_PROJECT_NAME}::fiblib
-        ${META_PROJECT_NAME}::baselib
-        ${META_PROJECT_NAME}::walkdriver
-    )
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_link_libraries(${target}
+        PRIVATE
+            ${DEFAULT_LIBRARIES}
+            ${META_PROJECT_NAME}::fiblib
+            ${META_PROJECT_NAME}::baselib
+            ${META_PROJECT_NAME}::walkdriver
+        )
+else ()
+    target_link_libraries(${target}
+        PRIVATE
+            -lwiringPi
+            -pthread
+            -lm
+            -lrt          # shm_open
+            -lcrypt       # crypt
+            ${DEFAULT_LIBRARIES}
+            ${META_PROJECT_NAME}::fiblib
+            ${META_PROJECT_NAME}::baselib
+            ${META_PROJECT_NAME}::walkdriver
+        )
+endif ()
 
 # 
 # Compile definitions
