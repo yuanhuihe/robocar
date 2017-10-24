@@ -80,9 +80,9 @@ namespace GPIORW
                 fprintf(stderr, "wiringPiSetup failed\n");
                 return 1;
             }
-			
-			fprintf(stderr, "wiringPiSetup successfully\n");
-			return 0;
+
+            fprintf(stderr, "wiringPiSetup successfully\n");
+            return 0;
         }
 
         virtual void Release()
@@ -125,7 +125,7 @@ namespace GPIORW
                 return -1;
             }
             // check pin map to wiring pi is avalible
-            if (PinToWiringPi[pin]==-1)
+            if (PinToWiringPi[pin] == -1)
             {
                 fprintf(stderr, "Pin '%d' WiringPi map failed\n", pin);
                 return -1;
@@ -133,10 +133,7 @@ namespace GPIORW
 
             return 0;
         }
-
-
     };
-
 
 } // namespace GPIORW
 
