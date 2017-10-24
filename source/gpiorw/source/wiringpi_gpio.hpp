@@ -31,7 +31,7 @@ namespace GPIORW
 
         virtual int Init()
         {
-            memset(PinToWiringPi, 0, sizeof(PinToWiringPi));
+            memset(PinToWiringPi, -1, sizeof(PinToWiringPi));
             //-----------Pin---wPiIO---Name------------------------------------------
             PinToWiringPi[0] = -1;  // Pin number is start from 1, 0 is not available
             PinToWiringPi[1] = -1;  // 3.3v DC Power
