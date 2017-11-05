@@ -5,19 +5,20 @@
 namespace WalkDriver
 {
     // Execute error types
-#define EET_OK                  0   // û�д���
-#define EET_UnknownAction           1   // δ֪��������
-#define EET_ActionNotSupport        2   // ָ���Ķ�����֧��
+#define EET_OK                      0   // No error
+#define EET_UnknownAction           1   // Unknown moving command
+#define EET_ActionNotSupport        2   // Not supported moving command
 
-    // ��������
+    // Chassis type
     enum ChassisType
     {
         CT_Unknown = 0,
-        CT_MotorSystem,
-        CT_FootWalkSystem,
+        CT_MotorSystem,                 // 'MotorSystem.xml' config will be loaded at start
+        CT_FootWalkSystem,              // 'FootWalkSystem.xml' config will be loaded at start
+        CT_CaterpillarSystem,           // 'CaterpillarSystem.xml' config will be loaded at start
     };
     
-    // ִ�л�������
+    // Executive device type
     enum ExecutiveDeviceType
     {
         EDT_Unknown = 0,
@@ -26,7 +27,7 @@ namespace WalkDriver
         EDT_Steering_Gear,
     };
     
-    // ִ�л�������
+    // Where is the executive device set on
     enum ExecutiveDevicePartType
     {
         EDPT_Unknown = 0,
@@ -53,7 +54,7 @@ namespace WalkDriver
         EDPT_RightBackWheel,
     };
 
-    // �ƶ�����
+    // Moving type
     enum MoveType
     {
         MT_Unknown = 0,
@@ -65,7 +66,7 @@ namespace WalkDriver
         MT_BackRigh,
     };
 
-    // �ƶ��ٶ�
+    // Moving speed
     enum MoveSpeed
     {
         SL_Stop,
