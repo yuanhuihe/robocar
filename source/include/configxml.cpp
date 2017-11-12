@@ -154,7 +154,7 @@ bool config::get_actions(std::vector<sActionConfig>& actions)
 {
     if (!xml_res)
     {
-        print_error(__LINE__, "get load xml status error when get_walk_device");
+        print_error(__LINE__, "get load xml status error");
         return false;
     }
     pugi::xml_node _node = get_path_node("executive/actions/action");
