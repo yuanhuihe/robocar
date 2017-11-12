@@ -9,33 +9,26 @@
 #include <string>       // std::string
 #include <string.h>     // memxxx/strlen()
 
-#include <walkdriver/walkdriver.h>
+#include <executive/executive.h>
 
-std::tuple<int, std::string, std::string> actionMap[]
-{
-    std::make_tuple(0, "stop", "Stop"),
-    std::make_tuple(1, "foreward", "Move Foreward"),
-    std::make_tuple(2, "leftward", "Move Leftward"),
-    std::make_tuple(3, "rightward", "Move Rightward"),
-    std::make_tuple(4, "backward", "Move Backward"),
-    std::make_tuple(5, "tips", "Tips" ),
-    std::make_tuple(6, "exit", "Exit this program"),
-};
-
-void showTips()
+void showTips(std::vector<Driver::Action*>& actlist)
 {
     std::cout << "Input definitions:" << std::endl;
-    for(auto item: actionMap)
+    std::cout << " -- " << "q" << ": " << "exit this app" << std::endl;
+    std::cout << " -- " << "s" << ": " << "show this tips" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Actions:" << std::endl;
+    for(int i=0; i<actlist.size(); i++)
     {
-        int code = std::get<0>(item);
-        std::string action = std::get<2>(item);
-        std::cout << " -- " << code << ": " << action << std::endl;
+        std::string action = actlist[i]->getName();
+        std::cout << " -- " << i << ": " << action << std::endl;
     }
+    std::cout << std::endl;
 }
 
 void tInputCtrlThead(int& inputCode)
 {
-    while (inputCode != 6)
+    while (inputCode != 'q')
     {
         char strInput[100];
         memset(strInput, 0, sizeof(strInput));
@@ -43,110 +36,55 @@ void tInputCtrlThead(int& inputCode)
         fgets (strInput, 100, stdin);
         int s = strlen(strInput);
         if (s > 0) strInput[s - 1] = 0;
-
-        bool bOK = false;
-        for (auto act : actionMap)
-        {
-            int code = atoi(strInput);
-            if (code == std::get<0>(act) || strcmp(strInput, std::get<1>(act).c_str()) == 0)
-            {
-                inputCode = std::get<0>(act);
-                bOK = true;
-                //std::cout << std::get<2>(act) << std::endl;                
-                break;
-            }
-        }
-
-        if (!bOK)
-        {
-            std::cout << "Input error" << std::endl;
-        }
+        inputCode = atoi(strInput);
     }
-}
-
-void actionMoveForeward(std::vector<WalkDriver::ExecutiveDevice*>& motorList)
-{
-    std::cout << std::endl << "Running Move foreward: " << std::endl;
-    for(auto mot : motorList)
-    {
-        mot->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Normal);
-    }
-    std::cout << "Down " << std::endl;
-}
-void actionMoveLeftward(std::vector<WalkDriver::ExecutiveDevice*>& motorList)
-{
-    std::cout << std::endl << "Running Move leftward: " << std::endl;
-    for(int i=0; i<motorList.size(); i++)
-    {
-        motorList[i]->execute(WalkDriver::MT_MoveForward, i != 0 ? WalkDriver::SL_Normal : WalkDriver::SL_Stop);
-    }
-    std::cout << "Down " << std::endl;
-}
-void actionMoveRightward(std::vector<WalkDriver::ExecutiveDevice*>& motorList)
-{
-    std::cout << std::endl << "Running Move rightward: " << std::endl;
-    for (int i = 0; i<motorList.size(); i++)
-    {
-        motorList[i]->execute(WalkDriver::MT_MoveForward, i != 1 ? WalkDriver::SL_Normal : WalkDriver::SL_Stop);
-    }
-    std::cout << "Down " << std::endl;
-}
-void actionMoveBackward(std::vector<WalkDriver::ExecutiveDevice*>& motorList)
-{
-    std::cout << std::endl << "Running Move leftward: " << std::endl;
-    for (int i = 0; i<motorList.size(); i++)
-    {
-        motorList[i]->execute(WalkDriver::MT_MoveBackward, WalkDriver::SL_Normal);
-    }
-    std::cout << "Down " << std::endl;
-}
-void actionMoveStop(std::vector<WalkDriver::ExecutiveDevice*>& motorList)
-{
-    std::cout << std::endl << "Running Action 'Stop': " << std::endl;
-    for (int i = 1; i<motorList.size(); i++)
-    {
-        motorList[i]->execute(WalkDriver::MT_MoveForward, WalkDriver::SL_Stop);
-    }
-    std::cout << "Down " << std::endl;
 }
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-    // Calculate and print fibonacci number
     std::cout << "           robocar application          " << std::endl;
     std::cout << "========================================" << std::endl;
-
-    showTips();
 
     // time start
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
     // get system instance
-    WalkDriver::WalkSystem* wsys = WalkDriver::WalkSystem::InitSystem(WalkDriver::CT_MotorSystem);
+    Driver::ExecutiveSystem* eSys = Driver::ExecutiveSystem::InitSystem();
     
-    // device list
-    std::vector<WalkDriver::ExecutiveDevice*> motorList;
+    // action list
+    std::vector<Driver::Action*> actionList;
     
-    // Enum executivable devices
-    WalkDriver::ExecutiveDevice* motor = wsys->enumFirstExecutiveBody();
-    while (motor)
+    // Enum actions
+    Driver::Action* action = eSys->enumFirstAction();
+    while (action)
     {
-        motorList.push_back(motor);
+        // save to list
+        actionList.push_back(action);
 
-        // next device
-        motor = wsys->enumNextExecutiveBody();
+        // next action
+        action = eSys->enumNextAction();
     }
-    std::cout << "There are " << motorList.size() << " motors to be used to controlling" << std::endl;
 
-    if(motorList.size()==0)
+    if(actionList.size()==0)
     {
-        WalkDriver::WalkSystem::ReleaseSystem(&wsys);
+        Driver::ExecutiveSystem::ReleaseSystem(&eSys);
         std::cout << "No executable device" << std::endl;
         return -1;
     }
 
+    showTips(actionList);
+
+    std::cout << "There are " << actionList.size() << " actions to be used" << std::endl;
+
     // reset motors
-    actionMoveStop(motorList);
+    for(auto act:actionList)
+    {
+        if(act->getType()==Driver::AT_Ready)
+        {
+            act->execute(0);
+            break;
+        }
+    }
 
     // controlling by console inputs
     int preInput = 0;
@@ -164,33 +102,40 @@ int main(int /*argc*/, char* /*argv*/[])
         }
 
         // execute action
-        switch(inputCode)
+        if(inputCode>0 && inputCode<actionList.size())
         {
-            case 0: actionMoveStop(motorList); break;
-            case 1: actionMoveForeward(motorList); break;
-            case 2: actionMoveLeftward(motorList); break;
-            case 3: actionMoveRightward(motorList); break;
-            case 4: actionMoveBackward(motorList); break;
-            case 5: showTips(); break;
-            case 6: bRunning = false; break;
-            default: break;
+            actionList[inputCode]->execute(10);
+        }
+        else if(inputCode=='q')
+        {
+            break;
+        }
+        else
+        {
+            std::cout << "Input error" << std::endl;
         }
 
         // update input
         preInput = inputCode;
     }
 
+    // reset motors
+    for(auto act:actionList)
+    {
+        if(act->getType()==Driver::AT_Ready)
+        {
+            act->execute(0);
+            break;
+        }
+    }
+
+    // release system
+    Driver::ExecutiveSystem::ReleaseSystem(&eSys);
+
     // time end
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::chrono::duration<double, std::milli> elapsed = end-start;
     std::cout << "runtime " << elapsed.count() << " ms\n";
-
-    tInputCtrlObj.join();
-
-    // reset motors
-    actionMoveStop(motorList);
-
-    WalkDriver::WalkSystem::ReleaseSystem(&wsys);
 
     return 0;
 }

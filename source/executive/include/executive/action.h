@@ -36,6 +36,15 @@ namespace Driver
         
         /**
         *  @brief
+        *    Get action
+        *
+        *  @return
+        *    Name of this action
+        */
+        virtual char* getName() = 0;
+        
+        /**
+        *  @brief
         *    Do work
         *
         *  @return

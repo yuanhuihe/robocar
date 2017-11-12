@@ -25,6 +25,11 @@ namespace Driver
         {
             return (ActionType)cfg.type;
         }
+
+        virtual char* getName()
+        {
+            return cfg.name;
+        }
         
         virtual unsigned int execute(SpeedPercent speed)
         {
