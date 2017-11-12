@@ -4,7 +4,7 @@
 #include "pugixml/pugixml.hpp"
 #include "pugixml/pugiconfig.hpp"
 #include "spdlog/spdlog.h"
-#include "xml_define.h"
+#include "configdef.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -17,17 +17,8 @@
 typedef  pugi::xml_node        pxml_node;
 typedef  pugi::xpath_node_set  pxpath_set;
 
-namespace xmlbus
+namespace ConfigInfo
 {
-// xml type enum
-typedef enum XML_TYPE_
-{
-    UNTYPE      = 0,
-    WALK_SYSTEM = 1,
-    APP_CONFIG  = 2,
-    SYN_CONFIG  = 3,
-}xmlType_;
-
 // string to any type(int, float...)
 template <class Type>
 Type stringToNum(const std::string& str)
@@ -161,21 +152,19 @@ public:
             pugi::xml_node base_node;
             switch (m_Xtype)
             {
-            case xmlType_::WALK_SYSTEM:
             case xmlType_::APP_CONFIG:
+                base_node = new_doc.append_child(HEAD_CFG);
+                base_node.append_attribute("version").set_value(CFG_VERSION);
+                base_node.append_attribute("name").set_value(NAME_VERSION);
+            break;
+            case xmlType_::DRIVER_ACTION:
             {
                 // head : <xml><alice ...>
-                base_node = new_doc.append_child(HEAD_SVR);
-                base_node.append_attribute("version").set_value(XMLBUS_VERSION);
-                base_node.append_attribute("number").set_value(NUMBER_VERSION);
+                base_node = new_doc.append_child(HEAD_EXE);
+                base_node.append_attribute("version").set_value(EXE_VERSION);
                 base_node.append_attribute("name").set_value(NAME_VERSION);
-            }break;
-            case xmlType_::SYN_CONFIG:
-            {
-                // head : <xml><configuration ...>
-                base_node = new_doc.append_child("configuration");
-                new_doc.append_attribute("version") = "19";
-            }break;
+            }
+            break;
             default:
                 base_node = new_doc.append_child("xml");
             }
@@ -405,33 +394,32 @@ public:
         pugi::xml_node base_node;
         switch (m_Xtype)
         {
-        case xmlType_::WALK_SYSTEM:
         case xmlType_::APP_CONFIG:
         {
-            // head : <xml><alice ...>
-            // goto => /alice , if not exist create it.
-            base_node = xml_doc.child(HEAD_SVR);
+            // if not exists, create it.
+            base_node = xml_doc.child(HEAD_CFG);
             if (!base_node)
             {
-                base_node = xml_doc.append_child(HEAD_SVR);
-                base_node.append_attribute("version").set_value(XMLBUS_VERSION);
-                base_node.append_attribute("number").set_value(NUMBER_VERSION);
+                base_node = xml_doc.append_child(HEAD_CFG);
+                base_node.append_attribute("version").set_value(CFG_VERSION);
                 base_node.append_attribute("name").set_value(NAME_VERSION);
             }
             return base_node;
-        }break;
-        case xmlType_::SYN_CONFIG:
+        }
+        break;
+        case xmlType_::DRIVER_ACTION:
         {
-            // head : <xml><configuration ...>
-            // goto => /configuration , if not exist create it.
-            base_node = xml_doc.child("configuration");
+            // if not exists, create it.
+            base_node = xml_doc.child(HEAD_EXE);
             if (!base_node)
             {
-                base_node = xml_doc.append_child("configuration");
-                base_node.append_attribute("version") = "19";
+                base_node = xml_doc.append_child(HEAD_CFG);
+                base_node.append_attribute("version").set_value(EXE_VERSION);
+                base_node.append_attribute("name").set_value(NAME_VERSION);
             }
             return base_node;
-        }break;
+        }
+        break;
         default:
             base_node = xml_doc.child("xml");
         }
@@ -450,7 +438,8 @@ public:
 
         // goto => /root/... , if not exist create it.
         pugi::xml_node child_node = base_node.child(child_name.c_str());
-        if (!child_node) child_node = base_node.append_child(child_name.c_str());
+        if (!child_node)
+            child_node = base_node.append_child(child_name.c_str());
 
         return child_node;
     }
@@ -464,14 +453,19 @@ public:
         pugi::xml_node base_node;
         switch (m_Xtype)
         {
-        case xmlType_::WALK_SYSTEM:
         case xmlType_::APP_CONFIG:
         {
-            // head : <xml><alice ...>
-            base_node = xml_doc.child(HEAD_SVR);
-        }break;
+            base_node = xml_doc.child(HEAD_CFG);
+        }
+        break;
+        case xmlType_::DRIVER_ACTION:
+        {
+            base_node = xml_doc.child(HEAD_EXE);
+        }
+        break;
         default:
             base_node = xml_doc.child("xml");
+            break;
         }
 
         if (!base_node)
@@ -490,11 +484,16 @@ public:
         pugi::xml_node base_node;
         switch (m_Xtype)
         {
-        case xmlType_::WALK_SYSTEM:
         case xmlType_::APP_CONFIG:
         {
             // head : <xml><alice ...>
-            base_node = xml_doc.child(HEAD_SVR);
+            base_node = xml_doc.child(HEAD_CFG);
+        }
+        break;
+        case xmlType_::DRIVER_ACTION:
+        {
+            // head : <xml><alice ...>
+            base_node = xml_doc.child(HEAD_EXE);
         }break;
         default:
             base_node = xml_doc.child("xml");
@@ -516,12 +515,16 @@ public:
         pugi::xml_node base_node;
         switch (m_Xtype)
         {
-        case xmlType_::WALK_SYSTEM:
         case xmlType_::APP_CONFIG:
         {
-            // head : <xml><alice ...>
-            base_node = xml_doc.child(HEAD_SVR);
-        }break;
+            base_node = xml_doc.child(HEAD_CFG);
+        }
+        break;
+        case xmlType_::DRIVER_ACTION:
+        {
+            base_node = xml_doc.child(HEAD_EXE);
+        }
+        break;
         default:
             base_node = xml_doc.child("xml");
         }
@@ -544,17 +547,13 @@ protected:
         {
             return std::string("unknown");
         }
-        case xmlType_::WALK_SYSTEM:
+        case xmlType_::DRIVER_ACTION:
         {
-            return std::string("WALK_SYSTEM_CFG");
+            return std::string("DRIVER_ACTION");
         }
         case xmlType_::APP_CONFIG:
         {
             return std::string("App_Config");
-        }
-        case xmlType_::SYN_CONFIG:
-        {
-            return std::string("Robo-Sync");
         }
         default:
             return std::string("unknown");
@@ -792,6 +791,6 @@ protected:
     }
 
 };
-}
+} // !ConfigInfo
 
 #endif // XML_PARSER_HPP_

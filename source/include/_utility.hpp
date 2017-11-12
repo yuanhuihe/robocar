@@ -11,6 +11,7 @@
 #include <atomic>
 #include <functional>
 #include <sys/types.h>
+
 #if WIN32 
 #include <Winbase.h>            // GetModuleFileNameA
 #include <io.h>  
@@ -24,6 +25,13 @@
 #include <limits.h>
 #include <stdio.h>
 
+
+#define SafeDelete(p)  if (p != nullptr) { delete p; p = nullptr; }
+#define SafeDeletes(p) if (p != nullptr) { delete [] p; p = nullptr; }
+#define SafeFree(p)  if (p != nullptr) { free(p); p = nullptr; }
+#define SafeCloseThread(p1, p2) if (p1 != nullptr) { p2 = false; p1->join(); delete p1; p1 = nullptr; }
+#define SafeCloseHandle(p) if (p != nullptr) { CloseHandle(p); p = nullptr; }
+#define SafeCloseFile(p) if(p != NULL) { fclose(p); p = NULL;}
 
 
 inline bool ends_with(std::string const & value, std::string const & ending)

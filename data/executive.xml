@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executive version="1.0" name="executive">
+	<actions>
+		<action>
+			<type>1</dev_type>
+			<name>AT_Ready</name>
+      		<speed_percent>0</speed_percent>
+			<control>
+				<gpio pin="37" value="0"/>
+				<gpio pin="35" value="0"/>
+				<gpio pin="33" value="0"/>
+				<gpio pin="31" value="0"/>
+			</control>
+			<log>
+				<filename>gpio_ctrl_flow</filename>
+				<level>0</level>
+			</log>
+		</action>
+		<action>
+			<type>2</dev_type>
+			<name>AT_MoveForward</name>
+      		<speed_percent>10</speed_percent>
+			<control>
+				<gpio pin="37" value="1"/>
+				<gpio pin="35" value="1"/>
+			</control>
+			<log>
+				<filename>gpio_ctrl_flow</filename>
+				<level>0</level>
+			</log>
+		</action>
+	</actions>
+</executive>

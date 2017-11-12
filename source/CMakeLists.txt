@@ -23,10 +23,9 @@ endif(WIN32)
 
 # Libraries
 set(IDE_FOLDER "DLL")
-add_subdirectory(baselib)
 add_subdirectory(fiblib)
 add_subdirectory(gpiorw)
-add_subdirectory(walkdriver)
+add_subdirectory(executive)
 
 
 # App

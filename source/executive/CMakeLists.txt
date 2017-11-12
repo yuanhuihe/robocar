@@ -11,7 +11,7 @@
 # 
 
 # Target name
-set(target walkdriver)
+set(target executive)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")

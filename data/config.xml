@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<walkdevice version="3.0" number="1024" name="Panda">
+<config version="3.0" number="1024" name="Panda">
 	<properties>
 		<language>zh</language>
 		<console>true</console>
-		<rootpath>C:\</rootpath>
+		<rootpath></rootpath>
 		<remote>
 			<exepath />
 		</remote>
@@ -21,65 +21,4 @@
 			<APPstartStopButton>1</APPstartStopButton>
 		</ui>
 	</properties>
-	<executives>
-		<dev>
-			<id>0</id>
-			<name>left_front</name>
-			<dev_type>1</dev_type>
-			<controller>
-				<pins>
-					<pin index="0" gpio="37"/>
-					<pin index="1" gpio="35"/>
-				</pins>
-			</controller>
-			<log>
-				<filename>left_front_motor</filename>
-				<level>0</level>
-			</log>
-		</dev>
-		<dev>
-			<id>1</id>
-			<name>right_front</name>
-			<dev_type>1</dev_type>
-			<controller>
-				<pins>
-					<pin index="2" gpio="33"/>
-					<pin index="3" gpio="31"/>
-				</pins>
-			</controller>
-			<log>
-				<filename>right_front_motor</filename>
-				<level>0</level>
-			</log>
-		</dev>
-		<dev>
-			<id>2</id>
-			<name>left_back</name>
-			<dev_type>1</dev_type>
-			<controller>
-				<pins>
-					<pin index="0" gpio="15"/>
-					<pin index="1" gpio="13"/>
-				</pins>
-			</controller>
-			<log>
-				<filename>left_back_motor</filename>
-				<level>0</level>
-			</log>
-		</dev>
-			<id>3</id>
-			<name>right_back</name>
-			<dev_type>1</dev_type>
-			<controller>
-				<pins>
-					<pin index="2" gpio="11"/>
-					<pin index="3" gpio="12"/>
-				</pins>
-			</controller>
-			<log>
-				<filename>right_back_motor</filename>
-				<level>0</level>
-			</log>
-		</dev>
-	</executives>
-</walkdevice>
+</config>

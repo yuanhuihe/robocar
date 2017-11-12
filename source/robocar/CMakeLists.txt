@@ -86,8 +86,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darw
         PRIVATE
             ${DEFAULT_LIBRARIES}
             ${META_PROJECT_NAME}::fiblib
-            ${META_PROJECT_NAME}::baselib
-            ${META_PROJECT_NAME}::walkdriver
+            ${META_PROJECT_NAME}::executive
         )
 else ()
     target_link_libraries(${target}
@@ -100,7 +99,7 @@ else ()
             ${DEFAULT_LIBRARIES}
             ${META_PROJECT_NAME}::fiblib
             ${META_PROJECT_NAME}::baselib
-            ${META_PROJECT_NAME}::walkdriver
+            ${META_PROJECT_NAME}::executive
         )
 endif ()
 

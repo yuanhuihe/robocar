@@ -3,12 +3,10 @@
 
 #include <string>
 
-#include "global.hpp"
-#include "xml_define.h"
 #include "xml_parser.hpp"
-#include "config_def.hpp"
+#include "configdef.hpp"
 
-namespace xmlbus
+namespace ConfigInfo
 {
 
 class config : public XML_Helper
@@ -18,21 +16,17 @@ public:
     ~config();
 
     // GET =========================================================================================
-    CFG_BROKER get_broker_cfg();                                // get broker
-    CFG_LICENSE get_license_cfg();                              // get license
     std::string get_language_cfg();                             // get language
     bool getConsoleStatus();                                    // get console status
     std::string getRootPath();                                  // get root path
 
-    bool get_walk_device(std::vector<DEV_INFO>& devs);
+    bool get_actions(std::vector<sActionConfig>& actions);
 
     // SET =========================================================================================
-    bool set_broker_cfg(CFG_BROKER& broker);                    // if exist modify broker, else add broker
-    bool set_license_cfg(CFG_LICENSE& license);                 // if exist modify license, el se add license
     bool set_language_cfg(std::string value);                   // set/add language
     bool setConsoleStatus(bool status);                         // set/add console status
     bool setRootPath(std::string path);                         // set/add root path
 };
 
-}
+} // !namespace ConfigInfo
 #endif  // CONFIG_XML_H_

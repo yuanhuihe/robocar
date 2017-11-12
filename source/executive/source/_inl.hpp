@@ -24,3 +24,8 @@
 //    { CT_MotorSystem,"MotorSystem.xml" },
 //    { CT_FootWalkSystem,"FootWalkSystem.xml" }
 //};
+
+struct sActionConfig
+{
+
+};
