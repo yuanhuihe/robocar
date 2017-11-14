@@ -36,7 +36,18 @@ void tInputCtrlThead(int& inputCode)
         fgets (strInput, 100, stdin);
         int s = strlen(strInput);
         if (s > 0) strInput[s - 1] = 0;
-        inputCode = atoi(strInput);
+
+        // try convert to number
+        int numb = atoi(strInput);
+        if(0 == numb && strInput[0] != '0')
+        {
+            // it is a char
+            inputCode = strInput[0];
+        }
+        else
+        {
+            inputCode = numb;
+        }
     }
 }
 
@@ -102,9 +113,13 @@ int main(int /*argc*/, char* /*argv*/[])
         }
 
         // execute action
-        if(inputCode>0 && inputCode<actionList.size())
+        if(inputCode>=0 && inputCode<actionList.size())
         {
             actionList[inputCode]->execute(10);
+        }
+        else if(inputCode=='s')
+        {
+            showTips(actionList);
         }
         else if(inputCode=='q')
         {
@@ -131,6 +146,8 @@ int main(int /*argc*/, char* /*argv*/[])
 
     // release system
     Driver::ExecutiveSystem::ReleaseSystem(&eSys);
+
+    tInputCtrlObj.join();
 
     // time end
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
