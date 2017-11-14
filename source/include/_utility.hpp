@@ -25,7 +25,6 @@
 #include <limits.h>
 #include <stdio.h>
 
-
 #define SafeDelete(p)  if (p != nullptr) { delete p; p = nullptr; }
 #define SafeDeletes(p) if (p != nullptr) { delete [] p; p = nullptr; }
 #define SafeFree(p)  if (p != nullptr) { free(p); p = nullptr; }
@@ -110,6 +109,7 @@ std::string get_curr_dir()
         i--;
     }
 #else
+
     if (!getcwd(path, PATH_MAX))
     {
         perror("getcwd");
@@ -117,6 +117,7 @@ std::string get_curr_dir()
     else
     {
         strncat(path, "/", PATH_MAX);
+        std::cout << path << std::endl;
     }
 #endif
 

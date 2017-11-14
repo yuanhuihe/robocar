@@ -2,9 +2,9 @@
 <executive version="1.0" name="executive">
 	<actions>
 		<action>
-			<type>1</dev_type>
+			<type>1</type>
 			<name>AT_Ready</name>
-      		<speed_percent>0</speed_percent>
+	  		<speed_percent>0</speed_percent>
 			<control>
 				<gpio pin="37" value="0"/>
 				<gpio pin="35" value="0"/>
@@ -17,9 +17,9 @@
 			</log>
 		</action>
 		<action>
-			<type>2</dev_type>
+			<type>2</type>
 			<name>AT_MoveForward</name>
-      		<speed_percent>10</speed_percent>
+	  		<speed_percent>10</speed_percent>
 			<control>
 				<gpio pin="37" value="1"/>
 				<gpio pin="35" value="1"/>

@@ -10,9 +10,6 @@ namespace Driver
     class ActionImpl: public Action
     {
     public:
-        ActionImpl()
-        {
-        }
         ActionImpl(sActionConfig cfgAct)
         {
             cfg = cfgAct;

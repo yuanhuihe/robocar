@@ -27,6 +27,7 @@ namespace Driver
             enumPos = 0;
             cfgActions.clear();
 
+            // firstly reset system
             for(auto& act: Actions)
             {
                 ActionType type = act->getType();
@@ -39,14 +40,14 @@ namespace Driver
             }
             Actions.clear();
 
+            // read action config
             std::string file = get_curr_dir() + "executive.xml";
             std::cout << file << std::endl;
             cfg.load_xml(file);
             cfg.get_actions(cfgActions);
             for(auto act : cfgActions)
             {
-                cfgActions[enumPos];
-                Action* action = new ActionImpl();
+                Action* action = new ActionImpl(act);
                 Actions.push_back(action);
             }
 
