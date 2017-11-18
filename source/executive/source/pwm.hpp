@@ -14,6 +14,7 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
+#include <string.h>
 #include <gpiorw/gpiorw.h>
 
 using namespace ConfigInfo;
@@ -23,7 +24,7 @@ namespace Driver
     class PWM
     {
     public:
-        PWM(sGpioCtrl* gpi0_list, int count)
+        PWM(sGpioCtrl* gpio_list, int count)
         :bRunning(false)
         ,gpioCount(0)
         ,pwm_freq(100)
@@ -32,9 +33,9 @@ namespace Driver
         ,disable_time(0)
         ,tObj(nullptr)
         {
-            gpioCount = std::min(count,MAX_GPIO_PINS);
+            gpio_cunt = std::min(count,MAX_GPIO_PINS);
             memset(ctrls, 0, sizeof(ctrls));
-            memcpy(ctrls, gpio_list, sizeof(sGpioCtrl)*gpioCount);
+            memcpy(ctrls, gpio_list, sizeof(sGpioCtrl)*gpio_cunt);
         }
         virtual ~PWM()
         {
@@ -88,7 +89,7 @@ namespace Driver
         int speed;
         int pwm_freq;
 
-        int gpioCount;
+        int gpio_cunt;
         sGpioCtrl ctrls[MAX_GPIO_PINS];
         std::thread* tObj; 
         std::atomic<int> enable_time; 
@@ -119,14 +120,14 @@ namespace Driver
         }
         void gpio_enable()
         {
-            for(int i=0; i<gpioCount; i++)
+            for(int i=0; i<gpio_cunt; i++)
             {
                 GPIORW::GPIOWrite(ctrls[i].pin, ctrls[i].value);
             }
         }
         void gpio_disable()
         {
-            for(int i=0; i<gpioCount; i++)
+            for(int i=0; i<gpio_cunt; i++)
             {
                 GPIORW::GPIOWrite(ctrls[i].pin, 0);
             }
