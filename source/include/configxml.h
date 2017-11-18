@@ -1,8 +1,6 @@
 #ifndef CONFIG_XML_H_
 #define CONFIG_XML_H_
 
-#include <string>
-
 #include "xml_parser.hpp"
 #include "configdef.hpp"
 
@@ -23,7 +21,7 @@ public:
     bool get_actions(std::vector<sActionConfig>& actions);
 
     // SET =========================================================================================
-    bool set_language_cfg(std::string value);                   // set/add language
+    bool set_language_cfg(char* value);                   // set/add language
     bool setConsoleStatus(bool status);                         // set/add console status
     bool setRootPath(std::string path);                         // set/add root path
 };

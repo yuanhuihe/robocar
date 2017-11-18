@@ -1,3 +1,15 @@
+/**
+* @brief
+*   Action implimentation file
+*
+* @author
+*   Yuanhui HE
+*
+* @Date
+*   2017.10.12
+*/
+#ifndef ACTION_IMPL_HPP_
+#define ACTION_IMPL_HPP_
 
 #include <executive/executive.h>
 #include "configdef.hpp"
@@ -41,9 +53,12 @@ namespace Driver
             }
             return EET_OK;
         }
+
     protected:
         sActionConfig cfg;
     };
     
 
 } // namespace Driver
+
+#endif //!ACTION_IMPL_HPP_

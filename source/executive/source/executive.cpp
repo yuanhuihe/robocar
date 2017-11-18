@@ -1,6 +1,14 @@
-
+/**
+* @brief
+*   Executive implimentation file
+*
+* @author
+*   Yuanhui HE
+*
+* @Date
+*   2017.10.12
+*/
 #include <executive/executive.h>
-
 #include <tuple>
 #include <string>
 #include <gpiorw/gpiorw.h>

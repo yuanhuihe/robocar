@@ -1,5 +1,15 @@
-
-#pragma once
+/**
+* @brief
+*   Executive aciton interface file
+*
+* @author
+*   Yuanhui HE
+*
+* @Date
+*   2017.11.12
+*/
+#ifndef ACTION_H_
+#define ACTION_H_
 
 #include <executive/executive_api.h>
 #include <executive/executive_def.h>
@@ -54,3 +64,5 @@ namespace Driver
     };
 
 } // namespace Driver
+
+#endif //!ACTION_H_

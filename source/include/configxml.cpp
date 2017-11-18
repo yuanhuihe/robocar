@@ -1,7 +1,7 @@
 #include "configxml.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+// #include <stdio.h>
+// #include <stdlib.h>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -42,7 +42,7 @@ std::string config::get_language_cfg()
  * @brief set/add language
  * @return set/add status
  */
-bool config::set_language_cfg(std::string value)
+bool config::set_language_cfg(char* value)
 {
     bool result = false;
     if (!xml_res)
@@ -52,7 +52,7 @@ bool config::set_language_cfg(std::string value)
     }
 
     pugi::xml_node language_node = gotoRootChildNode("language");
-    language_node.text().set(value.c_str());
+    language_node.text().set(value;
     result = true;
 
     return result;

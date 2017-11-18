@@ -1,4 +1,15 @@
-﻿#pragma once
+﻿/**
+* @brief
+*   Internel definitions file
+*
+* @author
+*   Yuanhui HE
+*
+* @Date
+*   2017.10.12
+*/
+#ifndef _INL_HPP_
+#define _INL_HPP_
 
 #include <string>
 #include <mutex>
@@ -29,3 +40,5 @@ struct sActionConfig
 {
 
 };
+
+#endif !_INL_HPP_

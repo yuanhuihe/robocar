@@ -1,5 +1,15 @@
-
-#pragma once
+/**
+* @brief
+*   Executive system implimentation file
+*
+* @author
+*   Yuanhui HE
+*
+* @Date
+*   2017.10.12
+*/
+#ifndef EXECUTIVESYSTEMIMPL_HPP_
+#define EXECUTIVESYSTEMIMPL_HPP_
 
 #include <executive/executive.h>
 #include "actionImpl.hpp"
@@ -78,3 +88,5 @@ namespace Driver
     };
 
 } // namespace Driver
+
+#endif //!EXECUTIVESYSTEMIMPL_HPP_

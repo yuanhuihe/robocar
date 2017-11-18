@@ -1,6 +1,15 @@
-
-#pragma once
-
+/**
+* @brief
+*   Executive interface definitions file
+*
+* @author
+*   Yuanhui HE
+*
+* @Date
+*   2017.10.12
+*/
+#ifndef EXECUTIVE_DEF_H_
+#define EXECUTIVE_DEF_H_
 
 namespace Driver
 {
@@ -29,6 +38,6 @@ typedef float SpeedPercent; // speed percent in range 0~100
 
 
 
-
-
 } // namespace Driver
+
+#endif //!EXECUTIVE_DEF_H_

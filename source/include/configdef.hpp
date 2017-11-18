@@ -20,11 +20,11 @@ namespace ConfigInfo
         UNTYPE
     };
 
-    typedef struct _gpio_ctrl
+    typedef struct _sGpioCtrl
     {
         int pin;
         int value;
-    }gpio_ctrl;
+    }sGpioCtrl;
 
     // Action configration
     typedef struct _sActionConfig
@@ -33,7 +33,7 @@ namespace ConfigInfo
         char name[64];  // action name
         float speed_percent;
         int ctrl_count;
-        gpio_ctrl ctrls[MAX_GPIO_PINS];
+        sGpioCtrl ctrls[MAX_GPIO_PINS];
     }sActionConfig;
 
 } // !namespace ConfigInfo

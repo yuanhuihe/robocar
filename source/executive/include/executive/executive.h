@@ -1,11 +1,19 @@
-
-#pragma once
-
+/**
+* @brief
+*   Executive interface file
+*
+* @author
+*   Yuanhui HE
+*
+* @Date
+*   2017.10.12
+*/
+#ifndef EXECUTIVE_H_
+#define EXECUTIVE_H_
 
 #include <executive/executive_api.h>
 #include <executive/executive_def.h>
 #include <executive/action.h>
-
 
 namespace Driver
 {
@@ -59,3 +67,5 @@ namespace Driver
 
 
 } // namespace Driver
+
+#endif //!EXECUTIVE_H_
