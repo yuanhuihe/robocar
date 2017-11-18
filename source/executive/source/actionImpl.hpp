@@ -24,7 +24,7 @@ namespace Driver
     {
     public:
         ActionImpl(sActionConfig cfgAct)
-        :pwm(cfgAct.ctrls, cfgAct.gpioCount)
+        :pwm(cfgAct.ctrls, cfgAct.ctrl_count)
         {
             cfg = cfgAct;
         }
