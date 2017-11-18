@@ -13,6 +13,7 @@
 
 #include <gpiorw/gpiorw.h>
 #include <atomic>
+#include <chrono>
 
 using namespace ConfigInfo;
 
@@ -36,6 +37,7 @@ namespace Driver
         }
         virtual ~PWM()
         {
+            stop();
         }
 
         void start()
@@ -75,6 +77,11 @@ namespace Driver
             return speed;
         }
 
+        bool isRunning()
+        {
+            return bRunning;
+        }
+
     protected:
         bool bRunning;
         int speed;
@@ -95,15 +102,18 @@ namespace Driver
             {
                 if(speed==0)
                 {
-                    usleep(300*1000);
+                    gpio_disable();
+                    std::this_thread::sleep_for(200ms);
                     continue;
                 }
             
+                // part of plus payload space
                 gpio_enable();
-                usleep(enable_time*1000);
+                std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(enable_time));
 
+                // part of plus of free space 
                 gpio_disable();
-                usleep(disable_time*1000);
+                std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(disable_time));
             }
         }
         void gpio_enable()

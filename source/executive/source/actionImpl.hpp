@@ -23,11 +23,17 @@ namespace Driver
     {
     public:
         ActionImpl(sActionConfig cfgAct)
+        :pwm(cfgAct.ctrls, cfgAct.gpioCount)
         {
             cfg = cfgAct;
         }
         virtual ~ActionImpl()
         {
+            if(pwm.isRunning())
+            {
+                pwm.setSpeed(0);
+                pwm.stop();
+            }
         }
 
         virtual ActionType getType()
@@ -47,15 +53,23 @@ namespace Driver
                 return EET_SpeedOutOfRange;
             }
 
-            for(int i=0; i< cfg.ctrl_count; i++)
+            if(!pwm.isRunning())
             {
-                GPIORW::GPIOWrite(cfg.ctrls[i].pin, cfg.ctrls[i].value);
+                pwm.start();    
             }
+
+            pwm.setSpeed(speed);
+
+            // for(int i=0; i< cfg.ctrl_count; i++)
+            // {
+            //     GPIORW::GPIOWrite(cfg.ctrls[i].pin, cfg.ctrls[i].value);
+            // }
             return EET_OK;
         }
 
     protected:
         sActionConfig cfg;
+        PWM pwm;
     };
     
 
