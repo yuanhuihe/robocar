@@ -14,6 +14,7 @@
 #include <executive/executive.h>
 #include "configdef.hpp"
 #include <gpiorw/gpiorw.h>
+#include "pwm.hpp"
 
 using namespace ConfigInfo;
 
