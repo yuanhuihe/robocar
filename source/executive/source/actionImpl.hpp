@@ -32,7 +32,7 @@ namespace Driver
         {
             if(pwm.isRunning())
             {
-                pwm.setSpeed(0);
+                standby();
                 pwm.stop();
             }
         }
@@ -45,6 +45,11 @@ namespace Driver
         virtual char* getName()
         {
             return cfg.name;
+        }
+        
+        virtual void standby()
+        {
+            execute(0);
         }
         
         virtual unsigned int execute(SpeedPercent speed)
@@ -61,10 +66,6 @@ namespace Driver
 
             pwm.setSpeed(speed);
 
-            // for(int i=0; i< cfg.ctrl_count; i++)
-            // {
-            //     GPIORW::GPIOWrite(cfg.ctrls[i].pin, cfg.ctrls[i].value);
-            // }
             return EET_OK;
         }
 

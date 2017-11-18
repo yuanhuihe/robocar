@@ -40,11 +40,8 @@ namespace Driver
             // firstly reset system
             for(auto& act: Actions)
             {
-                ActionType type = act->getType();
-                if(type)
-                {
-                    act->execute(0);
-                }
+                act->standby();
+                
                 delete act;
                 act = nullptr;
             }

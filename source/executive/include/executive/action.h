@@ -55,6 +55,13 @@ namespace Driver
         
         /**
         *  @brief
+        *    Reset and standby
+        *
+        */
+        virtual void standby() = 0;
+        
+        /**
+        *  @brief
         *    Do work
         *
         *  @return

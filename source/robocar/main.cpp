@@ -90,11 +90,7 @@ int main(int /*argc*/, char* /*argv*/[])
     // reset motors
     for(auto act:actionList)
     {
-        if(act->getType()==Driver::AT_Ready)
-        {
-            act->execute(0);
-            break;
-        }
+        act->standby();
     }
 
     // controlling by console inputs
