@@ -52,7 +52,7 @@ bool config::set_language_cfg(char* value)
     }
 
     pugi::xml_node language_node = gotoRootChildNode("language");
-    language_node.text().set(value;
+    language_node.text().set(value);
     result = true;
 
     return result;
