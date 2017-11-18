@@ -26,7 +26,7 @@ namespace Driver
     public:
         PWM(sGpioCtrl* gpio_list, int count)
         :bRunning(false)
-        ,gpioCount(0)
+        ,gpio_cunt(0)
         ,pwm_freq(100)
         ,speed(0)
         ,enable_time(0)
@@ -45,7 +45,7 @@ namespace Driver
         void start()
         {
             stop();
-            tObj = new std::thread(tPWMGen)
+            tObj = new std::thread(&PWM::tPWMGen, this);
         }
         void stop()
         {
@@ -105,7 +105,7 @@ namespace Driver
                 if(speed==0)
                 {
                     gpio_disable();
-                    std::this_thread::sleep_for(200ms);
+                    std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(200));
                     continue;
                 }
             
