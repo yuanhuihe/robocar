@@ -98,7 +98,6 @@ else ()
             -lcrypt       # crypt
             ${DEFAULT_LIBRARIES}
             ${META_PROJECT_NAME}::fiblib
-            ${META_PROJECT_NAME}::baselib
             ${META_PROJECT_NAME}::executive
         )
 endif ()
