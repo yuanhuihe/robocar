@@ -22,7 +22,7 @@ namespace Driver
     class PWM
     {
     public:
-        PWM(gpio_ctrl* gpi0_list, int count)
+        PWM(sGpioCtrl* gpi0_list, int count)
         :bRunning(false)
         ,gpioCount(0)
         ,pwm_freq(100)
