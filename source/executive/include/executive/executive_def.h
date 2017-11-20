@@ -19,6 +19,9 @@ namespace Driver
 #define EET_ActionNotSupport        2   // Not supported moving command
 #define EET_SpeedOutOfRange         3   // 
 
+#define PWM_FREQ                    100 // Hz
+
+
     // Moving type
     enum ActionType
     {

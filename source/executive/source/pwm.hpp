@@ -14,8 +14,10 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
+#include <assert.h>
 #include <string.h>
 #include <gpiorw/gpiorw.h>
+#include "executive/executive_def.h"
 
 using namespace ConfigInfo;
 
@@ -24,10 +26,9 @@ namespace Driver
     class PWM
     {
     public:
-        PWM(sGpioCtrl* gpio_list, int count)
+        PWM(sSpeedCtrl sd, sGpioCtrl* gpio_list, int count)
         :bRunning(false)
         ,speed(0)
-        ,pwm_freq(100)
         ,gpio_cunt(0)
         ,tObj(nullptr)
         ,enable_time(0)
@@ -36,6 +37,12 @@ namespace Driver
             gpio_cunt = std::min(count,MAX_GPIO_PINS);
             memset(ctrls, 0, sizeof(ctrls));
             memcpy(ctrls, gpio_list, sizeof(sGpioCtrl)*gpio_cunt);
+            memcpy(&speedData, &sd, sizeof(speedData));
+
+            speed = sd.default_value;
+
+            // calculate plus width, unit: ms
+            plus_width = 1000 / PWM_FREQ; // ms
         }
         virtual ~PWM()
         {
@@ -58,17 +65,18 @@ namespace Driver
             }
         }
 
-        void setSpeed(unsigned int speed)
+        void setSpeed(unsigned int s)
         {
-            if(speed>100) speed = 100;
+            if(s>speedData.range_max) s = speedData.range_max;
+            if(s<speedData.range_min) s = speedData.range_min;
 
-            this->speed = speed;
-
-            // calculate plus width, unit: ms
-            float plus_width = 1000 / pwm_freq; // ms
+            this->speed = s;
 
             // calculate enable time
-            this->enable_time = plus_width * (speed/100.0);
+            int range = speedData.range_max - speedData.range_min;
+            assert(range>0);
+
+            this->enable_time = plus_width * ((float)speed/range);
 
             // calculate disable time
             this->disable_time = plus_width - enable_time;
@@ -87,18 +95,17 @@ namespace Driver
     protected:
         bool bRunning;
         int speed;
-        int pwm_freq;
 
         int gpio_cunt;
         sGpioCtrl ctrls[MAX_GPIO_PINS];
+        sSpeedCtrl speedData;
+        float plus_width;
         std::thread* tObj; 
         std::atomic<int> enable_time; 
         std::atomic<int> disable_time; 
     protected:
         void tPWMGen()
         {
-            float plus_width = 1000.0 / pwm_freq;   // ms
-
             bRunning = true;
             while(bRunning)
             {

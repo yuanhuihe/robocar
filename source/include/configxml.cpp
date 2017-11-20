@@ -191,7 +191,28 @@ bool config::get_actions(std::vector<sActionConfig>& actions)
             action.speed.has_speed = true;
             action.speed.range_min = atoi(_node_speed.child("range").attribute("mini").value());
             action.speed.range_max = atoi(_node_speed.child("range").attribute("max").value());
-            action.speed.default_value= atoi(_node_speed.child("default").value());
+            action.speed.default_value = atoi(_node_speed.child_value("default"));
+
+            if(action.speed.range_min<0)
+            {
+                print_error(__LINE__, "speed range config error: min");
+                action.speed.range_min = 0;
+            } 
+            if(action.speed.range_max <= action.speed.range_min )
+            {
+                print_error(__LINE__, "speed range config error: max");
+                action.speed.range_max = action.speed.range_min + 1;
+            } 
+            if(action.speed.default_value > action.speed.range_max)
+            {
+                print_error(__LINE__, "speed range config error: default");
+                action.speed.default_value = action.speed.range_max;
+            } 
+            if(action.speed.default_value < action.speed.range_min)
+            {
+                print_error(__LINE__, "speed range config error: default");
+                action.speed.default_value = action.speed.range_min;
+            } 
         }
         else
         {
