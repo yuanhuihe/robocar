@@ -26,12 +26,12 @@ namespace Driver
     public:
         PWM(sGpioCtrl* gpio_list, int count)
         :bRunning(false)
-        ,gpio_cunt(0)
-        ,pwm_freq(100)
         ,speed(0)
+        ,pwm_freq(100)
+        ,gpio_cunt(0)
+        ,tObj(nullptr)
         ,enable_time(0)
         ,disable_time(0)
-        ,tObj(nullptr)
         {
             gpio_cunt = std::min(count,MAX_GPIO_PINS);
             memset(ctrls, 0, sizeof(ctrls));

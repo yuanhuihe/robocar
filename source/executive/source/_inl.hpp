@@ -30,15 +30,5 @@
 #include <stdio.h>
 
 
-//// 底盘类型列表
-//std::tuple<ChassisType, std::string> ChassisTypeMap[] = {
-//    { CT_MotorSystem,"MotorSystem.xml" },
-//    { CT_FootWalkSystem,"FootWalkSystem.xml" }
-//};
 
-struct sActionConfig
-{
-
-};
-
-#endif !_INL_HPP_
+#endif //!_INL_HPP_

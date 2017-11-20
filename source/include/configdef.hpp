@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <executive/executive_def.h>
+using namespace Driver;
 
 namespace ConfigInfo
 {
@@ -31,9 +33,9 @@ namespace ConfigInfo
     {
         int type;       // ActionType, defined in 'executive_def.h' file
         char name[64];  // action name
-        float speed_percent;
         int ctrl_count;
         sGpioCtrl ctrls[MAX_GPIO_PINS];
+        sSpeedCtrl speed;
     }sActionConfig;
 
 } // !namespace ConfigInfo

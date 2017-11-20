@@ -34,7 +34,14 @@ namespace Driver
         AT_HeadShook,
     };
 
-typedef float SpeedPercent; // speed percent in range 0~100
+
+    typedef struct _sSpeedCtrl
+    {
+        bool has_speed;
+        int range_min;
+        int range_max;
+        int default_value;
+    }sSpeedCtrl;
 
 
 

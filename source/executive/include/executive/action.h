@@ -55,6 +55,13 @@ namespace Driver
         
         /**
         *  @brief
+        *    Wether this action has speed controlling
+        *
+        */
+        virtual sSpeedCtrl getSpeed() = 0;
+        
+        /**
+        *  @brief
         *    Reset and standby
         *
         */
@@ -67,7 +74,7 @@ namespace Driver
         *  @return
         *    Code of running result
         */
-        virtual unsigned int execute(SpeedPercent speed) = 0;
+        virtual unsigned int execute(int speed) = 0;
     };
 
 } // namespace Driver

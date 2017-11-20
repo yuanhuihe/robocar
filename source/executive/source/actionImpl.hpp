@@ -47,12 +47,17 @@ namespace Driver
             return cfg.name;
         }
         
+        virtual sSpeedCtrl getSpeed() 
+        {
+            return cfg.speed;
+        }
+
         virtual void standby()
         {
             execute(0);
         }
         
-        virtual unsigned int execute(SpeedPercent speed)
+        virtual unsigned int execute(int speed)
         {
             if (speed < 0 || speed>100)
             {

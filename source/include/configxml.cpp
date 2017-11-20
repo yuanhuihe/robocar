@@ -165,7 +165,6 @@ bool config::get_actions(std::vector<sActionConfig>& actions)
         
         action.type = atoi(_node.child_value("type"));
         snprintf(action.name, sizeof(action.name) - 1, "%s", _node.child_value("name"));
-        action.speed_percent= atof(_node.child_value("speed_percent"));
 
         pugi::xml_node ctrl = _node.child("control");
         pugi::xml_node gpio = ctrl.child("gpio");
@@ -184,6 +183,20 @@ bool config::get_actions(std::vector<sActionConfig>& actions)
             gpio = gpio.next_sibling();
         }
         action.ctrl_count = i;
+
+
+        pugi::xml_node _node_speed = _node.child("speed");
+        if(_node_speed)
+        {
+            action.speed.has_speed = true;
+            action.speed.range_min = atoi(_node_speed.child("range").attribute("mini").value());
+            action.speed.range_max = atoi(_node_speed.child("range").attribute("max").value());
+            action.speed.default_value= atoi(_node_speed.child("default").value());
+        }
+        else
+        {
+            action.speed.has_speed = false;
+        }
 
         actions.push_back(action);
 

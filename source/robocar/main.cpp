@@ -18,10 +18,16 @@ void showTips(std::vector<Driver::Action*>& actlist)
     std::cout << " -- " << "s" << ": " << "show this tips" << std::endl;
     std::cout << std::endl;
     std::cout << "Actions:" << std::endl;
-    for(int i=0; i<actlist.size(); i++)
+    for(size_t i=0; i<actlist.size(); i++)
     {
         std::string action = actlist[i]->getName();
         std::cout << " -- " << i << ": " << action << std::endl;
+
+        Driver::sSpeedCtrl speed = actlist[i]->getSpeed();
+        if(speed.has_speed)
+        {
+            std::cout << "   -- speed range: " << speed.range_min<< ":" << speed.range_max << std::endl;
+        }
     }
     std::cout << std::endl;
 }
@@ -109,9 +115,10 @@ int main(int /*argc*/, char* /*argv*/[])
         }
 
         // execute action
-        if(inputCode>=0 && inputCode<actionList.size())
+        if(inputCode>=0 && inputCode<(int)actionList.size())
         {
-            actionList[inputCode]->execute(10);
+            Driver::sSpeedCtrl speed = actionList[inputCode]->getSpeed();
+            actionList[inputCode]->execute(speed.default_value);
         }
         else if(inputCode=='s')
         {

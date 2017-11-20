@@ -4,11 +4,14 @@
 		<action>
 			<type>2</type>
 			<name>AT_MoveForward</name>
-	  		<speed_percent>10</speed_percent>
 			<control>
 				<gpio pin="37" value="1"/>
 				<gpio pin="35" value="1"/>
 			</control>
+	  		<speed>
+			  <range mini="0" max="100"/>
+			  <default>50</default>
+			</speed>
 			<log>
 				<filename>gpio_ctrl_flow</filename>
 				<level>0</level>
@@ -17,11 +20,14 @@
 		<action>
 			<type>8</type>
 			<name>AT_HeadNod</name>
-	  		<speed_percent>10</speed_percent>
 			<control>
 				<gpio pin="33" value="1"/>
 				<gpio pin="31" value="0"/>
 			</control>
+	  		<speed>
+			  <range mini="0" max="100"/>
+			  <default>50</default>
+			</speed>
 			<log>
 				<filename>gpio_ctrl_flow</filename>
 				<level>0</level>
