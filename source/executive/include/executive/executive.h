@@ -53,6 +53,20 @@ namespace Driver
         *    Address of pointer of ExecutiveSystem object.
         */
         static void ReleaseSystem(ExecutiveSystem** obj);
+        
+        /**
+        *  @brief
+        *    Load and reset system to standby state
+        *
+        */
+        virtual void loadSystem() = 0;
+        
+        /**
+        *  @brief
+        *    Unload system to release resources.
+        *
+        */
+        virtual void unloadSystem() = 0;
 
         /**
         *  @brief

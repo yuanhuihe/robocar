@@ -56,6 +56,7 @@ namespace Driver
         }
         void stop()
         {
+            // stop pwm generator thread
             bRunning = false;
             if(tObj)
             {
@@ -63,6 +64,9 @@ namespace Driver
                 delete tObj;
                 tObj = nullptr;
             }
+
+            // reset gpio
+            gpio_disable();
         }
 
         void setSpeed(unsigned int s)

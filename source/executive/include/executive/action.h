@@ -62,19 +62,19 @@ namespace Driver
         
         /**
         *  @brief
-        *    Reset and standby
-        *
-        */
-        virtual void standby() = 0;
-        
-        /**
-        *  @brief
         *    Do work
         *
         *  @return
         *    Code of running result
         */
         virtual unsigned int execute(int speed) = 0;
+        
+        /**
+        *  @brief
+        *    Stop execution
+        *
+        */
+        virtual void stop() = 0;
     };
 
 } // namespace Driver

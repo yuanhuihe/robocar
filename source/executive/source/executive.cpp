@@ -41,6 +41,7 @@ namespace Driver
         ExecutiveSystem* tmp = dynamic_cast<ExecutiveSystem*>(*obj);
         if (tmp)
         {
+            tmp->unloadSystem();
             delete tmp;
             *obj = nullptr;
         }

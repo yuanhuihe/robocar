@@ -67,6 +67,9 @@ int main(int /*argc*/, char* /*argv*/[])
 
     // get system instance
     Driver::ExecutiveSystem* eSys = Driver::ExecutiveSystem::InitSystem();
+
+    // load system
+    eSys->loadSystem();
     
     // action list
     std::vector<Driver::Action*> actionList;
@@ -92,12 +95,6 @@ int main(int /*argc*/, char* /*argv*/[])
     showTips(actionList);
 
     std::cout << "There are " << actionList.size() << " actions to be used" << std::endl;
-
-    // reset motors
-    for(auto act:actionList)
-    {
-        act->standby();
-    }
 
     // controlling by console inputs
     int preInput = 0;
@@ -138,14 +135,7 @@ int main(int /*argc*/, char* /*argv*/[])
     }
 
     // reset motors
-    for(auto act:actionList)
-    {
-        if(act->getType()==Driver::AT_Ready)
-        {
-            act->execute(0);
-            break;
-        }
-    }
+    eSys->unloadSystem();
 
     // release system
     Driver::ExecutiveSystem::ReleaseSystem(&eSys);

@@ -31,32 +31,30 @@ namespace Driver
         {
 
         }
-
-        virtual Action* enumFirstAction()
+        
+        virtual void loadSystem()
         {
-            enumPos = 0;
-            cfgActions.clear();
-
-            // firstly reset system
-            for(auto& act: Actions)
-            {
-                act->standby();
-                
-                delete act;
-                act = nullptr;
-            }
-            Actions.clear();
+            unloadCfg();
 
             // read action config
             std::string file = get_curr_dir() + "executive.xml";
             std::cout << file << std::endl;
-            cfg.load_xml(file);
-            cfg.get_actions(cfgActions);
-            for(auto act : cfgActions)
-            {
-                Action* action = new ActionImpl(act);
-                Actions.push_back(action);
-            }
+            loadCfg(file);
+        }
+        
+        virtual void unloadSystem()
+        {
+            unloadCfg();
+        }
+
+        virtual Action* enumFirstAction()
+        {
+            unloadCfg();
+
+            // read action config
+            std::string file = get_curr_dir() + "executive.xml";
+            std::cout << file << std::endl;
+            loadCfg(file);
 
             if(Actions.size()>0)
             {
@@ -82,6 +80,37 @@ namespace Driver
         std::vector<ConfigInfo::sActionConfig> cfgActions;
         std::vector<Action*> Actions;
         int enumPos;
+
+        void loadCfg(std::string file)
+        {
+            // losf xml
+            cfg.load_xml(file);
+
+            // get actions
+            cfg.get_actions(cfgActions);
+            for(auto act : cfgActions)
+            {
+                Action* action = new ActionImpl(act);
+                Actions.push_back(action);
+            }
+        }
+
+        void unloadCfg()
+        {
+            // firstly reset system
+            for(auto& act: Actions)
+            {
+                act->stop();
+                
+                delete act;
+                act = nullptr;
+            }
+            Actions.clear();
+
+            // clear config data
+            enumPos = 0;
+            cfgActions.clear();
+        }
     };
 
 } // namespace Driver

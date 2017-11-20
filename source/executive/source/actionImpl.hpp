@@ -30,11 +30,7 @@ namespace Driver
         }
         virtual ~ActionImpl()
         {
-            if(pwm.isRunning())
-            {
-                standby();
-                pwm.stop();
-            }
+            stop();
         }
 
         virtual ActionType getType()
@@ -51,15 +47,10 @@ namespace Driver
         {
             return cfg.speed;
         }
-
-        virtual void standby()
-        {
-            execute(0);
-        }
         
         virtual unsigned int execute(int speed)
         {
-            if (speed < 0 || speed>100)
+            if (speed < cfg.speed.range_min || speed>cfg.speed.range_max)
             {
                 return EET_SpeedOutOfRange;
             }
@@ -72,6 +63,11 @@ namespace Driver
             pwm.setSpeed(speed);
 
             return EET_OK;
+        }
+
+        virtual void stop()
+        {
+            pwm.stop();
         }
 
     protected:
