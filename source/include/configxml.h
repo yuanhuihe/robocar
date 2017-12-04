@@ -18,7 +18,7 @@ public:
     bool getConsoleStatus();                                    // get console status
     std::string getRootPath();                                  // get root path
 
-    bool get_actions(std::vector<sActionConfig>& actions);
+    bool get_executive_bodies(std::vector<sExecutiveBody>& exe_bodies);
 
     // SET =========================================================================================
     bool set_language_cfg(char* value);                   // set/add language

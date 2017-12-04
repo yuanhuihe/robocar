@@ -22,11 +22,16 @@ namespace Driver
 #define PWM_FREQ                    100 // Hz
 
 
+    enum ExecutiveType
+    {
+        ET_Unknown = 0,
+        ET_Motor,
+    };
+
     // Moving type
     enum ActionType
     {
         AT_Unknown = 0,
-        AT_Ready,
         AT_MoveForward,
         AT_MoveBackward,
         AT_Leftward,

@@ -1,87 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<executive version="1.0" name="executive">
-	<actions>
-		<action>
-			<type>1</type>
-			<name>AT_Ready</name>
-			<control>
-				<gpio pin="37" value="0"/>
-				<gpio pin="35" value="0"/>
-				<gpio pin="33" value="0"/>
-				<gpio pin="31" value="0"/>
-			</control>
-	  		<speed>
-			  <range mini="0" max="100"/>
-			  <default>0</default>
-			</speed>
-			<log>
-				<filename>gpio_ctrl_flow</filename>
-				<level>0</level>
-			</log>
+<executives name="Motor-based driver system">
+	<body type=1 name="ET_Motor" desc="Walking control">
+		<speed>
+			<range mini=0 max=100/>
+			<default>70</default>
+		</speed>
+		<action type=1 name="AT_MoveForward">
+			<gpio>
+				<pin id=37 value=1/>
+				<pin id=35 value=0/>
+			</gpio>
 		</action>
-		<action>
-			<type>2</type>
-			<name>AT_MoveForward</name>
-			<control>
-				<gpio pin="37" value="1"/>
-				<gpio pin="35" value="1"/>
-			</control>
-	  		<speed>
-			  <range mini="0" max="100"/>
-			  <default>50</default>
-			</speed>
-			<log>
-				<filename>gpio_ctrl_flow</filename>
-				<level>0</level>
-			</log>
+		<action type=2 name="AT_MoveBackward">
+			<gpio>
+				<pin id=37 value=0/>
+				<pin id=35 value=1/>
+			</gpio>
 		</action>
-		<action>
-			<type>4</type>
-			<name>AT_Leftward</name>
-			<control>
-				<gpio pin="37" value="1"/>
-				<gpio pin="35" value="0"/>
-			</control>
-	  		<speed>
-			  <range mini="0" max="100"/>
-			  <default>20</default>
-			</speed>
-			<log>
-				<filename>gpio_ctrl_flow</filename>
-				<level>0</level>
-			</log>
+		<action type=3 name="AT_Leftward">
+			<gpio>
+				<pin id=37 value=1/>
+				<pin id=35 value=1/>
+			</gpio>
 		</action>
-		<action>
-			<type>5</type>
-			<name>AT_Rightward</name>
-			<control>
-				<gpio pin="37" value="0"/>
-				<gpio pin="35" value="1"/>
-			</control>
-	  		<speed>
-			  <range mini="0" max="100"/>
-			  <default>20</default>
-			</speed>
-			<log>
-				<filename>gpio_ctrl_flow</filename>
-				<level>0</level>
-			</log>
+		<log>
+			<filename>walk_motor</filename>
+			<level>0</level>
+		</log>
+	</body>
+	<body type=1 name="ET_Motor" desc="Head and hands controlling">
+		<speed>
+			<range mini=0 max=100/>
+			<default>50</default>
+		</speed>
+		<action type=7 name="AT_HeadNod">
+			<gpio>
+				<pin id=33 value=1/>
+				<pin id=31 value=0/>
+			</gpio>
 		</action>
-		<action>
-			<type>8</type>
-			<name>AT_HeadNod</name>
-			<control>
-				<gpio pin="33" value="1"/>
-				<gpio pin="31" value="0"/>
-			</control>
-	  		<speed>
-			  <range mini="0" max="100"/>
-			  <default>50</default>
-			</speed>
-			<log>
-				<filename>gpio_ctrl_flow</filename>
-				<level>0</level>
-			</log>
+		<action type=8 name="AT_HeadShook">
+			<gpio>
+				<pin id=33 value=0/>
+				<pin id=31 value=1/>
+			</gpio>
 		</action>
-	</actions>
-</executive>
+		<action type=8 name="AT_HeadShook">
+			<gpio>
+				<pin id=33 value=1/>
+				<pin id=31 value=1/>
+			</gpio>
+		</action>
+		<log>
+			<filename>walk_motor</filename>
+			<level>0</level>
+		</log>
+	</body>
+</executives>

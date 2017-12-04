@@ -55,26 +55,12 @@ namespace Driver
         
         /**
         *  @brief
-        *    Wether this action has speed controlling
-        *
-        */
-        virtual sSpeedCtrl getSpeed() = 0;
-        
-        /**
-        *  @brief
-        *    Do work
+        *    Get id of ExecuteBody this action belong to
         *
         *  @return
-        *    Code of running result
+        *    Id of ExecuteBody
         */
-        virtual unsigned int execute(int speed) = 0;
-        
-        /**
-        *  @brief
-        *    Stop execution
-        *
-        */
-        virtual void stop() = 0;
+        virtual int getExecuteBodyID() = 0;
     };
 
 } // namespace Driver

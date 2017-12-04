@@ -12,7 +12,7 @@
 #define EXECUTIVESYSTEMIMPL_HPP_
 
 #include <executive/executive.h>
-#include "actionImpl.hpp"
+#include "executive_body_impl.hpp"
 #include "configxml.h"
 #include "_inl.hpp"
 #include "_utility.hpp"
@@ -47,7 +47,7 @@ namespace Driver
             unloadCfg();
         }
 
-        virtual Action* enumFirstAction()
+        virtual ExecutiveBody* enumFirstExecutiveBody()
         {
             unloadCfg();
 
@@ -56,20 +56,21 @@ namespace Driver
             std::cout << file << std::endl;
             loadCfg(file);
 
-            if(Actions.size()>0)
+            enumPos = 0;
+            if(executiveBodys.size()>0)
             {
-                return Actions[0];
+                return executiveBodys[0];
             }
             
             return nullptr;
         }
 
-        virtual Action* enumNextAction()
+        virtual ExecutiveBody* enumNextExecutiveBody()
         {
             enumPos++;
-            if(cfgActions.size()>enumPos)
+            if(executiveBodys.size()>enumPos)
             {
-                return Actions[enumPos];
+                return executiveBodys[enumPos];
             }
             
             return nullptr;
@@ -77,8 +78,8 @@ namespace Driver
 
     private:
         ConfigInfo::config cfg;
-        std::vector<ConfigInfo::sActionConfig> cfgActions;
-        std::vector<Action*> Actions;
+        std::vector<ConfigInfo::sExecutiveBody> sbodies;
+        std::vector<ExecutiveBody*> executiveBodys;
         int enumPos;
 
         void loadCfg(std::string file)
@@ -87,29 +88,27 @@ namespace Driver
             cfg.load_xml(file);
 
             // get actions
-            cfg.get_actions(cfgActions);
-            for(auto act : cfgActions)
+            cfg.get_executive_bodies(sbodies);
+            for(auto bd : sbodies)
             {
-                Action* action = new ActionImpl(act);
-                Actions.push_back(action);
+                executiveBodys.push_back(new ExecutiveBodymImpl(bd));
             }
         }
 
         void unloadCfg()
         {
             // firstly reset system
-            for(auto& act: Actions)
+            for(auto& bd: executiveBodys)
             {
-                act->stop();
-                
-                delete act;
-                act = nullptr;
+                bd->stop();
+                delete bd;
+                bd = nullptr;
             }
-            Actions.clear();
+            executiveBodys.clear();
 
             // clear config data
             enumPos = 0;
-            cfgActions.clear();
+            sbodies.clear();
         }
     };
 

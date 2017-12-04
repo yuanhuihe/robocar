@@ -13,8 +13,6 @@
 
 #include <executive/executive.h>
 #include "configdef.hpp"
-#include <gpiorw/gpiorw.h>
-#include "pwm.hpp"
 
 using namespace ConfigInfo;
 
@@ -23,56 +21,31 @@ namespace Driver
     class ActionImpl: public Action
     {
     public:
-        ActionImpl(sActionConfig cfgAct)
-        :pwm(cfgAct.speed, cfgAct.ctrls, cfgAct.ctrl_count)
+        ActionImpl(sAction act)
         {
-            cfg = cfgAct;
+            act_data = act;
         }
         virtual ~ActionImpl()
         {
-            stop();
         }
 
         virtual ActionType getType()
         {
-            return (ActionType)cfg.type;
+            return (ActionType)act_data.type;
         }
 
         virtual char* getName()
         {
-            return cfg.name;
+            return act_data.name;
+        }
+
+        virtual int getExecuteBodyID()
+        {
+            return act_data.parent_id;
         }
         
-        virtual sSpeedCtrl getSpeed() 
-        {
-            return cfg.speed;
-        }
-        
-        virtual unsigned int execute(int speed)
-        {
-            if (speed < cfg.speed.range_min || speed>cfg.speed.range_max)
-            {
-                return EET_SpeedOutOfRange;
-            }
-
-            if(!pwm.isRunning())
-            {
-                pwm.start();    
-            }
-
-            pwm.setSpeed(speed);
-
-            return EET_OK;
-        }
-
-        virtual void stop()
-        {
-            pwm.stop();
-        }
-
     protected:
-        sActionConfig cfg;
-        PWM pwm;
+        sAction act_data;
     };
     
 

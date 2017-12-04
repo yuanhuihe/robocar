@@ -11,28 +11,24 @@
 
 #include <executive/executive.h>
 
-void showTips(std::vector<Driver::Action*>& actlist)
+void showTips(std::vector<Driver::ExecutiveBody*>& executiveList)
 {
     std::cout << "Input definitions:" << std::endl;
     std::cout << " -- " << "q" << ": " << "exit this app" << std::endl;
-    std::cout << " -- " << "s" << ": " << "show this tips" << std::endl;
+    std::cout << " -- " << "s" << ": " << "stop all executive bodies" << std::endl;
+    std::cout << " -- " << "S" << ": " << "show this tips again" << std::endl;
     std::cout << std::endl;
-    std::cout << "Actions:" << std::endl;
-    for(size_t i=0; i<actlist.size(); i++)
+    std::cout << "Executive bodies:" << std::endl;
+    for(size_t i=0; i<executiveList.size(); i++)
     {
-        std::string action = actlist[i]->getName();
-        std::cout << " -- " << i << ": " << action << std::endl;
+        std::string body_name = executiveList[i]->getName();
+        std::cout << " -- " << i << ": " << body_name << std::endl;
 
-        Driver::sSpeedCtrl speed = actlist[i]->getSpeed();
-        if(speed.has_speed)
-        {
-            std::cout << "   -- speed range: " << speed.range_min<< ":" << speed.range_max << std::endl;
-        }
     }
     std::cout << std::endl;
 }
 
-void tInputCtrlThead(int& inputCode)
+void tInputCtrlThead(int& inputCode, int& act_index, int& speed)
 {
     while (inputCode != 'q')
     {
@@ -42,6 +38,8 @@ void tInputCtrlThead(int& inputCode)
         fgets (strInput, 100, stdin);
         int s = strlen(strInput);
         if (s > 0) strInput[s - 1] = 0;
+
+        sscanf(strInput, "", inputCode, act_index, speed);
 
         // try convert to number
         int numb = atoi(strInput);
@@ -71,35 +69,37 @@ int main(int /*argc*/, char* /*argv*/[])
     // load system
     eSys->loadSystem();
     
-    // action list
-    std::vector<Driver::Action*> actionList;
+    // ExecutiveB body list
+    std::vector<Driver::ExecutiveBody*> executiveList;
     
-    // Enum actions
-    Driver::Action* action = eSys->enumFirstAction();
-    while (action)
+    // Enum executive bodies
+    Driver::ExecutiveBody* body = eSys->enumFirstExecutiveBody();
+    while (body)
     {
         // save to list
-        actionList.push_back(action);
+        executiveList.push_back(body);
 
-        // next action
-        action = eSys->enumNextAction();
+        // next
+        body = eSys->enumNextExecutiveBody();
     }
 
-    if(actionList.size()==0)
+    if(executiveList.size()==0)
     {
         Driver::ExecutiveSystem::ReleaseSystem(&eSys);
-        std::cout << "No executable device" << std::endl;
+        std::cout << "No executable body" << std::endl;
         return -1;
     }
 
-    showTips(actionList);
+    showTips(executiveList);
 
-    std::cout << "There are " << actionList.size() << " actions to be used" << std::endl;
+    std::cout << "There are " << executiveList.size() << " executive bodies to be used" << std::endl;
 
     // controlling by console inputs
     int preInput = 0;
     int inputCode = 0;
-    std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode));
+    int act_index = 0;
+    int speed = 0;
+    std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode), std::ref(act_index), std::ref(speed));
 
     bool bRunning = true;
     while(bRunning)
@@ -112,14 +112,21 @@ int main(int /*argc*/, char* /*argv*/[])
         }
 
         // execute action
-        if(inputCode>=0 && inputCode<(int)actionList.size())
+        if(inputCode>=0 && inputCode<(int)executiveList.size())
         {
-            Driver::sSpeedCtrl speed = actionList[inputCode]->getSpeed();
-            actionList[inputCode]->execute(speed.default_value);
+            Driver::ExecutiveBody* executive_body = executiveList[inputCode];
+            executive_body->execute(nullptr, speed);
         }
         else if(inputCode=='s')
         {
-            showTips(actionList);
+            for(auto bd:executiveList)
+            {
+                bd->stop();
+            }
+        }
+        else if(inputCode=='S')
+        {
+            showTips(executiveList);
         }
         else if(inputCode=='q')
         {

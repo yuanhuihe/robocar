@@ -26,21 +26,12 @@ namespace Driver
     class PWM
     {
     public:
-        PWM(sSpeedCtrl sd, sGpioCtrl* gpio_list, int count)
+        PWM()
         :bRunning(false)
-        ,speed(0)
-        ,gpio_cunt(0)
         ,tObj(nullptr)
         ,enable_time(0)
         ,disable_time(0)
         {
-            gpio_cunt = std::min(count,MAX_GPIO_PINS);
-            memset(ctrls, 0, sizeof(ctrls));
-            memcpy(ctrls, gpio_list, sizeof(sGpioCtrl)*gpio_cunt);
-            memcpy(&speedData, &sd, sizeof(speedData));
-
-            speed = sd.default_value;
-
             // calculate plus width, unit: ms
             plus_width = 1000 / PWM_FREQ; // ms
         }

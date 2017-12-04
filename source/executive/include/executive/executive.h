@@ -13,7 +13,7 @@
 
 #include <executive/executive_api.h>
 #include <executive/executive_def.h>
-#include <executive/action.h>
+#include <executive/executive_body.h>
 
 namespace Driver
 {
@@ -73,10 +73,10 @@ namespace Driver
         *    Enum all actions this system can excuting
         *
         *  @return
-        *    Action object
+        *    @ref ExecutiveBody object
         */
-        virtual Action* enumFirstAction() = 0;
-        virtual Action* enumNextAction() = 0;
+        virtual ExecutiveBody* enumFirstExecutiveBody() = 0;
+        virtual ExecutiveBody* enumNextExecutiveBody() = 0;
     };
 
 

@@ -150,77 +150,87 @@ bool config::setRootPath(std::string path)
  * @brief set/add root path
  * @return set/add status
  */
-bool config::get_actions(std::vector<sActionConfig>& actions)
+bool config::get_executive_bodies(std::vector<sExecutiveBody>& exe_bodies)
 {
     if (!xml_res)
     {
         print_error(__LINE__, "get load xml status error");
         return false;
     }
-    pugi::xml_node _node = get_path_node("executive/actions/action");
+    pugi::xml_node _node = get_path_node("executives/body");
+    
+    int id = 0;
     while (_node)
     {
-        sActionConfig action;
-        memset(&action, 0, sizeof(action));
+        sExecutiveBody body;
+        memset(&body, 0, sizeof(body));
+
+        body.id = id;
         
-        action.type = atoi(_node.child_value("type"));
-        snprintf(action.name, sizeof(action.name) - 1, "%s", _node.child_value("name"));
-
-        pugi::xml_node ctrl = _node.child("control");
-        pugi::xml_node gpio = ctrl.child("gpio");
-        int i = 0;
-        while (gpio)
-        {
-            int pin = atoi(gpio.first_attribute().value());
-            int value = atoi(gpio.last_attribute().value());
-            if( pin < MAX_GPIO_PINS)
-            {
-                action.ctrls[i].pin = pin;
-                action.ctrls[i].value = value;
-                i++;
-            }
-
-            gpio = gpio.next_sibling();
-        }
-        action.ctrl_count = i;
-
+        body.type = atoi(_node.attribute("type").value());
+        snprintf(body.name, sizeof(body.name) - 1, "%s", _node.attribute("name").value());
 
         pugi::xml_node _node_speed = _node.child("speed");
         if(_node_speed)
         {
-            action.speed.has_speed = true;
-            action.speed.range_min = atoi(_node_speed.child("range").attribute("mini").value());
-            action.speed.range_max = atoi(_node_speed.child("range").attribute("max").value());
-            action.speed.default_value = atoi(_node_speed.child_value("default"));
+            body.speed.range_min = atoi(_node_speed.child("range").attribute("mini").value());
+            body.speed.range_max = atoi(_node_speed.child("range").attribute("max").value());
+            body.speed.default_value = atoi(_node_speed.child_value("default"));
 
-            if(action.speed.range_min<0)
+            if(body.speed.range_min<0)
             {
                 print_error(__LINE__, "speed range config error: min");
-                action.speed.range_min = 0;
+                body.speed.range_min = 0;
             } 
-            if(action.speed.range_max <= action.speed.range_min )
+            if(body.speed.range_max <= body.speed.range_min )
             {
                 print_error(__LINE__, "speed range config error: max");
-                action.speed.range_max = action.speed.range_min + 1;
+                body.speed.range_max = body.speed.range_min + 1;
             } 
-            if(action.speed.default_value > action.speed.range_max)
+            if(body.speed.default_value > body.speed.range_max)
             {
                 print_error(__LINE__, "speed range config error: default");
-                action.speed.default_value = action.speed.range_max;
+                body.speed.default_value = body.speed.range_max;
             } 
-            if(action.speed.default_value < action.speed.range_min)
+            if(body.speed.default_value < body.speed.range_min)
             {
                 print_error(__LINE__, "speed range config error: default");
-                action.speed.default_value = action.speed.range_min;
+                body.speed.default_value = body.speed.range_min;
             } 
         }
-        else
+
+        pugi::xml_node act_node = _node.child("action");
+        int act_cnt = 0;
+        while (act_node && act_cnt<MAX_ACTION_CNT)
         {
-            action.speed.has_speed = false;
+            sAction& action = body.acts[act_cnt];
+            action.parent_id = id;
+
+            action.type = atoi(act_node.attribute("type").value());
+            snprintf(action.name, sizeof(action.name) - 1, "%s", act_node.attribute("name").value());
+
+            pugi::xml_node gpio_node = act_node.child("gpio");
+            if(gpio_node)
+            {
+                pugi::xml_node pin_node = gpio_node.child("pin");
+                int i = 0;
+                while (pin_node && i<MAX_GPIO_PINS)
+                {
+                    int pin = atoi(pin_node.first_attribute().value());
+                    int value = atoi(pin_node.last_attribute().value());
+                    action.ctrls[i].pin = pin;
+                    action.ctrls[i].value = value;
+                    i++;
+                    pin_node = pin_node.next_sibling();
+                }
+                action.ctrl_count = i;
+            }
+
+            act_cnt++;
+            act_node = act_node.next_sibling();
         }
 
-        actions.push_back(action);
-
+        exe_bodies.push_back(body);
         _node = _node.next_sibling();
     }
 

@@ -13,7 +13,8 @@ namespace ConfigInfo
 #define HEAD_EXE        "executive"
 #define CFG_VERSION     "1.0"
 #define EXE_VERSION     "1.0"
-#define MAX_GPIO_PINS   64
+#define MAX_GPIO_PINS   40  // max gpio pins on raspberry PI
+#define MAX_ACTION_CNT  10  // max actions a executive body can support
 
     enum xmlType_
     {
@@ -29,14 +30,25 @@ namespace ConfigInfo
     }sGpioCtrl;
 
     // Action configration
-    typedef struct _sActionConfig
+    typedef struct _sAction
     {
-        int type;       // ActionType, defined in 'executive_def.h' file
-        char name[64];  // action name
+        int parent_id;
+        int type;       // type, defined in 'executive_def.h' file
+        char name[64];  // name
         int ctrl_count;
         sGpioCtrl ctrls[MAX_GPIO_PINS];
+    }sAction;
+
+    // Executive body configration
+    typedef struct _sExecutiveBody
+    {
+        int id;
+        int type;       // type, defined in 'executive_def.h' file
+        char name[64];  // name
+        int act_count;
+        sAction acts[MAX_ACTION_CNT];
         sSpeedCtrl speed;
-    }sActionConfig;
+    }sExecutiveBody;
 
 } // !namespace ConfigInfo
 #endif // CONFIG_DEF_HPP_
