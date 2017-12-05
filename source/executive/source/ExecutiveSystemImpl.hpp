@@ -107,6 +107,18 @@ namespace Driver
             return false;
         }
 
+        virtual bool resetSystem()
+        {
+            if(executiveBodys.size()==0)
+            {
+                return false;
+            }
+            for(auto e:executiveBodys)
+            {
+                e->stop();
+            }
+            return true;
+        }
     private:
         ConfigInfo::config cfg;
         std::vector<ConfigInfo::sExecutiveBody> sbodies;

@@ -98,6 +98,9 @@ int main(int /*argc*/, char* /*argv*/[])
         return -1;
     }
 
+    // reset to standby state
+    eSys->resetSystem();
+
     showTips(actionList);
 
     std::cout << "There are " << actionList.size() << " actions can be executed" << std::endl;
@@ -149,6 +152,8 @@ int main(int /*argc*/, char* /*argv*/[])
         preSpeed = speed;
     }
 
+    eSys->resetSystem();
+    
     // reset motors
     eSys->unloadSystem();
 

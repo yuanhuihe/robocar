@@ -80,6 +80,18 @@ namespace Driver
 
         /**
         *  @brief
+        *    Reset system to standby state.
+        *
+        *  @return
+        *    return false if this function be called before enum actions.
+        *  @mark
+        *    This function only can be called after enum actions.
+        *    If no executive body or actions found, this call will also return false.
+        */
+        virtual bool resetSystem() = 0;
+
+        /**
+        *  @brief
         *    Run an action
         *  @param
         *   [in] action, an action will be executed by the system.
