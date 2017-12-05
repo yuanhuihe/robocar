@@ -50,9 +50,9 @@ namespace Driver
             
             clear_acts();
 
-            for(auto act : bd.acts)
+            for(int i=0; i<bd.act_count; i++)
             {
-                Actions.push_back(new ActionImpl(act));
+                Actions.push_back(new ActionImpl(bd.acts[i]));
             }
 
             if(Actions.size()>0)

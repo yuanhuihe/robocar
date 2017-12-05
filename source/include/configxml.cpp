@@ -203,6 +203,11 @@ bool config::get_executive_bodies(std::vector<sExecutiveBody>& exe_bodies)
         int act_cnt = 0;
         while (act_node && act_cnt<MAX_ACTION_CNT)
         {
+            if(strcmp(act_node.name(), "action")!=0)
+            {
+                break;
+            }
+
             sAction& action = body.acts[act_cnt];
             action.parent_id = id;
 
@@ -229,6 +234,7 @@ bool config::get_executive_bodies(std::vector<sExecutiveBody>& exe_bodies)
             act_cnt++;
             act_node = act_node.next_sibling();
         }
+        body.act_count = act_cnt;
 
         exe_bodies.push_back(body);
         _node = _node.next_sibling();

@@ -43,18 +43,23 @@ void tInputCtrlThead(int& inputCode, int& speed)
         int s = strlen(strInput);
         if (s > 0) strInput[s - 1] = 0;
 
-        sscanf(strInput, "%d %d", &inputCode, &speed);
-
-        // try convert to number
-        int numb = atoi(strInput);
-        if(0 == numb && strInput[0] != '0')
+        int ret = sscanf(strInput, "%d %d", &inputCode, &speed);
+        switch(ret)
         {
-            // it is a char
-            inputCode = strInput[0];
-        }
-        else
-        {
-            inputCode = numb;
+            case 0:
+            {
+                inputCode = strInput[0];
+            }
+            break;
+            case 1:
+            {
+                ret = sscanf(strInput, "%d %c", &inputCode, &speed);
+                if(ret!=2)
+                {
+                    ret = sscanf(strInput, "%c %d", &inputCode, &speed);   
+                }
+            }
+            break;
         }
     }
 }
@@ -99,6 +104,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     // controlling by console inputs
     int preInput = 0;
+    int preSpeed = 0;
     int inputCode = 0;
     int speed = 0;
     std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode), std::ref(speed));
@@ -114,7 +120,7 @@ int main(int /*argc*/, char* /*argv*/[])
         }
 
         // execute action
-        if(inputCode>=0 && inputCode<(int)actionList.size())
+        if(inputCode>=0 && inputCode<(int)actionList.size() && preSpeed!=speed)
         {
             if(speed == 's')
             {
@@ -140,6 +146,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
         // update input
         preInput = inputCode;
+        preSpeed = speed;
     }
 
     // reset motors

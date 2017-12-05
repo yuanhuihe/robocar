@@ -39,13 +39,13 @@
 				<pin id="31" value="0"/>
 			</gpio>
 		</action>
-		<action type="8" name="AT_HeadShook">
+		<action type="8" name="AT_HeadShook1">
 			<gpio>
 				<pin id="33" value="0"/>
 				<pin id="31" value="1"/>
 			</gpio>
 		</action>
-		<action type="8" name="AT_HeadShook">
+		<action type="8" name="AT_HeadShook2">
 			<gpio>
 				<pin id="33" value="1"/>
 				<pin id="31" value="1"/>
