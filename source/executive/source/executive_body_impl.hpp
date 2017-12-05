@@ -25,6 +25,7 @@ namespace Driver
     public:
         ExecutiveBodymImpl(sExecutiveBody bd)
             : bd(bd)
+            , pwm(bd.speed)
             , enumPos(0)
         {
         }

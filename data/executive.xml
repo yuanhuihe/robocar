@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executives name="Motor-based driver system">
-	<body type=1 name="ET_Motor" desc="Walking control">
+	<body type="1" name="ET_Motor" desc="Walking control">
 		<speed>
-			<range mini=0 max=100/>
+			<range mini="0" max="100"/>
 			<default>70</default>
 		</speed>
-		<action type=1 name="AT_MoveForward">
+		<action type="1" name="AT_MoveForward">
 			<gpio>
-				<pin id=37 value=1/>
-				<pin id=35 value=0/>
+				<pin id="37" value="1"/>
+				<pin id="35" value="0"/>
 			</gpio>
 		</action>
-		<action type=2 name="AT_MoveBackward">
+		<action type="2" name="AT_MoveBackward">
 			<gpio>
-				<pin id=37 value=0/>
-				<pin id=35 value=1/>
+				<pin id="37" value="0"/>
+				<pin id="35" value="1"/>
 			</gpio>
 		</action>
-		<action type=3 name="AT_Leftward">
+		<action type="3" name="AT_Leftward">
 			<gpio>
-				<pin id=37 value=1/>
-				<pin id=35 value=1/>
+				<pin id="37" value="1"/>
+				<pin id="35" value="1"/>
 			</gpio>
 		</action>
 		<log>
@@ -28,27 +28,27 @@
 			<level>0</level>
 		</log>
 	</body>
-	<body type=1 name="ET_Motor" desc="Head and hands controlling">
+	<body type="1" name="ET_Motor" desc="Head and hands controlling">
 		<speed>
-			<range mini=0 max=100/>
+			<range mini="0" max="100"/>
 			<default>50</default>
 		</speed>
-		<action type=7 name="AT_HeadNod">
+		<action type="7" name="AT_HeadNod">
 			<gpio>
-				<pin id=33 value=1/>
-				<pin id=31 value=0/>
+				<pin id="33" value="1"/>
+				<pin id="31" value="0"/>
 			</gpio>
 		</action>
-		<action type=8 name="AT_HeadShook">
+		<action type="8" name="AT_HeadShook">
 			<gpio>
-				<pin id=33 value=0/>
-				<pin id=31 value=1/>
+				<pin id="33" value="0"/>
+				<pin id="31" value="1"/>
 			</gpio>
 		</action>
-		<action type=8 name="AT_HeadShook">
+		<action type="8" name="AT_HeadShook">
 			<gpio>
-				<pin id=33 value=1/>
-				<pin id=31 value=1/>
+				<pin id="33" value="1"/>
+				<pin id="31" value="1"/>
 			</gpio>
 		</action>
 		<log>

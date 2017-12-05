@@ -104,7 +104,7 @@ public:
         xml_res = xml_doc.load_file(xml_file_full_name.c_str(), pugi::parse_default, XML_U8);
         if (!xml_res)  // judge xml load status
         {
-            print_error(__LINE__, "load failed");
+            print_error(xml_res.offset, xml_res.description());
             return false;
         }
         print_info(__LINE__, "load success");

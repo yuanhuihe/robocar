@@ -42,17 +42,6 @@ namespace Driver
         AT_HeadShook,
     };
 
-
-    typedef struct _sSpeedCtrl
-    {
-        bool has_speed;
-        int range_min;
-        int range_max;
-        int default_value;
-    }sSpeedCtrl;
-
-
-
 } // namespace Driver
 
 #endif //!EXECUTIVE_DEF_H_

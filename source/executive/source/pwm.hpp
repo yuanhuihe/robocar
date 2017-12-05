@@ -26,14 +26,17 @@ namespace Driver
     class PWM
     {
     public:
-        PWM()
+        PWM(sSpeedCtrl sc)
         :bRunning(false)
+        ,speed_data(sc)
         ,tObj(nullptr)
         ,enable_time(0)
         ,disable_time(0)
         {
             // calculate plus width, unit: ms
             plus_width = 1000 / PWM_FREQ; // ms
+            speed_span = speed_data.range_max - speed_data.range_min;
+            assert(speed_span>0);
         }
         virtual ~PWM()
         {
@@ -49,7 +52,7 @@ namespace Driver
         {
             // DON'T STOP IMMEDIATELY!
             int stop_steps = 5;
-            while(stop_steps>0)
+            while(stop_steps>0 && this->speed>0)
             {
                 unsigned int s = this->speed * (2.0/3.0);
                 setSpeed(s);
@@ -74,16 +77,18 @@ namespace Driver
 
         void setSpeed(unsigned int s)
         {
-            if(s>speedData.range_max) s = speedData.range_max;
-            if(s<speedData.range_min) s = speedData.range_min;
+            // assert(speed_span>0)
+            if(speed_span<=0) return;
 
+            // correct speed
+            if(s>speed_data.range_max) s = speed_data.range_max;
+            if(s<speed_data.range_min) s = speed_data.range_min;
+
+            // save speed
             this->speed = s;
 
             // calculate enable time
-            int range = speedData.range_max - speedData.range_min;
-            assert(range>0);
-
-            this->enable_time = plus_width * ((float)speed/range);
+            this->enable_time = plus_width * ((float)speed/speed_span);
 
             // calculate disable time
             this->disable_time = plus_width - enable_time;
@@ -105,7 +110,8 @@ namespace Driver
 
         int gpio_cunt;
         sGpioCtrl ctrls[MAX_GPIO_PINS];
-        sSpeedCtrl speedData;
+        sSpeedCtrl speed_data;
+        int speed_span;
         float plus_width;
         std::thread* tObj; 
         std::atomic<int> enable_time; 

@@ -23,6 +23,13 @@ namespace ConfigInfo
         UNTYPE
     };
 
+    typedef struct _sSpeedCtrl
+    {
+        int range_min;
+        int range_max;
+        int default_value;
+    }sSpeedCtrl;
+
     typedef struct _sGpioCtrl
     {
         int pin;
