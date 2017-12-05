@@ -74,6 +74,11 @@ namespace Driver
             return nullptr;
         }
 
+        virtual void reset()
+        {
+            pwm.reset();
+        }
+
         virtual unsigned int execute(Action* action, unsigned int speed)
         {
             if(action->getExecuteBodyID()!=bd.id) return EET_ActionNotSupport;

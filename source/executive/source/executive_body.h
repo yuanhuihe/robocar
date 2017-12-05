@@ -71,6 +71,11 @@ namespace Driver
         *    Action object, return nullptr if no more action.
         */
         virtual Action* enumNextAction() = 0;
+        /**
+        *  @brief
+        *    Reset executive body.
+        */
+        virtual void reset() = 0;
 
         /**
         *  @brief

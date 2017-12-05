@@ -107,17 +107,16 @@ namespace Driver
             return false;
         }
 
-        virtual bool resetSystem()
+        virtual void resetSystem()
         {
             if(executiveBodys.size()==0)
             {
-                return false;
+                return;
             }
             for(auto e:executiveBodys)
             {
-                e->stop();
+                e->reset();
             }
-            return true;
         }
     private:
         ConfigInfo::config cfg;

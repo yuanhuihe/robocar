@@ -29,6 +29,7 @@ namespace Driver
         PWM(sSpeedCtrl sc)
         :bRunning(false)
         ,speed_data(sc)
+        ,gpio_cunt(0)
         ,tObj(nullptr)
         ,enable_time(0)
         ,disable_time(0)
@@ -48,6 +49,7 @@ namespace Driver
             stop();
             tObj = new std::thread(&PWM::tPWMGen, this);
         }
+
         void stop()
         {
             // DON'T STOP IMMEDIATELY!
@@ -102,6 +104,11 @@ namespace Driver
         bool isRunning()
         {
             return bRunning;
+        }
+
+        void reset()
+        {
+            stop();
         }
 
     protected:

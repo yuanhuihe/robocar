@@ -48,17 +48,26 @@ void tInputCtrlThead(int& inputCode, int& speed)
         {
             case 0:
             {
+                // No any number input, maybe 's' or 'q' input
                 inputCode = strInput[0];
             }
             break;
             case 1:
             {
+                // maybe input action stop command: number + 's'
                 ret = sscanf(strInput, "%d %c", &inputCode, &speed);
                 if(ret!=2)
                 {
                     ret = sscanf(strInput, "%c %d", &inputCode, &speed);   
                 }
             }
+            break;
+            case 2:
+            {
+                // no input error
+            }
+            break;
+            default:
             break;
         }
     }
