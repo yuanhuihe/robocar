@@ -13,7 +13,7 @@
 
 #include <executive/executive_api.h>
 #include <executive/executive_def.h>
-#include <executive/executive_body.h>
+#include <executive/action.h>
 
 namespace Driver
 {
@@ -75,8 +75,31 @@ namespace Driver
         *  @return
         *    @ref ExecutiveBody object
         */
-        virtual ExecutiveBody* enumFirstExecutiveBody() = 0;
-        virtual ExecutiveBody* enumNextExecutiveBody() = 0;
+        virtual Action* enumFirstAction() = 0;
+        virtual Action* enumNextAction() = 0;
+
+        /**
+        *  @brief
+        *    Run an action
+        *  @param
+        *   [in] action, an action will be executed by the system.
+        *   [in] speed, refered speed of action. '0' means stop execute this action.
+        *
+        *  @return
+        *    @ref true if successful, other wise return false.
+        */
+        virtual bool runAction(Action* action, unsigned int speed) = 0;
+
+        /**
+        *  @brief
+        *    Stop an action
+        *  @param
+        *   [in] action, an action will be stoped.
+        *
+        *  @return
+        *    @ref true if successful, other wise return false.
+        */
+        virtual bool stopAction(Action* action) = 0;
     };
 
 

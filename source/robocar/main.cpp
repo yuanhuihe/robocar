@@ -11,24 +11,28 @@
 
 #include <executive/executive.h>
 
-void showTips(std::vector<Driver::ExecutiveBody*>& executiveList)
+void showTips(std::vector<Driver::Action*>& actList)
 {
     std::cout << "Input definitions:" << std::endl;
     std::cout << " -- " << "q" << ": " << "exit this app" << std::endl;
-    std::cout << " -- " << "s" << ": " << "stop all executive bodies" << std::endl;
-    std::cout << " -- " << "S" << ": " << "show this tips again" << std::endl;
+    std::cout << " -- " << "s" << ": " << "show this tips again" << std::endl;
     std::cout << std::endl;
-    std::cout << "Executive bodies:" << std::endl;
-    for(size_t i=0; i<executiveList.size(); i++)
+    std::cout << "Format for running an action: " << std::endl;
+    std::cout << " Run action : 'action index' + 'speed'"<< std::endl;
+    std::cout << " Stop action: 'action index' + 's'"<< std::endl;
+    std::cout << " e.g.: 1 70 ==> run action '1' with speed of '70%'"<< std::endl;
+    std::cout << std::endl;
+    std::cout << "Actions list:" << std::endl;
+    for(size_t i=0; i<actList.size(); i++)
     {
-        std::string body_name = executiveList[i]->getName();
-        std::cout << " -- " << i << ": " << body_name << std::endl;
+        std::string name = actList[i]->getName();
+        std::cout << " -- " << i << ": " << name << std::endl;
 
     }
     std::cout << std::endl;
 }
 
-void tInputCtrlThead(int& inputCode, int& act_index, int& speed)
+void tInputCtrlThead(int& inputCode, int& speed)
 {
     while (inputCode != 'q')
     {
@@ -39,7 +43,7 @@ void tInputCtrlThead(int& inputCode, int& act_index, int& speed)
         int s = strlen(strInput);
         if (s > 0) strInput[s - 1] = 0;
 
-        sscanf(strInput, "", inputCode, act_index, speed);
+        sscanf(strInput, "%d %d", &inputCode, &speed);
 
         // try convert to number
         int numb = atoi(strInput);
@@ -70,36 +74,34 @@ int main(int /*argc*/, char* /*argv*/[])
     eSys->loadSystem();
     
     // ExecutiveB body list
-    std::vector<Driver::ExecutiveBody*> executiveList;
+    std::vector<Driver::Action*> actionList;
     
-    // Enum executive bodies
-    Driver::ExecutiveBody* body = eSys->enumFirstExecutiveBody();
-    while (body)
+    // Enum all actions
+    Driver::Action* act = eSys->enumFirstAction();
+    while (act)
     {
         // save to list
-        executiveList.push_back(body);
-
+        actionList.push_back(act);
         // next
-        body = eSys->enumNextExecutiveBody();
+        act = eSys->enumNextAction();
     }
 
-    if(executiveList.size()==0)
+    if(actionList.size()==0)
     {
         Driver::ExecutiveSystem::ReleaseSystem(&eSys);
-        std::cout << "No executable body" << std::endl;
+        std::cout << "No executable actions on this system" << std::endl;
         return -1;
     }
 
-    showTips(executiveList);
+    showTips(actionList);
 
-    std::cout << "There are " << executiveList.size() << " executive bodies to be used" << std::endl;
+    std::cout << "There are " << actionList.size() << " actions can be executed" << std::endl;
 
     // controlling by console inputs
     int preInput = 0;
     int inputCode = 0;
-    int act_index = 0;
     int speed = 0;
-    std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode), std::ref(act_index), std::ref(speed));
+    std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode), std::ref(speed));
 
     bool bRunning = true;
     while(bRunning)
@@ -112,21 +114,20 @@ int main(int /*argc*/, char* /*argv*/[])
         }
 
         // execute action
-        if(inputCode>=0 && inputCode<(int)executiveList.size())
+        if(inputCode>=0 && inputCode<(int)actionList.size())
         {
-            Driver::ExecutiveBody* executive_body = executiveList[inputCode];
-            executive_body->execute(nullptr, speed);
+            if(speed == 's')
+            {
+                eSys->stopAction(actionList[inputCode]);   
+            }
+            else
+            {
+                eSys->runAction(actionList[inputCode], speed);
+            }
         }
         else if(inputCode=='s')
         {
-            for(auto bd:executiveList)
-            {
-                bd->stop();
-            }
-        }
-        else if(inputCode=='S')
-        {
-            showTips(executiveList);
+            showTips(actionList);
         }
         else if(inputCode=='q')
         {

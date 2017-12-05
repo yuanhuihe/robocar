@@ -47,6 +47,18 @@ namespace Driver
         }
         void stop()
         {
+            // DON'T STOP IMMEDIATELY!
+            int stop_steps = 5;
+            while(stop_steps>0)
+            {
+                unsigned int s = this->speed * (2.0/3.0);
+                setSpeed(s);
+
+                std::this_thread::sleep_for(std::chrono::duration<int,std::milli>(500));
+
+                stop_steps--;
+            }
+
             // stop pwm generator thread
             bRunning = false;
             if(tObj)

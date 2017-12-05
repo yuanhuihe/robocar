@@ -47,7 +47,7 @@ namespace Driver
             unloadCfg();
         }
 
-        virtual ExecutiveBody* enumFirstExecutiveBody()
+        virtual Action* enumFirstAction()
         {
             unloadCfg();
 
@@ -57,29 +57,61 @@ namespace Driver
             loadCfg(file);
 
             enumPos = 0;
-            if(executiveBodys.size()>0)
+            if(actions.size()>0)
             {
-                return executiveBodys[0];
+                return actions[0];
             }
             
             return nullptr;
         }
 
-        virtual ExecutiveBody* enumNextExecutiveBody()
+        virtual Action* enumNextAction()
         {
             enumPos++;
-            if(executiveBodys.size()>enumPos)
+            if(actions.size()>enumPos)
             {
-                return executiveBodys[enumPos];
+                return actions[enumPos];
             }
             
             return nullptr;
+        }
+
+        virtual bool runAction(Action* action, unsigned int speed)
+        {
+            if(action == nullptr) return false;
+            
+            Action* act = dynamic_cast<Action*>(action);
+            if(act==nullptr) return false;
+
+            int pid = action->getExecuteBodyID();
+            if(executiveBodys.size()>pid)
+            {
+                return executiveBodys[pid]->execute(action, speed) == EET_OK;
+            }
+            return false;
+        }
+
+        virtual bool stopAction(Action* action)
+        {
+            if(action == nullptr) return false;
+            
+            Action* act = dynamic_cast<Action*>(action);
+            if(act==nullptr) return false;
+
+            int pid = action->getExecuteBodyID();
+            if(executiveBodys.size()>pid)
+            {
+                executiveBodys[pid]->stop();
+                return true;
+            }
+            return false;
         }
 
     private:
         ConfigInfo::config cfg;
         std::vector<ConfigInfo::sExecutiveBody> sbodies;
         std::vector<ExecutiveBody*> executiveBodys;
+        std::vector<Action*> actions;
         int enumPos;
 
         void loadCfg(std::string file)
@@ -91,7 +123,15 @@ namespace Driver
             cfg.get_executive_bodies(sbodies);
             for(auto bd : sbodies)
             {
-                executiveBodys.push_back(new ExecutiveBodymImpl(bd));
+                ExecutiveBody* body = new ExecutiveBodymImpl(bd);
+                executiveBodys.push_back(body);
+
+                Action* act = body->enumFirstAction();
+                while(act)
+                {
+                    actions.push_back(act);
+                    act = body->enumNextAction();
+                }
             }
         }
 
@@ -105,6 +145,8 @@ namespace Driver
                 bd = nullptr;
             }
             executiveBodys.clear();
+
+            actions.clear();
 
             // clear config data
             enumPos = 0;

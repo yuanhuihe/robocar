@@ -11,7 +11,7 @@
 #ifndef EXECUTIVE_BODY_IMPL_HPP_
 #define EXECUTIVE_BODY_IMPL_HPP_
 
-#include <executive/executive_body.h>
+#include "executive_body.h"
 #include "actionImpl.hpp"
 #include "configxml.h"
 #include "_inl.hpp"
@@ -30,7 +30,7 @@ namespace Driver
         }
         virtual ~ExecutiveBodymImpl()
         {
-
+            clear_acts();
         }
         
         virtual ExecutiveType getType()
@@ -75,7 +75,7 @@ namespace Driver
 
         virtual unsigned int execute(Action* action, unsigned int speed)
         {
-            if(action->getExecuteBodyID()!=bd.id)
+            if(action->getExecuteBodyID()!=bd.id) return EET_ActionNotSupport;
 
             if(!pwm.isRunning())
             {
