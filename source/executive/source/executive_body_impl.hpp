@@ -25,7 +25,7 @@ namespace Driver
     public:
         ExecutiveBodymImpl(sExecutiveBody bd)
             : bd(bd)
-            , pwm(bd.speed)
+            , pwm(bd)
             , enumPos(0)
         {
         }
@@ -81,11 +81,22 @@ namespace Driver
 
         virtual unsigned int execute(Action* action, unsigned int speed)
         {
-            if(action->getExecuteBodyID()!=bd.id) return EET_ActionNotSupport;
+            ActionImpl* act = dynamic_cast<ActionImpl*>(action);
+            if (act == nullptr)
+            {
+                return EET_UnknownAction;
+            }
+
+            if (act->getExecuteBodyID() != bd.id)
+            {
+                return EET_ActionNotSupport;
+            }
+
+            int index = act->getId();
 
             if(!pwm.isRunning())
             {
-                pwm.start();    
+                pwm.run_action(index);
             }
 
             pwm.setSpeed(speed);
@@ -117,6 +128,7 @@ namespace Driver
                 delete act;
                 act = nullptr;
             }
+            Actions.clear();
         }
     };
 

@@ -34,26 +34,27 @@ namespace Driver
         
         virtual void loadSystem()
         {
+            // clear config
             unloadCfg();
 
             // read action config
             std::string file = get_curr_dir() + "executive.xml";
-            std::cout << file << std::endl;
             loadCfg(file);
         }
         
         virtual void unloadSystem()
         {
+            // clear config
             unloadCfg();
         }
 
         virtual Action* enumFirstAction()
         {
+            // clear config
             unloadCfg();
 
             // read action config
-            std::string file = get_curr_dir() + "executive.xml";
-            std::cout << file << std::endl;
+            std::string file = get_curr_dir() + CFG_EXECUTIVE_FILE;
             loadCfg(file);
 
             enumPos = 0;
@@ -109,11 +110,7 @@ namespace Driver
 
         virtual void resetSystem()
         {
-            if(executiveBodys.size()==0)
-            {
-                return;
-            }
-            for(auto e:executiveBodys)
+            for (auto e : executiveBodys)
             {
                 e->reset();
             }

@@ -25,13 +25,9 @@ namespace Driver
         {
             act_data = act;
         }
+
         virtual ~ActionImpl()
         {
-        }
-
-        virtual ActionType getType()
-        {
-            return (ActionType)act_data.type;
         }
 
         virtual char* getName()
@@ -42,6 +38,11 @@ namespace Driver
         virtual int getExecuteBodyID()
         {
             return act_data.parent_id;
+        }
+
+        int getId()
+        {
+            return act_data.id;
         }
         
     protected:

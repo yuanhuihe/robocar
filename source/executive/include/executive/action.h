@@ -34,16 +34,7 @@ namespace Driver
         *    Destructor
         */
         virtual ~Action();
-        
-        /**
-        *  @brief
-        *    Get type of action
-        *
-        *  @return
-        *    Type of the device
-        */
-        virtual ActionType getType() = 0;
-        
+
         /**
         *  @brief
         *    Get action

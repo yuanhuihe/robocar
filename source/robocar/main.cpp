@@ -13,6 +13,7 @@
 
 void showTips(std::vector<Driver::Action*>& actList)
 {
+    std::cout << "*************************************************" << std::endl;
     std::cout << "Input definitions:" << std::endl;
     std::cout << " -- " << "q" << ": " << "exit this app" << std::endl;
     std::cout << " -- " << "s" << ": " << "show this tips again" << std::endl;
@@ -29,6 +30,9 @@ void showTips(std::vector<Driver::Action*>& actList)
         std::cout << " -- " << i << ": " << name << std::endl;
 
     }
+
+    std::cout << "There are " << actList.size() << " actions can be executed" << std::endl;
+    std::cout << "*************************************************" << std::endl;
     std::cout << std::endl;
 }
 
@@ -112,8 +116,6 @@ int main(int /*argc*/, char* /*argv*/[])
 
     showTips(actionList);
 
-    std::cout << "There are " << actionList.size() << " actions can be executed" << std::endl;
-
     // controlling by console inputs
     int preInput = 0;
     int preSpeed = 0;
@@ -134,13 +136,13 @@ int main(int /*argc*/, char* /*argv*/[])
         // execute action
         if(inputCode>=0 && inputCode<(int)actionList.size() && preSpeed!=speed)
         {
-            if(speed == 's')
+            if(speed != 's')
             {
-                eSys->stopAction(actionList[inputCode]);   
+                eSys->runAction(actionList[inputCode], speed);
             }
             else
             {
-                eSys->runAction(actionList[inputCode], speed);
+                eSys->stopAction(actionList[inputCode]);   
             }
         }
         else if(inputCode=='s')

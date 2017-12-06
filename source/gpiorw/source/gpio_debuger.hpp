@@ -12,27 +12,25 @@
 
 namespace GPIORW
 {
-    class Win32DebugGpio : public gpio_base
+    class GpioCrossplatformDebuger : public gpio_base
     {
     public:
-        Win32DebugGpio()
+        GpioCrossplatformDebuger()
         {
-            fprintf(stderr, "Win32DebugGpio constructor\n");
         }
-        virtual ~Win32DebugGpio()
+        virtual ~GpioCrossplatformDebuger()
         {
-            fprintf(stderr, "Win32DebugGpio destructor\n");
         }
 
         virtual int Init()
         {
-            fprintf(stderr, "Win32DebugGpio Init()\n");
+            fprintf(stderr, "<GpioDebuger>Init()\n");
             return 0;
         }
 
         virtual void Release()
         {
-            fprintf(stderr, "Win32DebugGpio Release()\n");
+            fprintf(stderr, "<GpioDebuger>Release()\n");
         }
 
         virtual int GPIORead(int pin)
@@ -42,7 +40,7 @@ namespace GPIORW
                 return -1;
             }
 
-            fprintf(stderr, "Win32DebugGpio GPIORead(pin:%d)\n", pin);
+            fprintf(stderr, "<GpioDebuger>GPIORead(pin:%d)\n", pin);
             return 0;
         }
 
@@ -53,7 +51,7 @@ namespace GPIORW
                 return -1;
             }
 
-            fprintf(stderr, "Win32DebugGpio GPIOWrite(pin:%d, value:%d)\n", pin, value);
+            fprintf(stderr, "<GpioDebuger>GPIOWrite(pin:%d, value:%d)\n", pin, value);
             return 0;
         }
 
@@ -64,14 +62,12 @@ namespace GPIORW
             // check pin range
             if (pin < 0 || pin >= PIN_MAX_COUNT)
             {
-                fprintf(stderr, "Win32DebugGpio checkPin(pin:%d) error\n", pin);
+                fprintf(stderr, "<GpioDebuger>checkPin(pin:%d) error\n", pin);
                 return -1;
             }
 
             return 0;
         }
-
-
     };
 
 } // namespace GPIORW

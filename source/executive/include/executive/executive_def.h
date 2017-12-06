@@ -28,20 +28,6 @@ namespace Driver
         ET_Motor,
     };
 
-    // Moving type
-    enum ActionType
-    {
-        AT_Unknown = 0,
-        AT_MoveForward,
-        AT_MoveBackward,
-        AT_Leftward,
-        AT_Rightward,
-        AT_BackLeft,
-        AT_BackRigh,
-        AT_HeadNod,
-        AT_HeadShook,
-    };
-
 } // namespace Driver
 
 #endif //!EXECUTIVE_DEF_H_

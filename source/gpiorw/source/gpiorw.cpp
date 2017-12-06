@@ -10,7 +10,7 @@
 #include "gpio_base.hpp"
 #include "fsgpio.hpp"
 #include "wiringpi_gpio.hpp"
-#include "win32debuggpio.hpp"
+#include "gpio_debuger.hpp"
 
 
 namespace GPIORW
@@ -19,7 +19,7 @@ namespace GPIORW
 #if !defined(WIN32) && !defined(__APPLE__)
     gpio_base* gpio = new WiringPiGPIO();
 #else
-    gpio_base* gpio = new Win32DebugGpio();
+    gpio_base* gpio = new GpioCrossplatformDebuger();
 #endif
 
 

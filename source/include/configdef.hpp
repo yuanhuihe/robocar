@@ -8,13 +8,15 @@ using namespace Driver;
 
 namespace ConfigInfo
 {
-#define NAME_VERSION    "ROBO_CAR"
-#define HEAD_CFG        "config"
-#define HEAD_EXE        "executive"
-#define CFG_VERSION     "1.0"
-#define EXE_VERSION     "1.0"
-#define MAX_GPIO_PINS   40  // max gpio pins on raspberry PI
-#define MAX_ACTION_CNT  10  // max actions a executive body can support
+#define NAME_VERSION        "ROBO_CAR"
+#define HEAD_CFG            "config"
+#define HEAD_EXE            "executive"
+#define CFG_SYS_CFG_FILE    "config.xml"
+#define CFG_EXECUTIVE_FILE  "executive.xml"
+#define CFG_VERSION         "1.0"
+#define EXE_VERSION         "1.0"
+#define MAX_GPIO_PINS       40  // max gpio pins on raspberry PI
+#define MAX_ACTION_CNT      10  // max actions a executive body can support
 
     enum xmlType_
     {
@@ -39,8 +41,8 @@ namespace ConfigInfo
     // Action configration
     typedef struct _sAction
     {
+        int id;
         int parent_id;
-        int type;       // type, defined in 'executive_def.h' file
         char name[64];  // name
         int ctrl_count;
         sGpioCtrl ctrls[MAX_GPIO_PINS];
