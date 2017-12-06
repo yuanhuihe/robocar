@@ -27,6 +27,7 @@ namespace Driver
             : bd(bd)
             , pwm(bd)
             , enumPos(0)
+            , running_action_index(-1)
         {
         }
         virtual ~ExecutiveBodymImpl()
@@ -92,21 +93,18 @@ namespace Driver
                 return EET_ActionNotSupport;
             }
 
-            int index = act->getId();
-
-            if(!pwm.isRunning())
-            {
-                pwm.run_action(index);
-            }
-
-            pwm.setSpeed(speed);
+            running_action_index = act->getId();
+            pwm.run_action(running_action_index, speed);
 
             return EET_OK;
         }
         
-        virtual void updateExecuteSpeed(int speed)
+        virtual void updateSpeed(int speed)
         {
-            pwm.setSpeed(speed);
+            if (running_action_index >= 0)
+            {
+                pwm.run_action(running_action_index, speed);
+            }
         }
         
         virtual void stop()
@@ -117,6 +115,7 @@ namespace Driver
     private:
         sExecutiveBody bd;
         std::vector<Action*> Actions;
+        int running_action_index;
         int enumPos;
 
         PWM pwm;

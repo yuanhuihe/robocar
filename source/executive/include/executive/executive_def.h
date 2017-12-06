@@ -13,7 +13,7 @@
 
 namespace Driver
 {
-    // Execute error types
+    // Execution error types
 #define EET_OK                      0   // No error
 #define EET_UnknownAction           1   // Unknown moving command
 #define EET_ActionNotSupport        2   // Not supported moving command

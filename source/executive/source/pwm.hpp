@@ -49,32 +49,34 @@ namespace Driver
             stop();
         }
 
-        void run_action(int act_index)
+        void run_action(int act_index, unsigned int speed)
         {
             if (act_index >= seb.act_count) return;
 
-            curr_action_locker.lock();
-            curr_action = seb.acts[act_index];
-            curr_action_locker.unlock();
+            if (curr_action.id != act_index)
+            {
+                // action will change, stop pre-action
+                stop();
 
-            stop();
+                // update as new action data
+                std::lock_guard<std::mutex> l(curr_action_locker);
+                curr_action = seb.acts[act_index];
+            }
 
-            tObj = new std::thread(&PWM::tPWMGen, this);
+            // start pwm generation
+            if (tObj == nullptr)
+            {
+                tObj = new std::thread(&PWM::tPWMGen, this);
+            }
+
+            // change speed
+            change_speed_gradually(speed);
         }
 
         void stop()
         {
             // DON'T STOP IMMEDIATELY!
-            int stop_steps = 5;
-            while (stop_steps>0 && this->curr_speed>0)
-            {
-                unsigned int s = this->curr_speed * (2.0 / 3.0);
-                setSpeed(s);
-
-                std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(500));
-
-                stop_steps--;
-            }
+            change_speed_gradually(0);
 
             // stop pwm generator thread
             bRunning = false;
@@ -87,25 +89,6 @@ namespace Driver
 
             // reset gpio
             gpio_disable(curr_action);
-        }
-
-        void setSpeed(unsigned int speed)
-        {
-            // assert(speed_span>0)
-            if (speed_span <= 0) return;
-
-            // correct speed
-            if (speed>seb.speed.range_max) speed = seb.speed.range_max;
-            if (speed<seb.speed.range_min) speed = seb.speed.range_min;
-
-            // save speed
-            this->curr_speed = speed;
-
-            // calculate enable time
-            this->enable_time = plus_width * ((float)curr_speed / speed_span);
-
-            // calculate disable time
-            this->disable_time = plus_width - enable_time;
         }
 
         unsigned int getSpeed()
@@ -185,6 +168,53 @@ namespace Driver
             {
                 GPIORW::GPIOWrite(action.ctrls[i].pin, 0);
             }
+        }
+        
+        void change_speed_gradually(unsigned int speed)
+        {
+            // correct speed
+            if (speed>seb.speed.range_max) speed = seb.speed.range_max;
+            if (speed<seb.speed.range_min) speed = seb.speed.range_min;
+            
+            // total deta speed
+            float deta_speed = (int)speed - curr_speed;
+            if (abs(deta_speed) > 0)
+            {
+                // save current speed
+                float tmp_curr_speed = curr_speed;
+
+                // deta speed for every step
+                int steps = 5;
+                deta_speed /= steps;
+                while (steps>0)
+                {
+                    tmp_curr_speed += deta_speed;
+
+                    update_speed(tmp_curr_speed + 0.5);
+
+                    std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(200));
+
+                    steps--;
+                }
+
+                // set real time
+                update_speed(speed);
+            }
+        }
+
+        void update_speed(unsigned int speed)
+        {
+            // assert(speed_span>0)
+            if (speed_span <= 0) return;
+
+            // update speed
+            this->curr_speed = speed;
+
+            // calculate enable time
+            this->enable_time = plus_width * ((float)curr_speed / speed_span);
+
+            // calculate disable time
+            this->disable_time = plus_width - enable_time;
         }
     };
 

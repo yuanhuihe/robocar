@@ -31,7 +31,7 @@ namespace Driver
         {
 
         }
-        
+
         virtual void loadSystem()
         {
             // clear config
@@ -41,7 +41,7 @@ namespace Driver
             std::string file = get_curr_dir() + "executive.xml";
             loadCfg(file);
         }
-        
+
         virtual void unloadSystem()
         {
             // clear config
@@ -58,54 +58,56 @@ namespace Driver
             loadCfg(file);
 
             enumPos = 0;
-            if(actions.size()>0)
+            if (actions.size()>0)
             {
                 return actions[0];
             }
-            
+
             return nullptr;
         }
 
         virtual Action* enumNextAction()
         {
             enumPos++;
-            if(actions.size()>enumPos)
+            if (actions.size()>enumPos)
             {
                 return actions[enumPos];
             }
-            
+
             return nullptr;
         }
 
-        virtual bool runAction(Action* action, unsigned int speed)
+        virtual unsigned int runAction(Action* action, unsigned int speed)
         {
-            if(action == nullptr) return false;
-            
             Action* act = dynamic_cast<Action*>(action);
-            if(act==nullptr) return false;
+            if (act == nullptr)
+            {
+                return EET_UnknownAction;
+            }
 
             int pid = action->getExecuteBodyID();
-            if(executiveBodys.size()>pid)
+            if (executiveBodys.size()>pid)
             {
-                return executiveBodys[pid]->execute(action, speed) == EET_OK;
+                return executiveBodys[pid]->execute(action, speed);
             }
-            return false;
+            return EET_ActionNotSupport;
         }
 
-        virtual bool stopAction(Action* action)
+        virtual unsigned int stopAction(Action* action)
         {
-            if(action == nullptr) return false;
-            
             Action* act = dynamic_cast<Action*>(action);
-            if(act==nullptr) return false;
+            if (act == nullptr)
+            {
+                return EET_UnknownAction;
+            }
 
             int pid = action->getExecuteBodyID();
-            if(executiveBodys.size()>pid)
+            if (executiveBodys.size()>pid)
             {
                 executiveBodys[pid]->stop();
-                return true;
+                return EET_OK;
             }
-            return false;
+            return EET_ActionNotSupport;
         }
 
         virtual void resetSystem()
@@ -129,13 +131,13 @@ namespace Driver
 
             // get actions
             cfg.get_executive_bodies(sbodies);
-            for(auto bd : sbodies)
+            for (auto bd : sbodies)
             {
                 ExecutiveBody* body = new ExecutiveBodymImpl(bd);
                 executiveBodys.push_back(body);
 
                 Action* act = body->enumFirstAction();
-                while(act)
+                while (act)
                 {
                     actions.push_back(act);
                     act = body->enumNextAction();
@@ -146,7 +148,7 @@ namespace Driver
         void unloadCfg()
         {
             // firstly reset system
-            for(auto& bd: executiveBodys)
+            for (auto& bd : executiveBodys)
             {
                 bd->stop();
                 delete bd;

@@ -86,15 +86,15 @@ namespace Driver
 
         /**
         *  @brief
-        *    Run an action
+        *    Run an action, or update speed of an running action.
         *  @param
         *   [in] action, an action will be executed by the system.
         *   [in] speed, refered speed of action. '0' means stop execute this action.
         *
         *  @return
-        *    @ref true if successful, other wise return false.
+        *    Execution code, '0' means successful. An xecution error code is defined in 'executive_def.h' file.
         */
-        virtual bool runAction(Action* action, unsigned int speed) = 0;
+        virtual unsigned int runAction(Action* action, unsigned int speed) = 0;
 
         /**
         *  @brief
@@ -103,9 +103,9 @@ namespace Driver
         *   [in] action, an action will be stoped.
         *
         *  @return
-        *    @ref true if successful, other wise return false.
+        *    Execution code, '0' means successful. An xecution error code is defined in 'executive_def.h' file.
         */
-        virtual bool stopAction(Action* action) = 0;
+        virtual unsigned int stopAction(Action* action) = 0;
     };
 
 

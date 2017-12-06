@@ -127,7 +127,7 @@ int main(int /*argc*/, char* /*argv*/[])
     while (bRunning)
     {
         // check input
-        if (inputCode == preInput)
+        if (inputCode == preInput && preSpeed == inputSpeed)
         {
             std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(50));
             continue;
