@@ -36,6 +36,7 @@ namespace Driver
         {
             // clear memory
             memset(&curr_action, 0, sizeof(curr_action));
+            curr_action.id = -1;
 
             // calculate plus width, unit: ms
             plus_width = 1000 / PWM_FREQ;

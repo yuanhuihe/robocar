@@ -235,6 +235,8 @@ namespace ConfigInfo
 
             exe_bodies.push_back(body);
             _node = _node.next_sibling();
+
+            id++;
         }
 
         return true;

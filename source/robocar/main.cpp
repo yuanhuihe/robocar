@@ -134,7 +134,7 @@ int main(int /*argc*/, char* /*argv*/[])
         }
 
         // execute action
-        if (inputCode >= 0 && inputCode<(int)actionList.size() && preSpeed != inputSpeed)
+        if (inputCode >= 0 && inputCode<(int)actionList.size() && ( preInput != inputCode || preSpeed != inputSpeed))
         {
             if (inputSpeed != 's')
             {
