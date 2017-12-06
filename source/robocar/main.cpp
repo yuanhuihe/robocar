@@ -19,12 +19,12 @@ void showTips(std::vector<Driver::Action*>& actList)
     std::cout << " -- " << "s" << ": " << "show this tips again" << std::endl;
     std::cout << std::endl;
     std::cout << "Format for running an action: " << std::endl;
-    std::cout << " Run action : 'action index' + 'speed'"<< std::endl;
-    std::cout << " Stop action: 'action index' + 's'"<< std::endl;
-    std::cout << " e.g.: 1 70 ==> run action '1' with speed of '70%'"<< std::endl;
+    std::cout << " Run action : 'action index' + 'speed'" << std::endl;
+    std::cout << " Stop action: 'action index' + 's'" << std::endl;
+    std::cout << " e.g.: 1 70 ==> run action '1' with speed of '70%'" << std::endl;
     std::cout << std::endl;
     std::cout << "Actions list:" << std::endl;
-    for(size_t i=0; i<actList.size(); i++)
+    for (size_t i = 0; i<actList.size(); i++)
     {
         std::string name = actList[i]->getName();
         std::cout << " -- " << i << ": " << name << std::endl;
@@ -36,42 +36,42 @@ void showTips(std::vector<Driver::Action*>& actList)
     std::cout << std::endl;
 }
 
-void tInputCtrlThead(int& inputCode, int& speed)
+void tInputCtrlThead(int& code, int& speed)
 {
-    while (inputCode != 'q')
+    while (code != 'q')
     {
         char strInput[100];
         memset(strInput, 0, sizeof(strInput));
 
-        fgets (strInput, 100, stdin);
+        fgets(strInput, 100, stdin);
         int s = strlen(strInput);
         if (s > 0) strInput[s - 1] = 0;
 
-        int ret = sscanf(strInput, "%d %d", &inputCode, &speed);
-        switch(ret)
+        int ret = sscanf(strInput, "%d %d", &code, &speed);
+        switch (ret)
         {
-            case 0:
+        case 0:
+        {
+            // No any number input, maybe 's' or 'q' input
+            code = strInput[0];
+        }
+        break;
+        case 1:
+        {
+            // maybe input action stop command: number + 's'
+            ret = sscanf(strInput, "%d %c", &code, &speed);
+            if (ret != 2)
             {
-                // No any number input, maybe 's' or 'q' input
-                inputCode = strInput[0];
+                ret = sscanf(strInput, "%c %d", &code, &speed);
             }
-            break;
-            case 1:
-            {
-                // maybe input action stop command: number + 's'
-                ret = sscanf(strInput, "%d %c", &inputCode, &speed);
-                if(ret!=2)
-                {
-                    ret = sscanf(strInput, "%c %d", &inputCode, &speed);   
-                }
-            }
-            break;
-            case 2:
-            {
-                // no input error
-            }
-            break;
-            default:
+        }
+        break;
+        case 2:
+        {
+            // no input error
+        }
+        break;
+        default:
             break;
         }
     }
@@ -90,10 +90,10 @@ int main(int /*argc*/, char* /*argv*/[])
 
     // load system
     eSys->loadSystem();
-    
+
     // ExecutiveB body list
     std::vector<Driver::Action*> actionList;
-    
+
     // Enum all actions
     Driver::Action* act = eSys->enumFirstAction();
     while (act)
@@ -104,7 +104,7 @@ int main(int /*argc*/, char* /*argv*/[])
         act = eSys->enumNextAction();
     }
 
-    if(actionList.size()==0)
+    if (actionList.size() == 0)
     {
         Driver::ExecutiveSystem::ReleaseSystem(&eSys);
         std::cout << "No executable actions on this system" << std::endl;
@@ -120,36 +120,36 @@ int main(int /*argc*/, char* /*argv*/[])
     int preInput = 0;
     int preSpeed = 0;
     int inputCode = 0;
-    int speed = 0;
-    std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode), std::ref(speed));
+    int inputSpeed = 0;
+    std::thread tInputCtrlObj(tInputCtrlThead, std::ref(inputCode), std::ref(inputSpeed));
 
     bool bRunning = true;
-    while(bRunning)
+    while (bRunning)
     {
         // check input
-        if(inputCode == preInput)
+        if (inputCode == preInput)
         {
             std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(50));
             continue;
         }
 
         // execute action
-        if(inputCode>=0 && inputCode<(int)actionList.size() && preSpeed!=speed)
+        if (inputCode >= 0 && inputCode<(int)actionList.size() && preSpeed != inputSpeed)
         {
-            if(speed != 's')
+            if (inputSpeed != 's')
             {
-                eSys->runAction(actionList[inputCode], speed);
+                eSys->runAction(actionList[inputCode], inputSpeed);
             }
             else
             {
-                eSys->stopAction(actionList[inputCode]);   
+                eSys->stopAction(actionList[inputCode]);
             }
         }
-        else if(inputCode=='s')
+        else if (inputCode == 's')
         {
             showTips(actionList);
         }
-        else if(inputCode=='q')
+        else if (inputCode == 'q')
         {
             break;
         }
@@ -160,11 +160,11 @@ int main(int /*argc*/, char* /*argv*/[])
 
         // update input
         preInput = inputCode;
-        preSpeed = speed;
+        preSpeed = inputSpeed;
     }
 
     eSys->resetSystem();
-    
+
     // reset motors
     eSys->unloadSystem();
 
@@ -175,7 +175,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     // time end
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = end-start;
+    std::chrono::duration<double, std::milli> elapsed = end - start;
     std::cout << "runtime " << elapsed.count() << " ms\n";
 
     return 0;

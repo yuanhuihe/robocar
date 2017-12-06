@@ -53,9 +53,12 @@ namespace Driver
         {
             if (act_index >= seb.act_count) return;
 
+            curr_action_locker.lock();
             curr_action = seb.acts[act_index];
+            curr_action_locker.unlock();
 
             stop();
+
             tObj = new std::thread(&PWM::tPWMGen, this);
         }
 
@@ -134,8 +137,9 @@ namespace Driver
     protected:
         bool bRunning;
         sExecutiveBody seb;
+        std::mutex curr_action_locker;
         sAction curr_action;
-        int curr_speed;
+        std::atomic<int> curr_speed;
 
         int speed_span;
         float plus_width;
@@ -166,6 +170,8 @@ namespace Driver
         }
         void gpio_enable(sAction& action)
         {
+            std::lock_guard<std::mutex> l(curr_action_locker);
+
             for (int i = 0; i<action.ctrl_count; i++)
             {
                 GPIORW::GPIOWrite(action.ctrls[i].pin, action.ctrls[i].value);
@@ -173,6 +179,8 @@ namespace Driver
         }
         void gpio_disable(sAction& action)
         {
+            std::lock_guard<std::mutex> l(curr_action_locker);
+
             for (int i = 0; i<action.ctrl_count; i++)
             {
                 GPIORW::GPIOWrite(action.ctrls[i].pin, 0);
