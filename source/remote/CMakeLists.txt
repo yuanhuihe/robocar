@@ -12,7 +12,7 @@ find_package(CZMQ REQUIRED)
 # 
 
 # Target name
-set(target broker)
+set(target remote)
 set(META_NAME ${target})
 configure_file(${PROJECT_BINARY_DIR}/version.rc ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
 set(RES_FILES  ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
@@ -39,31 +39,16 @@ set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 file(GLOB headers
-    "${include_path}/broker.h"
-    "${include_path}/BrHelper.hpp"
-    "${PROJECT_SOURCE_DIR}/source/include/data/auto_match.h"
-    "${PROJECT_SOURCE_DIR}/source/include/data/rbimu/*.h"
-    "${PROJECT_SOURCE_DIR}/source/include/data/rbimu/*.hpp" 
-    "${PROJECT_SOURCE_DIR}/source/include/data/*.h"
-    "${PROJECT_SOURCE_DIR}/source/include/data/*.hpp"
-    "${PROJECT_SOURCE_DIR}/source/motive/source/OptiReader/OptiDataParse.h"
-    "${PROJECT_SOURCE_DIR}/thirdparty/utility/Utility.h"
+    "${include_path}/remote.h"
+    "${include_path}/helper.hpp"
     "${PROJECT_SOURCE_DIR}/thirdparty/utility/HighPerfTimer.h"
     "${PROJECT_SOURCE_DIR}/source/include/CRCCode.h"
-    "${PROJECT_SOURCE_DIR}/source/include/xmlbus/*.h"
 )
 
 file(GLOB sources
-    "${source_path}/broker.cpp"
-    "${PROJECT_SOURCE_DIR}/source/include/data/auto_match.cpp"
-    "${PROJECT_SOURCE_DIR}/source/include/data/rbimu/*.cpp" 
-    "${PROJECT_SOURCE_DIR}/source/include/data/DataFusion.cpp"
-    "${PROJECT_SOURCE_DIR}/source/include/data/DataHelper.cpp"
-    "${PROJECT_SOURCE_DIR}/source/motive/source/OptiReader/OptiDataParse.cpp"
-    "${PROJECT_SOURCE_DIR}/thirdparty/utility/Utility.cpp"
+    "${source_path}/remote.cpp"
     "${PROJECT_SOURCE_DIR}/thirdparty/utility/HighPerfTimer.cpp"
     "${PROJECT_SOURCE_DIR}/source/include/CRCCode.cpp"
-    "${PROJECT_SOURCE_DIR}/source/include/xmlbus/*.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/version.rc"
 )
 
@@ -143,25 +128,9 @@ target_include_directories(${target}
         ${CMAKE_CURRENT_BINARY_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 	    ${PROJECT_SOURCE_DIR}/source/include
-        ${PROJECT_SOURCE_DIR}/source/include/data
-        ${PROJECT_SOURCE_DIR}/source/include/xmlbus
-        ${PROJECT_SOURCE_DIR}/source/opagent/include
-        ${PROJECT_SOURCE_DIR}/source/motive/include
-        ${PROJECT_SOURCE_DIR}/source/motive/source
-        ${PROJECT_SOURCE_DIR}/source/imu/include
-        ${PROJECT_SOURCE_DIR}/source/wii/include
-        ${PROJECT_SOURCE_DIR}/source/hmu/include
-        ${PROJECT_SOURCE_DIR}/source/hi5/include
-        ${PROJECT_SOURCE_DIR}/source/router/include
-        ${PROJECT_SOURCE_DIR}/source/router/source
 		${PROJECT_SOURCE_DIR}/thirdparty
 		${PROJECT_SOURCE_DIR}/thirdparty/memory/include
-        ${PROJECT_SOURCE_DIR}/thirdparty/HmdImuData/include
-        ${PROJECT_SOURCE_DIR}/thirdparty/DpnHmuData/include
-        ${PROJECT_SOURCE_DIR}/thirdparty/rbimu/include
-        ${PROJECT_SOURCE_DIR}/thirdparty/AliceDataReader
         ${PROJECT_SOURCE_DIR}/thirdparty/utility
-        ${PROJECT_SOURCE_DIR}/thirdparty/pugixml
     PUBLIC
 	    ${DEFAULT_INCLUDE_DIRECTORIES}
 
@@ -178,15 +147,9 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        Shlwapi
-        dbghelp
-        Psapi
 		${ZMQ_LIBRARY}
 		${CZMQ_LIBRARY}
-        # ${PROJECT_SOURCE_DIR}/thirdparty/rbimu/x64/nav_alic.lib
-        # ${META_PROJECT_NAME}::RigidbodyToLocal
-        # ${META_PROJECT_NAME}::RigidBodyToModel
-        # ${META_PROJECT_NAME}::AutoMatch
+        #${META_PROJECT_NAME}::AutoMatch
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
@@ -243,29 +206,29 @@ target_link_libraries(${target}
 
 # Library
 install(TARGETS ${target}
-#    EXPORT  "${target}-export"            COMPONENT dev
+    EXPORT  "${target}-export"            COMPONENT dev
     RUNTIME DESTINATION ${INSTALL_BIN}    COMPONENT runtime
     LIBRARY DESTINATION ${INSTALL_SHARED} COMPONENT runtime
-  #  ARCHIVE DESTINATION ${INSTALL_LIB}    COMPONENT dev
+    ARCHIVE DESTINATION ${INSTALL_LIB}    COMPONENT dev
 )
 
 # Header files
-#install(DIRECTORY
- #   ${CMAKE_CURRENT_SOURCE_DIR}/include/${target} DESTINATION ${INSTALL_INCLUDE}
- #   COMPONENT dev
-#)
+install(DIRECTORY
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/${target} DESTINATION ${INSTALL_INCLUDE}
+   COMPONENT dev
+)
 
 # Generated header files
-#install(DIRECTORY
- #   ${CMAKE_CURRENT_BINARY_DIR}/include/${target} DESTINATION ${INSTALL_INCLUDE}
- #   COMPONENT dev
-#)
+install(DIRECTORY
+   ${CMAKE_CURRENT_BINARY_DIR}/include/${target} DESTINATION ${INSTALL_INCLUDE}
+   COMPONENT dev
+)
 
 # CMake config
-#install(EXPORT ${target}-export
-#    NAMESPACE   ${META_PROJECT_NAME}::
-#    DESTINATION ${INSTALL_CMAKE}/${target}
-#    COMPONENT   dev
-#)
+install(EXPORT ${target}-export
+    NAMESPACE   ${META_PROJECT_NAME}::
+    DESTINATION ${INSTALL_CMAKE}/${target}
+    COMPONENT   dev
+)
 
 

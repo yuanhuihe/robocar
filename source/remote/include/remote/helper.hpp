@@ -1,33 +1,26 @@
 
-#ifndef BR_HELPER_HPP
-#define BR_HELPER_HPP
+#ifndef REMOTE_HELPER_HPP
+#define REMOTE_HELPER_HPP
 
+#include <memory>
 #include <iostream>
+#include "_inl.hpp"
 #include "czmq.h"
 #include "spdlog/spdlog.h"
-#include "_inl.hpp"
-#include "DataProcessor.hpp"
-#include "PubDataBehavior.hpp"
-#include "xmlbus/config_def.hpp"
 
-namespace xmlbus { struct LOG; }
-namespace broker
+namespace Remote
 {
-    extern std::shared_ptr<spdlog::logger> g_log_;
-    class BrHelper
+    class remoteHelper
     {
     public:
-        BrHelper(std::string id)
+        remoteHelper(std::string id)
             : data_read_proxy(nullptr)
             , data_forward_proxy(nullptr)
-            , dp(nullptr)
-            , d_pub(nullptr)
         {
             id_ = id;
-            g_log_->info("BrHelper constructed");
         }
 
-        ~BrHelper()
+        ~remoteHelper()
         {
             stop();
 
@@ -58,16 +51,12 @@ namespace broker
 
         void stop()
         {
-            dp = nullptr;
-            d_pub = nullptr;
         }
 
         void destroy()
         {
             zactor_destroy(&data_read_proxy);
-            g_log_->info("data proxy destroyed");
             zactor_destroy(&data_forward_proxy);
-            g_log_->info("data pub proxy destroyed");
         }
 
         /**
@@ -85,9 +74,6 @@ namespace broker
 
         void process_data()
         {
-            dp = std::make_shared<data_processor>();
-            dp->set_url(p_url);
-            dp->start();
         }
 
         /**
@@ -97,9 +83,6 @@ namespace broker
 
         void process_pub_data()
         {
-            d_pub = std::make_shared<pub_data_behavior>();
-            d_pub->set_url(p_url);
-            d_pub->start();
         }
     private:
         /**
@@ -118,7 +101,6 @@ namespace broker
                 zsock_wait(data_read_proxy);
                 zstr_sendx(data_read_proxy, "BACKEND", "PUSH", p_url.recv_out_.c_str(), NULL);
                 zsock_wait(data_read_proxy);
-                g_log_->info("data proxy started");
             }
 
             // 2. proxy forward
@@ -130,17 +112,14 @@ namespace broker
                 zsock_wait(data_forward_proxy);
                 zstr_sendx(data_forward_proxy, "BACKEND", "PUSH", p_url.send_out_.c_str(), NULL);
                 zsock_wait(data_forward_proxy);
-                g_log_->info("data pub proxy started");
             }
         }
 
     private:
         zactor_t* data_read_proxy;
         zactor_t* data_forward_proxy;
-        proxy_url  ;
+        proxy_url p_url;
         std::string id_;
-        std::shared_ptr<data_processor> dp;
-        std::shared_ptr<pub_data_behavior> d_pub;
     };
 }
-#endif // !BR_HELPER_HPP
+#endif // !REMOTE_HELPER_HPP

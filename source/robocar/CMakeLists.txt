@@ -3,9 +3,6 @@
 # External dependencies
 # 
 
-#find_package(ZMQ REQUIRED)
-#find_package(CZMQ REQUIRED)
-#find_package(ZYRE REQUIRED)
 #find_package(Qt5 COMPONENTS Widgets Network)
 #find_package(Qt5LinguistTools)
 
@@ -62,19 +59,13 @@ set_target_properties(${target}
 
 target_include_directories(${target}
     PRIVATE
-        #${ZMQ_INCLUDE_DIR}
-        #${CZMQ_INCLUDE_DIR}
-        #${ZYRE_INCLUDE_DIR}
         #${Qt5Widgets_INCLUDES}
         #${Qt5Network_INCLUDES}
         ${DEFAULT_INCLUDE_DIRECTORIES}
         ${PROJECT_BINARY_DIR}/source/include
         ${PROJECT_SOURCE_DIR}/source/include
         ${PROJECT_SOURCE_DIR}/thirdparty/
-        ${PROJECT_SOURCE_DIR}/thirdparty/XmlParse
         ${PROJECT_SOURCE_DIR}/thirdparty/memory/include
-        ${PROJECT_SOURCE_DIR}/thirdparty/msgpack/include
-        ${PROJECT_SOURCE_DIR}/thirdparty/pugixml
         ${PROJECT_SOURCE_DIR}/thirdparty/utility
    )
 
@@ -85,7 +76,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darw
     target_link_libraries(${target}
         PRIVATE
             ${DEFAULT_LIBRARIES}
-            ${META_PROJECT_NAME}::fiblib
+            ${META_PROJECT_NAME}::remote
             ${META_PROJECT_NAME}::executive
         )
 else ()
@@ -97,7 +88,7 @@ else ()
             -lrt          # shm_open
             -lcrypt       # crypt
             ${DEFAULT_LIBRARIES}
-            ${META_PROJECT_NAME}::fiblib
+            ${META_PROJECT_NAME}::remote
             ${META_PROJECT_NAME}::executive
         )
 endif ()

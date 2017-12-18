@@ -26,6 +26,7 @@ set(IDE_FOLDER "DLL")
 add_subdirectory(fiblib)
 add_subdirectory(gpiorw)
 add_subdirectory(executive)
+add_subdirectory(remote)
 
 
 # App
