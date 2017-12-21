@@ -163,13 +163,13 @@ CZMQ_EXPORT int
 //  interface having disappeared (happens easily with WiFi)
 //  *** This is for CZMQ internal use only and may change arbitrarily ***
 CZMQ_EXPORT int
-    zsys_udp_send (SOCKET udpsock, zframe_t *frame, inaddr_t *address);
+    zsys_udp_send (SOCKET udpsock, zframe_t *frame, inaddr_t *address, int addrlen);
 
 //  Receive zframe from UDP socket, and set address of peer that sent it
 //  The peername must be a char [INET_ADDRSTRLEN] array.
 //  *** This is for CZMQ internal use only and may change arbitrarily ***
 CZMQ_EXPORT zframe_t *
-    zsys_udp_recv (SOCKET udpsock, char *peername);
+    zsys_udp_recv (SOCKET udpsock, char *peername, int peerlen);
 
 //  Handle an I/O error on some socket operation; will report and die on
 //  fatal errors, and continue silently on "try again" errors.
@@ -223,6 +223,15 @@ CZMQ_EXPORT void
 CZMQ_EXPORT size_t
     zsys_socket_limit (void);
 
+//  Configure the maximum allowed size of a message sent.
+//  The default is INT_MAX.
+CZMQ_EXPORT void
+    zsys_set_max_msgsz (int max_msgsz);
+
+//  Return maximum message size.
+CZMQ_EXPORT int
+    zsys_max_msgsz (void);
+
 //  Configure the default linger timeout in msecs for new zsock instances.
 //  You can also set this separately on each zsock_t instance. The default
 //  linger time is zero, i.e. any pending messages will be dropped. If the
@@ -268,6 +277,10 @@ CZMQ_EXPORT size_t
 CZMQ_EXPORT void
     zsys_set_ipv6 (int ipv6);
 
+//  Return use of IPv6 for zsock instances.
+CZMQ_EXPORT int
+    zsys_ipv6 (void);
+
 //  Set network interface name to use for broadcasts, particularly zbeacon.
 //  This lets the interface be configured for test environments where required.
 //  For example, on Mac OS X, zbeacon cannot bind to 255.255.255.255 which is
@@ -280,6 +293,42 @@ CZMQ_EXPORT void
 //  Return network interface to use for broadcasts, or "" if none was set.
 CZMQ_EXPORT const char *
     zsys_interface (void);
+
+//  Set IPv6 address to use zbeacon socket, particularly for receiving zbeacon.
+//  This needs to be set IPv6 is enabled as IPv6 can have multiple addresses
+//  on a given interface. If the environment variable ZSYS_IPV6_ADDRESS is set,
+//  use that as the default IPv6 address.
+CZMQ_EXPORT void
+    zsys_set_ipv6_address (const char *value);
+
+//  Return IPv6 address to use for zbeacon reception, or "" if none was set.
+CZMQ_EXPORT const char *
+    zsys_ipv6_address (void);
+
+//  Set IPv6 milticast address to use for sending zbeacon messages. This needs
+//  to be set if IPv6 is enabled. If the environment variable
+//  ZSYS_IPV6_MCAST_ADDRESS is set, use that as the default IPv6 multicast
+//  address.
+CZMQ_EXPORT void
+    zsys_set_ipv6_mcast_address (const char *value);
+
+//  Return IPv6 multicast address to use for sending zbeacon, or "" if none was
+//  set.
+CZMQ_EXPORT const char *
+    zsys_ipv6_mcast_address (void);
+
+//  Configure the automatic use of pre-allocated FDs when creating new sockets.
+//  If 0 (default), nothing will happen. Else, when a new socket is bound, the
+//  system API will be used to check if an existing pre-allocated FD with a
+//  matching port (if TCP) or path (if IPC) exists, and if it does it will be
+//  set via the ZMQ_USE_FD socket option so that the library will use it
+//  instead of creating a new socket.
+CZMQ_EXPORT void
+    zsys_set_auto_use_fd (int auto_use_fd);
+
+//  Return use of automatic pre-allocated FDs for zsock instances.
+CZMQ_EXPORT int
+    zsys_auto_use_fd (void);
 
 //  Set log identity, which is a string that prefixes all log messages sent
 //  by this process. The log identity defaults to the environment variable

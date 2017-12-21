@@ -48,7 +48,7 @@ extern "C" {
 //  these addresses will be accepted. For PLAIN and CURVE, they will be
 //  allowed to continue with authentication. You can call this method
 //  multiple times to whitelist more IP addresses. If you whitelist one
-//  or nmore addresses, any non-whitelisted addresses are treated as
+//  or more addresses, any non-whitelisted addresses are treated as
 //  blacklisted:
 //  
 //      zstr_sendx (auth, "ALLOW", "127.0.0.1", "127.0.0.2", NULL);
@@ -86,7 +86,7 @@ extern "C" {
 //
 //  This is the zauth constructor as a zactor_fn:
 CZMQ_EXPORT void
-    zauth (zsock_t *pipe, void *unused);
+    zauth (zsock_t *pipe, void *certstore);
 
 //  Selftest
 CZMQ_EXPORT void

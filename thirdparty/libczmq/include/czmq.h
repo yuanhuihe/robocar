@@ -1,15 +1,22 @@
 /*  =========================================================================
-    czmq - an open-source framework for proximity-based P2P apps
+    CZMQ - a high-level binding in C for ZeroMQ
 
-    Copyright (c) 1991-2012 iMatix Corporation -- http://www.imatix.com
-    Copyright other contributors as noted in the AUTHORS file.         
-                                                                       
-    This file is part of CZMQ -- See http://czmq.zeromq.org            
-                                                                       
+    Copyright (c) the Contributors as noted in the AUTHORS file.
+    This file is part of CZMQ, the high-level C binding for 0MQ:
+    http://czmq.zeromq.org.
+
     This Source Code Form is subject to the terms of the Mozilla Public
     License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.           
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
     =========================================================================
+
+  "Tell them I was a writer.
+   A maker of software.
+   A humanist. A father.
+   And many things.
+   But above all, a writer.
+   Thank You. :)
+   - Pieter Hintjens
 */
 
 #ifndef __CZMQ_H_INCLUDED__

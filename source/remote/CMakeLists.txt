@@ -13,13 +13,7 @@ find_package(CZMQ REQUIRED)
 
 # Target name
 set(target remote)
-set(META_NAME ${target})
-configure_file(${PROJECT_BINARY_DIR}/version.rc ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
-set(RES_FILES  ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
-set(CMAKE_RC_COMPILER_INIT windres)
-ENABLE_LANGUAGE(RC)
-SET(CMAKE_RC_COMPILE_OBJECT 
-"<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
+
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")
