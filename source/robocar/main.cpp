@@ -9,6 +9,7 @@
 #include <string>       // std::string
 #include <string.h>     // memxxx/strlen()
 
+#include <remote/remote.h>
 #include <executive/executive.h>
 
 void showTips(std::vector<Driver::Action*>& actList)
@@ -81,6 +82,11 @@ int main(int /*argc*/, char* /*argv*/[])
 {
     std::cout << "           robocar application          " << std::endl;
     std::cout << "========================================" << std::endl;
+
+    std::cout << " >> Staring remote model ..." << std::endl;
+    Remote::remote remote;
+    remote.start(SERVER_RECV_URL, SERVER_SEND_URL, true);
+    std::cout << " >> OK" << std::endl;
 
     // time start
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();

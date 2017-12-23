@@ -31,9 +31,9 @@ find_path(ZMQ_INCLUDE_DIR
   PATHS ${PROJECT_SOURCE_DIR}/thirdparty/libzmq/include
   NO_DEFAULT_PATH)
 find_library(ZMQ_LIBRARY
-  NAMES zmq
-  PATHS ${PROJECT_SOURCE_DIR}/thirdparty/libzmq/lib/${build_platform}
+  NAMES zmq libzmq
+  PATHS ${PROJECT_SOURCE_DIR}/thirdparty/libzmq/lib/${build_platform}/${build_arch}
   NO_DEFAULT_PATH)
-  
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ZMQ DEFAULT_MSG ZMQ_LIBRARY ZMQ_INCLUDE_DIR)

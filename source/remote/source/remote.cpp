@@ -12,10 +12,9 @@ namespace Remote
      * @brief
      *     Constructor
      **/
-    remote::remote(std::string id)
+    remote::remote()
     {
-        id_ = id;
-        g_helper_ = std::make_shared<remoteHelper>(id);
+        g_helper_ = std::make_shared<remoteHelper>(id_);
     }
 
     /**

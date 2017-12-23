@@ -19,7 +19,7 @@ else()
 endif()
 
 if (${arch} STREQUAL "i386")
-    set(build_arch "x86")
+    set(build_arch "win32")
 endif (${arch} STREQUAL "i386")
 if (${arch} STREQUAL "x86_64")
     set(build_arch "x64")
@@ -30,8 +30,8 @@ find_path(CZMQ_INCLUDE_DIR
   PATHS ${PROJECT_SOURCE_DIR}/thirdparty/libczmq/include
   NO_DEFAULT_PATH)
 find_library(CZMQ_LIBRARY
-  NAMES czmq
-  PATHS ${PROJECT_SOURCE_DIR}/thirdparty/libczmq/lib/${build_platform}
+  NAMES czmq libczmq
+  PATHS ${PROJECT_SOURCE_DIR}/thirdparty/libczmq/lib/${build_platform}/${build_arch}
   NO_DEFAULT_PATH)
 
 include(FindPackageHandleStandardArgs)

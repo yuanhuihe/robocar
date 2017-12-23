@@ -2,6 +2,7 @@
 #define _REMOTE_H_
 
 #include <remote/remote_api.h>
+#include <remote/remote_def.h>
 #include <string>
 
 namespace Remote
@@ -13,7 +14,7 @@ namespace Remote
          * @brief
          *      Constructor
          **/
-        remote(std::string id);
+        remote();
 
         /**
          * @brief
@@ -25,8 +26,9 @@ namespace Remote
         /**
          *  @brief
          *     start remote
-         *  @param [in] server, use the ip which clients will connect
-         *  @param [in] url_recv, url_send
+         *  @param [in] url_recv, receive channel
+         *  @param [in] url_send, send channel
+         *  @param [in] master, wether running as server or client
          **/
         void start(std::string url_recv, std::string url_send, bool master);
 
