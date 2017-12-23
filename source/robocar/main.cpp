@@ -80,6 +80,9 @@ void tInputCtrlThead(int& code, int& speed)
 
 int main(int /*argc*/, char* /*argv*/[])
 {
+    // time start
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
     std::cout << "           robocar application          " << std::endl;
     std::cout << "========================================" << std::endl;
 
@@ -88,18 +91,14 @@ int main(int /*argc*/, char* /*argv*/[])
     remote.start(SERVER_RECV_URL, SERVER_SEND_URL, true);
     std::cout << " >> OK" << std::endl;
 
-    // time start
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
+    std::cout << " >> Staring driver system ..." << std::endl;
     // get system instance
     Driver::ExecutiveSystem* eSys = Driver::ExecutiveSystem::InitSystem();
-
     // load system
     eSys->loadSystem();
-
     // ExecutiveB body list
     std::vector<Driver::Action*> actionList;
-
     // Enum all actions
     Driver::Action* act = eSys->enumFirstAction();
     while (act)
@@ -109,16 +108,20 @@ int main(int /*argc*/, char* /*argv*/[])
         // next
         act = eSys->enumNextAction();
     }
-
     if (actionList.size() == 0)
     {
         Driver::ExecutiveSystem::ReleaseSystem(&eSys);
-        std::cout << "No executable actions on this system" << std::endl;
+        std::cout << " >> No executable actions on this system" << std::endl;
         return -1;
     }
+    std::cout << " >> OK" << std::endl;
 
+    std::cout << " >> System started, reset to standby ..." << std::endl;
     // reset to standby state
     eSys->resetSystem();
+    std::cout << " >> OK" << std::endl;
+    std::cout << " >> Welcom to robocar system <<" << std::endl << std::endl << std::endl;
+
 
     showTips(actionList);
 
