@@ -28,14 +28,15 @@ namespace Remote
     }
 
     /**
-     *  @brief
-     *     start router
-     *  @param [in] server, use the ip which clients will connect
-     *  @param [in] url_recv, url_send
-     **/
-    void remote::start(std::string url_recv, std::string url_send, bool master)
+    *  @brief
+    *     start router
+    *  @param [in] url_recv, receive channel
+    *  @param [in] url_send, send channel
+    *  @param [in] master, wether running as server or client
+    **/
+    void remote::start(/*std::string url_recv, std::string url_send, */bool master)
     {
-        g_helper_->start(url_recv, url_send, master);
+        g_helper_->start(SERVER_RECV_URL, SERVER_SEND_URL, master);
     }
 
     /**

@@ -34,14 +34,10 @@ namespace Remote
             stop();
             proxy_url url_;
             url_.id_ = id_;
-            url_.broker_in_ = url_recv;
-            url_.broker_out_ = "@" + url_send;
-            url_.recv_in_ = url_.broker_in_;
-            url_.recv_out_ = master ? S_PROXY_RECV_BACKEND : C_PROXY_RECV_BACKEND;
-            url_.send_in_ = master ? S_PROXY_SEND_FONTEND : C_PROXY_SEND_FONTEND;
-            url_.send_out_ = master ? S_PROXY_SEND_BACKEND : C_PROXY_SEND_BACKEND;
-            url_.pub_in_ = master ? S_IPC_PUB_RECV : C_IPC_PUB_RECV;
-            url_.pub_out_ = url_.broker_out_;
+            url_.proxy_recver_in_ = url_recv;
+            url_.proxy_recver_out_ = master ? SERVER_PROXY_RECV_BACKEND : CLIENT_PROXY_RECV_BACKEND;
+            url_.proxy_sender_in_ = master ? SERVER_PROXY_SEND_FONTEND : CLIENT_PROXY_RECV_BACKEND;
+            url_.proxy_sender_out_ = "@" + url_send;
             set_proxy_url(url_);
 
             create_data_proxy();
@@ -97,9 +93,9 @@ namespace Remote
             data_read_proxy = zactor_new(zproxy, NULL);
             if (data_read_proxy)
             {
-                zstr_sendx(data_read_proxy, "FRONTEND", "PULL", p_url.recv_in_.c_str(), NULL);
+                zstr_sendx(data_read_proxy, "FRONTEND", "PULL", p_url.proxy_recver_in_.c_str(), NULL);
                 zsock_wait(data_read_proxy);
-                zstr_sendx(data_read_proxy, "BACKEND", "PUSH", p_url.recv_out_.c_str(), NULL);
+                zstr_sendx(data_read_proxy, "BACKEND", "PUSH", p_url.proxy_recver_out_.c_str(), NULL);
                 zsock_wait(data_read_proxy);
             }
 
@@ -108,9 +104,9 @@ namespace Remote
             data_forward_proxy = zactor_new(zproxy, NULL);
             if (data_forward_proxy)
             {
-                zstr_sendx(data_forward_proxy, "FRONTEND", "PULL", p_url.send_in_.c_str(), NULL);
+                zstr_sendx(data_forward_proxy, "FRONTEND", "PULL", p_url.proxy_sender_in_.c_str(), NULL);
                 zsock_wait(data_forward_proxy);
-                zstr_sendx(data_forward_proxy, "BACKEND", "PUSH", p_url.send_out_.c_str(), NULL);
+                zstr_sendx(data_forward_proxy, "BACKEND", "PUSH", p_url.proxy_sender_out_.c_str(), NULL);
                 zsock_wait(data_forward_proxy);
             }
         }

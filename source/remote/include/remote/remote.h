@@ -26,11 +26,9 @@ namespace Remote
         /**
          *  @brief
          *     start remote
-         *  @param [in] url_recv, receive channel
-         *  @param [in] url_send, send channel
          *  @param [in] master, wether running as server or client
          **/
-        void start(std::string url_recv, std::string url_send, bool master);
+        void start(bool master);
 
         /**
          *  @brief

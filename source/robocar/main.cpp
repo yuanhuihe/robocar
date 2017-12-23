@@ -88,7 +88,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     std::cout << " >> Staring remote model ..." << std::endl;
     Remote::remote remote;
-    remote.start(SERVER_RECV_URL, SERVER_SEND_URL, true);
+    remote.start(true);
     std::cout << " >> OK" << std::endl;
 
 
