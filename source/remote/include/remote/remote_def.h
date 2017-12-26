@@ -4,6 +4,11 @@
 
 namespace Remote
 {
+    struct TransFrame
+    {
+        int frame_index;
+        uint64_t time_stamp;
+    };
 
 
 } // namespace Remote

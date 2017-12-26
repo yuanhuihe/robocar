@@ -1,6 +1,6 @@
 #include <remote/remote.h>
 #include <thread>
-#include "helper.hpp"
+#include "remote_helper.hpp"
 
 using namespace spdlog::level;
 namespace Remote
@@ -36,7 +36,7 @@ namespace Remote
     **/
     void remote::start(/*std::string url_recv, std::string url_send, */bool master)
     {
-        g_helper_->start(SERVER_RECV_URL, SERVER_SEND_URL, master);
+        g_helper_->start(SERVER_PROXY_RECV_FONTEND, SERVER_PROXY_SEND_BACKEND, master);
     }
 
     /**
@@ -48,7 +48,6 @@ namespace Remote
         if (g_helper_)
         {
             g_helper_->stop();
-            g_helper_->destroy();
         }
     }
 } // namespace Remote
