@@ -37,8 +37,8 @@ namespace Remote
             stop();
             
             running = true;
-            obj_recv = new std::thread(sub_data, this, url_recv);
-            obj_send = new std::thread(pub_data, this, url_send);
+            obj_recv = new std::thread(&data_processor::sub_data, this, url_recv);
+            obj_send = new std::thread(&data_processor::pub_data, this, url_send);
 
         }
 
@@ -77,7 +77,7 @@ namespace Remote
             size_t len;
             while(running)
             {
-                int rc = zsock_recv(recv_scok, &id, &data, &len);
+                int rc = zsock_recv(recv_scok, "sb", &id, &data, &len);
                 if(rc==-1)
                 {
                     continue;
@@ -85,11 +85,11 @@ namespace Remote
 
                 TransFrame* frame = new TransFrame();
                 queue_proc_.write(frame);
-                notify_all();
+                cv.notify_all();
 
 
-                zfree(&id);
-                zfree(&data);
+                zstr_free(&id);
+                zstr_free(&data);
             }
         }
 
@@ -110,17 +110,24 @@ namespace Remote
             {
                 while(queue_proc_.read(frame))
                 {
-                    zsock_send(send_sock, &id, &data, &len);
+                    // doing some data processing
+                    proc_data(frame);
+
+                    // send to sender proxy
+                    zsock_send(send_sock, "sb", &frame->id, &data, &len);
                 }
                 
-                std::unique_lock<std::mutex> l(mtx);
-                wait(l);
+                std::unique_lock<std::mutex> lock(mtx);
+                cv.wait(lock);
             }
         }
 
     private:
-    
-        
+
+        void proc_data(TransFrame* frame)
+        {
+
+        }
 
     private:
         ProducerConsumerQueue<TransFrame*> queue_proc_;
@@ -128,6 +135,7 @@ namespace Remote
 
         bool running;
         std::mutex mtx;
+        std::condition_variable cv;
         std::thread* obj_recv;
         std::thread* obj_send;
     };

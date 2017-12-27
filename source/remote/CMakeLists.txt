@@ -40,6 +40,7 @@ file(GLOB headers
 )
 
 file(GLOB sources
+    "${source_path}/*.hpp"
     "${source_path}/remote.cpp"
     "${PROJECT_SOURCE_DIR}/thirdparty/utility/HighPerfTimer.cpp"
     "${PROJECT_SOURCE_DIR}/source/include/CRCCode.cpp"
