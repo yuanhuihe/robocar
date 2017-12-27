@@ -1,9 +1,13 @@
 #ifndef DATAFRAMEPOOL_H_
 #define DATAFRAMEPOOL_H_
 
+#include <mutex>
 #include "_inl.hpp"
 #include "MemoryPool.h"
 
+#define DATA_OF_FRAME_LEN  4096
+
+template<class T>
 class DataFramePool
 {
 private:
@@ -17,11 +21,11 @@ private:
 
 public:
     #define SafetyNew(dataLen) _SafetyNew(dataLen, __func__, __FILE__, __LINE__)
-    static AliceDataFrame* _SafetyNew(int dataLen, const char* fun, const char* file, int line)
+    static T* _SafetyNew(int dataLen, const char* fun, const char* file, int line)
     {
         std::lock_guard<std::mutex> l(_inst->mtx);
 
-        if (dataLen > ADFRAME_DATA_LEN)
+        if (dataLen > DATA_OF_FRAME_LEN)
         {
             printf("%s() _%s:%d: received a big data block, len=%d throw away.\n", fun, file, line, dataLen);
             return nullptr;
@@ -30,7 +34,7 @@ public:
         return _inst->frame_pool.newElement();
     }
 
-    static void ReleaseFrame(AliceDataFrame*& frame)
+    static void ReleaseFrame(T*& frame)
     {
         if (frame == nullptr) return;
 
@@ -47,9 +51,8 @@ public:
 
 private:
     static DataFramePool* _inst;
-	
-    MemoryPool<AliceDataFrame, 4096 * 4096 * 2>  frame_pool;
-    std::mutex                                   mtx;
+    MemoryPool<T, 4096 * 4096 * 2>  frame_pool;
+    std::mutex                      mtx;
 
 private:
 

@@ -8,6 +8,7 @@
 #include "_inl.hpp"
 #include "czmq.h"
 #include "ProducerConsumerQueue.h"
+#include "DataFramePool.h"
 #include "spdlog/spdlog.h"
 
 namespace Remote
@@ -16,6 +17,7 @@ namespace Remote
     {
     public:
         data_processor(std::string id)
+            :queue_proc_(1024)
         {
             id_ = id;
             running = false;
@@ -47,13 +49,13 @@ namespace Remote
             running = false;
             if(obj_recv)
             {
-                obj_recv->joint();
+                obj_recv->join();
                 delete obj_recv;
                 obj_recv = nullptr;
             }
             if(obj_send)
             {
-                obj_send->joint();
+                obj_send->join();
                 delete obj_send;
                 obj_send = nullptr;
             }
@@ -83,9 +85,14 @@ namespace Remote
                     continue;
                 }
 
-                TransFrame* frame = new TransFrame();
-                queue_proc_.write(frame);
-                cv.notify_all();
+                TransFrame* frame = DataFramePool<TransFrame>::SafetyNew(len);
+                if (frame)
+                {
+                    memcpy(frame->data, data, len);
+                    frame->len = len;
+                    queue_proc_.write(frame);
+                    cv.notify_all();
+                }
 
 
                 zstr_free(&id);
@@ -105,6 +112,9 @@ namespace Remote
             zsock_t *send_sock = zsock_new_push (url.c_str());
             assert (send_sock);
 
+            char id[64];
+            sprintf(id, "%s", "<Currently not defined>");
+
             TransFrame* frame = nullptr;
             while(running)
             {
@@ -114,7 +124,9 @@ namespace Remote
                     proc_data(frame);
 
                     // send to sender proxy
-                    zsock_send(send_sock, "sb", &frame->id, &data, &len);
+                    zsock_send(send_sock, "sb", id_.c_str(), &frame->data, &frame->len);
+
+                    DataFramePool<TransFrame>::ReleaseFrame(frame);
                 }
                 
                 std::unique_lock<std::mutex> lock(mtx);
