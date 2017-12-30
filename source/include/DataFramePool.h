@@ -2,7 +2,6 @@
 #define DATAFRAMEPOOL_H_
 
 #include <mutex>
-#include "_inl.hpp"
 #include "MemoryPool.h"
 
 #define DATA_OF_FRAME_LEN  4096
@@ -50,7 +49,7 @@ public:
     }
 
 private:
-    static DataFramePool* _inst;
+    static DataFramePool<T>* _inst;
     MemoryPool<T, 4096 * 4096 * 2>  frame_pool;
     std::mutex                      mtx;
 
@@ -58,5 +57,7 @@ private:
 
 };
 
+template<class T>
+DataFramePool<T>* DataFramePool<T>::_inst = new DataFramePool<T>();
 
 #endif //!DATAFRAMEPOOL_H_

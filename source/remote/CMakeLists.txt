@@ -43,6 +43,7 @@ file(GLOB sources
     "${source_path}/*.hpp"
     "${source_path}/remote.cpp"
     "${PROJECT_SOURCE_DIR}/thirdparty/utility/HighPerfTimer.cpp"
+    "${PROJECT_SOURCE_DIR}/thirdparty/utility/DataFramePool.cpp"
     "${PROJECT_SOURCE_DIR}/source/include/CRCCode.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/version.rc"
 )

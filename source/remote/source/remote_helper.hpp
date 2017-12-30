@@ -15,7 +15,8 @@ namespace Remote
     {
     public:
         remoteHelper(std::string id)
-            : data_read_proxy(nullptr)
+            : dp(id)
+            , data_read_proxy(nullptr)
             , data_forward_proxy(nullptr)
         {
             id_ = id;

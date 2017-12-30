@@ -3,8 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <executive/executive_def.h>
-using namespace Driver;
 
 namespace ConfigInfo
 {

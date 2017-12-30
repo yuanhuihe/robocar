@@ -25,6 +25,7 @@ endif(WIN32)
 set(IDE_FOLDER "DLL")
 add_subdirectory(gpiorw)
 add_subdirectory(executive)
+add_subdirectory(ymq)
 add_subdirectory(remote)
 
 

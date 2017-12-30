@@ -4,16 +4,13 @@
 # 
 
 # find_package(THIRDPARTY REQUIRED)
-find_package(ZMQ REQUIRED)
-find_package(CZMQ REQUIRED)
-find_package(MemQueue REQUIRED)
 
 # 
 # Library name and options
 # 
 
 # Target name
-set(target streamhub)
+set(target ymq)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")
