@@ -5,8 +5,8 @@ if(NOT OPTION_BUILD_DEMOS)
 endif()
 
 # Example applications
-add_subdirectory(gpio_test)
-#add_subdirectory(fiblib)
+add_subdirectory(test_gpio)
+add_subdirectory(test_ymq)
 
 
 

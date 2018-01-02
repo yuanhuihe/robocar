@@ -6,7 +6,7 @@
 #find_package(ZMQ REQUIRED)
 
 # Target name
-set(target gpio_test)
+set(target test_gpio)
 
 # Exit here if required dependencies are not met
 message(STATUS "Demo: ${target}")

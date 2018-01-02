@@ -18,19 +18,19 @@ extern "C" {
 #endif
 namespace ymq
 {
-    typedef void* ymq_proxy;
-    typedef void* ymq_sock;
+    typedef void* ymq_proxy_t;
+    typedef void* ymq_sock_t;
 
     /**************************** proxy/hub **********************************/
     /* @brief
     *   Create a proxy.
     */
-    YMQ_API ymq_proxy ymq_new_proxy(int poll_port, int push_port);
+    YMQ_API ymq_proxy_t ymq_new_proxy(int poll_port, int push_port);
 
     /* @brief
     *   Destory proxy.
     */
-    YMQ_API ymq_sock ymq_proxy_destory(ymq_proxy& sock);
+    YMQ_API void ymq_proxy_destory(ymq_proxy_t& sock);
     /**************************** proxy/hub **********************************/
 
 
@@ -39,22 +39,22 @@ namespace ymq
     /* @brief
     *   Create a ymq socket.
     */
-    YMQ_API ymq_sock ymq_new_sock(char* url);
+    YMQ_API ymq_sock_t ymq_new_sock(char* url);
 
     /* @brief
     *   Receive data on socket.
     */
-    YMQ_API ymq_sock ymq_sock_recv(char* buff, int buff_len);
+    YMQ_API int ymq_sock_recv(ymq_sock_t s, char* buff, int buff_len);
 
     /* @brief
     *   Send data by socket.
     */
-    YMQ_API ymq_sock ymq_sock_send(char* data, int data_len);
+    YMQ_API int ymq_sock_send(ymq_sock_t s, char* data, int data_len);
 
     /* @brief
     *   Destory socket.
     */
-    YMQ_API ymq_sock ymq_sock_destory(ymq_sock& sock);
+    YMQ_API void ymq_sock_destory(ymq_sock_t& sock);
     /**************************** ymq socket **********************************/
 
 

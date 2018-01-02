@@ -3,10 +3,10 @@
 #include <stdint.h>
 #include <time.h>
 
-#ifdef __OS_XUN__
-#include <sys/time.h>
-#else
+#ifdef WIN32
 #include <Windows.h>   // LARGE_INTEGER, QueryPerformanceFrequency
+#else
+#include <sys/time.h>
 #endif
 
 /*
@@ -16,11 +16,11 @@
 
 class HighPerfTimer
 {
-#ifdef __OS_XUN__
-    struct timeval StartingTime, EndingTime, ElapsedTime;
-#else
+#ifdef WIN32
     LARGE_INTEGER __cpuFreq;
     LARGE_INTEGER StartingTime, EndingTime, ElapsedTime;
+#else
+    struct timeval StartingTime, EndingTime, ElapsedTime;
 #endif // WIN32
 
     // 记录调用此函数时到1970年的微秒数
