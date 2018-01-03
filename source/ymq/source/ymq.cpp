@@ -6,9 +6,9 @@
 namespace ymq
 {
     /**************************** proxy/hub **********************************/
-    YMQ_API ymq_proxy_t ymq_new_proxy(int poll_port, int push_port)
+    YMQ_API ymq_proxy_t ymq_new_proxy(char* url_poll, char* url_push)
     {
-        return new ymq_proxy(poll_port, push_port);
+        return new ymq_proxy(url_poll, url_push);
     }
 
     YMQ_API void ymq_proxy_destory(ymq_proxy_t& sock)

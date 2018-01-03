@@ -16,12 +16,20 @@ class ymq_listernner : public ymq_socket
   public:
     ymq_listernner(char* url)
     {
-        this->listerner_ = -1;
         this->kq_ = 0;
         this->running_ = false;
         this->obj_thread_ = nullptr;
 
         fn_received_data_ = nullptr;
+
+        url_ = url;
+        int p1 = url_.rfind('/') + 1;
+        int p2 = url_.rfind(':');
+        ip_ = url_.substr(p1, p2-p1);
+
+        p2 += 1;
+        std::string str_port = url_.substr(p2, url_.length()-p2);
+        port_ = atoi(str_port.c_str());
     }
     virtual ~ymq_listernner()
     {
@@ -33,29 +41,38 @@ class ymq_listernner : public ymq_socket
         fn_received_data_ = fn;
     }
 
-    void start()
+    virtual bool start()
     {
+        stop();
+
+        if(!ymq_socket::start()) return false;
+
         /* Create kqueue. */
         this->kq_ = kqueue();
+        
         /* Create listerner on port*/
-        listerner_ = create_listerner(listern_port_);
+        if(!create_listerner(listern_port_))
+        {
+            return false;
+        }
+
         /*Register events on kqueue*/
-        register_event(kq_, listerner_);
+        register_event(kq_, sock_);
+        
         /*Start events thread*/
         obj_thread_ = new std::thread(&ymq_listernner::process_event, this);
+
+        return true;
     }
 
-    void stop()
+    virtual void stop()
     {
-        if(listerner_>0)
-        {
-            close(listerner_);
-            listerner_ = 0;
-        }
+        ymq_socket::stop();
 
         running_ = false;
         if (obj_thread_)
         {
+            close(kq_);
             obj_thread_->join();
             delete obj_thread_;
             obj_thread_ = nullptr;
@@ -80,6 +97,7 @@ class ymq_listernner : public ymq_socket
     {
         struct kevent *events = new struct kevent[MAX_EVENT_COUNT];
         int ret = 0;
+        running_ = true;
         while (running_)
         {
             ret = kevent(kq_, NULL, 0, events, MAX_EVENT_COUNT, NULL);
@@ -89,37 +107,28 @@ class ymq_listernner : public ymq_socket
         delete[] events;
     }
 
-    int create_listerner(int port)
+    bool create_listerner(int port)
     {
-        int sock = socket(PF_INET, SOCK_STREAM, 0);
-        if (sock == -1)
-        {
-            std::cerr << "socket()　failed:" << errno << std::endl;
-            return -1;
-        }
-
-        int set = 1;
-        setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
-
         struct sockaddr_in addr;
         addr.sin_len = sizeof(addr);
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port);
         addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-        int ret = ::bind(sock, (struct sockaddr *)&addr, sizeof(struct sockaddr));
+        int ret = ::bind(sock_, (struct sockaddr *)&addr, sizeof(struct sockaddr));
         if (ret == -1)
         {
             std::cerr << "bind()　failed:" << errno << std::endl;
-            return -1;
+            return false;
         }
 
-        // if( listern(sock,5) == -1)
-        // {
-        //     std::cerr << " listern()　failed:" << errno << std::endl;
-        //     return -1;
-        // }
-        return sock;
+        if( ::listen(sock_,5) == -1)
+        {
+            std::cerr << " listern()　failed:" << errno << std::endl;
+            return false;
+        }
+
+        return true;
     }
 
     void handle_events(int kq, struct kevent *events, int nevents)
@@ -129,7 +138,7 @@ class ymq_listernner : public ymq_socket
             int sock = events[i].ident;
             int data = events[i].data;
 
-            if (sock == listerner_)
+            if (sock == sock_)
                 accept_conn(kq, data);
             else
                 receive_data(sock, data);
@@ -171,7 +180,7 @@ class ymq_listernner : public ymq_socket
     {
         for (int i = 0; i < connSize; i++)
         {
-            int client = accept(listerner_, NULL, NULL);
+            int client = accept(sock_, NULL, NULL);
             if (client == -1)
             {
                 std::cerr << "Accept failed. ";
@@ -214,10 +223,14 @@ class ymq_listernner : public ymq_socket
     }
 
   private:
+    std::string url_;
+    std::string ip_;
+    int port_;
+
     bool running_;
     int kq_;
     int listern_port_;
-    int listerner_;
+    
     char buf_[MAX_RECV_BUFF];
     fn_received_data_handle fn_received_data_;
     std::thread *obj_thread_;

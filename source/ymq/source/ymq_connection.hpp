@@ -15,104 +15,63 @@ class ymq_connection : public ymq_socket
     ymq_connection(char* url)
     : url_(url)
     {
-        this->sock_ = -1;
-        this->running_ = false;
-        this->obj_thread_ = nullptr;
-        fn_received_data_ = nullptr;
+        this->is_conn_ = false;
 
-        int p = url_.rfind(':');
-        ip_ = url_.substr(0, p);
+        url_ = url;
+        int p1 = url_.rfind('/') + 1;
+        int p2 = url_.rfind(':');
+        ip_ = url_.substr(p1, p2-p1);
 
-        std::string str_port = url_.substr(p, url_.length()-p);
+        p2 += 1;
+        std::string str_port = url_.substr(p2, url_.length()-p2);
         port_ = atoi(str_port.c_str());
+
+        start();
     }
     virtual ~ymq_connection()
     {
         stop();
     }
 
-    void set_received_callback(fn_received_data_handle fn)
-    {
-        fn_received_data_ = fn;
-    }
-
-    void start()
+    virtual bool start()
     {
         stop();
 
-        /* Start events thread */
-        obj_thread_ = new std::thread(&ymq_connection::process, this);
+        if(!ymq_socket::start()) return false;
+
+        return (is_conn_ = connect());
     }
 
-    void stop()
+    virtual void stop()
     {
-        running_ = false;
-        if (obj_thread_)
-        {
-            obj_thread_->join();
-            delete obj_thread_;
-            obj_thread_ = nullptr;
-        }
-
-        if(sock_>0)
-        {
-            close(sock_);
-            sock_ = 0;
-        }
+        ymq_socket::stop();
     }
 
     virtual int send(char* data, int data_len)
     {
-        ::send(sock_, data, data_len, 0);
+        return ::send(sock_, data, data_len, 0);
     }
 
     virtual int recv(char* buff, int buff_len)
     {
-
+        return ::recv(sock_, buff, buff_len, 0);
     }
 
   private:
-    void process()
+    bool connect()
     {
-        char* buff = new char[MAX_RECV_BUFF_SIZE];
-        int len = 0;
-        while (running_)
+        if(sock_<=0)
         {
-            if(sock_<=0)
+            sock_ = socket(PF_INET, SOCK_STREAM, 0);
+            if (sock_ == -1)
             {
-                sock_ = connect();
-                usleep(1000000);
-                continue;
+                std::cerr << "socket()　failed:" << errno << std::endl;
+                return false;
             }
 
-            len = ::recv(sock_, buff, MAX_RECV_BUFF_SIZE, NULL);
-            if(len == -1)
-            {
-                close(sock_);
-                sock_ = -1;
-                continue;
-            }
-
-            if(fn_received_data_)
-            {
-                fn_received_data_(buff, len);
-            }
+            int set = 1;
+            setsockopt(sock_, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
         }
-
-        delete buff;
-    }
-
-    int connect()
-    {
-        int sock = socket(PF_INET, SOCK_STREAM, 0);
-        if (sock == -1)
-        {
-            std::cerr << "socket()　failed:" << errno << std::endl;
-            return -1;
-        }
-
-        int set = 1;
-        setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
 
         struct sockaddr_in addr;
         addr.sin_len = sizeof(addr);
@@ -120,28 +79,29 @@ class ymq_connection : public ymq_socket
         addr.sin_port = htons(port_);
         addr.sin_addr.s_addr = inet_addr(ip_.c_str());
 
-        if (-1 == ::connect(sock, (sockaddr*)&addr, sizeof(addr)))
+        if (-1 == ::connect(sock_, (sockaddr*)&addr, sizeof(addr)))
         {
-            printf("Client: connect() - Failed to connect.\n");
-            return -1;
+            printf("Client: connect() - Failed to connect. errno(%d).\n", errno);
+            return false;
         }
         
-        struct timeval tv = {5, 0};
-        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
+        int timeout = 1000; // ms
+        #ifdef WIN32
+        DWORD t = timeout;
+        setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&t, sizeof(t));
+        #else
+        struct timeval tv = {timeout/1000, 0};
+        setsockopt(sock_, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
+        #endif
 
-        return sock;
+        return true;
     }
 
   private:
     std::string url_;
     std::string ip_;
     int port_;
-    bool running_;
-    int sock_;
-    fn_received_data_handle fn_received_data_;
-    std::thread *obj_thread_;
-
-
+    bool is_conn_;
 };
 } // namespace ymq
 

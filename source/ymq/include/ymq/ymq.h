@@ -25,7 +25,7 @@ namespace ymq
     /* @brief
     *   Create a proxy.
     */
-    YMQ_API ymq_proxy_t ymq_new_proxy(int poll_port, int push_port);
+    YMQ_API ymq_proxy_t ymq_new_proxy(char* url_poll, char* url_push);
 
     /* @brief
     *   Destory proxy.

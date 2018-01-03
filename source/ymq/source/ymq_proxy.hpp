@@ -2,8 +2,8 @@
 #define YMQ_PROXY_HPP_
 
 #include "ymq_socket.hpp"
-#include "sock_kqueue.hpp"
-#include <functional>       // std::bind
+#include "ymq_listernner.hpp"
+#include <functional>           // std::bind
 
 using namespace std::placeholders;
 
@@ -12,20 +12,26 @@ namespace ymq
     class ymq_proxy : public ymq_socket
     {
     public:
-        ymq_proxy(int recv_port, int send_port)
-        : puller(recv_port)
-        , pusher(send_port)
+        ymq_proxy(char* url_recv, char* url_send)
+        : puller(url_recv)
+        , pusher(url_send)
         {
+            start();
         }
         virtual ~ymq_proxy()
         {
+            stop();
         }
 
-        virtual void start()
+        virtual bool start()
         {
-            pusher.start();
-            puller.start();
+            stop();
+
+            if(!pusher.start()) return false;
+            if(!puller.start()) return false;
             puller.set_received_callback(std::bind(&ymq_proxy::on_received_data, this, _1, _2));
+
+            return true;
         }
         virtual void stop()
         {
@@ -34,13 +40,22 @@ namespace ymq
         }
 
     private:
-        sock_kqueue puller;
-        sock_kqueue pusher;
+        ymq_listernner puller;
+        ymq_listernner pusher;
 
     private:
         void on_received_data(char* data, int len)
         {
             pusher.send(data, len);
+        }
+
+        virtual int send(char* data, int data_len)
+        {
+
+        }
+        virtual int recv(char* buff, int buff_len)
+        {
+            
         }
     };
 

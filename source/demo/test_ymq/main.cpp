@@ -19,18 +19,24 @@ int main(int /*argc*/, char* /*argv*/[])
     // time start
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
-    int puller_port = 7788;
-    int pusher_port = 7799;
-    std::cout << "Creating proxy at " << puller_port << ":" << pusher_port << std::endl;
-    ymq_proxy_t proxy = ymq_new_proxy(puller_port, pusher_port);
+    int recv_port = 7788;
+    int send_port = 7799;
+
+    char url_recv[64];
+    char url_send[64];
+    sprintf(url_recv, "@tcp://*:%d", recv_port);
+    sprintf(url_send, "@tcp://*:%d", send_port);
+
+    std::cout << "Creating proxy:\n puller: " << url_recv << "\n pusher: " << url_send << std::endl;
+    ymq_proxy_t proxy = ymq_new_proxy(url_recv, url_send);
 
     char url_push[64];
-    sprintf(url_push, ">tcp://127.0.0.1:%d", puller_port);
+    sprintf(url_push, ">tcp://127.0.0.1:%d", recv_port);
     std::cout << "Creating a connection to " << url_push << std::endl;
     ymq_sock_t sock_push = ymq_new_sock((char*)url_push);
 
     char url_pull[64];
-    sprintf(url_pull, ">tcp://127.0.0.1:%d", pusher_port);
+    sprintf(url_pull, ">tcp://127.0.0.1:%d", send_port);
     std::cout << "Creating a connection to " << url_pull << std::endl;
     ymq_sock_t sock_pull = ymq_new_sock((char*)url_pull);
 
@@ -69,8 +75,6 @@ int main(int /*argc*/, char* /*argv*/[])
     ymq_proxy_destory(proxy);
     ymq_sock_destory(sock_push);
     ymq_sock_destory(sock_pull);
-
-    getchar();
 
     return 0;
 }
