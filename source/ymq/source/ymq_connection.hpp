@@ -1,6 +1,7 @@
 ﻿#ifndef YMQ_CONNECTION_HPP_
 #define YMQ_CONNECTION_HPP_
 
+#include "_inl.hpp"
 #include "ymq_socket.hpp"
 
 #include <sys/types.h>
@@ -10,7 +11,6 @@ namespace ymq
 {
 class ymq_connection : public ymq_socket
 {
-    #define MAX_RECV_BUFF_SIZE  65535
   public:
     ymq_connection(char* url)
     : url_(url)

@@ -1,6 +1,7 @@
-﻿#ifndef YMQ_LISTERNNER_HPP_
-#define YMQ_LISTERNNER_HPP_
+﻿#ifndef YMQ_LISTENNER_HPP_
+#define YMQ_LISTENNER_HPP_
 
+#include "_inl.hpp"
 #include "ymq_socket.hpp"
 #include <functional>
 #include <mutex>
@@ -8,13 +9,10 @@
 
 namespace ymq
 {
-class ymq_listernner : public ymq_socket
+class ymq_listenner : public ymq_socket
 {
-#define MAX_EVENT_COUNT 5000
-#define MAX_RECV_BUFF 65535
-
   public:
-    ymq_listernner(char* url)
+    ymq_listenner(char* url)
     {
         this->kq_ = 0;
         this->running_ = false;
@@ -31,7 +29,7 @@ class ymq_listernner : public ymq_socket
         std::string str_port = url_.substr(p2, url_.length()-p2);
         port_ = atoi(str_port.c_str());
     }
-    virtual ~ymq_listernner()
+    virtual ~ymq_listenner()
     {
         stop();
     }
@@ -50,8 +48,8 @@ class ymq_listernner : public ymq_socket
         /* Create kqueue. */
         this->kq_ = kqueue();
         
-        /* Create listerner on port*/
-        if(!create_listerner(listern_port_))
+        /* Create listener on port*/
+        if(!create_listener(listen_port_))
         {
             return false;
         }
@@ -60,7 +58,7 @@ class ymq_listernner : public ymq_socket
         register_event(kq_, sock_);
         
         /*Start events thread*/
-        obj_thread_ = new std::thread(&ymq_listernner::process_event, this);
+        obj_thread_ = new std::thread(&ymq_listenner::process_event, this);
 
         return true;
     }
@@ -100,14 +98,20 @@ class ymq_listernner : public ymq_socket
         running_ = true;
         while (running_)
         {
+            //ret = accept(sock_, NULL, NULL);
             ret = kevent(kq_, NULL, 0, events, MAX_EVENT_COUNT, NULL);
+            if(-1==ret)
+            {
+                continue;
+            }
+
             handle_events(kq_, events, ret);
         }
 
         delete[] events;
     }
 
-    bool create_listerner(int port)
+    bool create_listener(int port)
     {
         struct sockaddr_in addr;
         addr.sin_len = sizeof(addr);
@@ -124,7 +128,7 @@ class ymq_listernner : public ymq_socket
 
         if( ::listen(sock_,5) == -1)
         {
-            std::cerr << " listern()　failed:" << errno << std::endl;
+            std::cerr << " listen()　failed:" << errno << std::endl;
             return false;
         }
 
@@ -229,9 +233,9 @@ class ymq_listernner : public ymq_socket
 
     bool running_;
     int kq_;
-    int listern_port_;
+    int listen_port_;
     
-    char buf_[MAX_RECV_BUFF];
+    char buf_[MAX_RECV_BUFF_SIZE];
     fn_received_data_handle fn_received_data_;
     std::thread *obj_thread_;
 
@@ -240,4 +244,4 @@ class ymq_listernner : public ymq_socket
 };
 } // namespace ymq
 
-#endif //!YMQ_LISTERNNER_HPP_
+#endif //!YMQ_LISTENNER_HPP_

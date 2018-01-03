@@ -24,8 +24,6 @@
 
 namespace ymq
 {
-    typedef std::function<void(char*, int)> fn_received_data_handle;
-
     class ymq_socket
     {
     public:

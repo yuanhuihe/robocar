@@ -1,11 +1,10 @@
 ﻿#ifndef YMQ_PROXY_HPP_
 #define YMQ_PROXY_HPP_
 
+#include "_inl.hpp"
 #include "ymq_socket.hpp"
-#include "ymq_listernner.hpp"
+#include "ymq_listenner.hpp"
 #include <functional>           // std::bind
-
-using namespace std::placeholders;
 
 namespace ymq
 {
@@ -40,8 +39,8 @@ namespace ymq
         }
 
     private:
-        ymq_listernner puller;
-        ymq_listernner pusher;
+        ymq_listenner puller;
+        ymq_listenner pusher;
 
     private:
         void on_received_data(char* data, int len)

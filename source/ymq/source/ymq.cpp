@@ -1,6 +1,7 @@
 ﻿#include <ymq/ymq.h>
+#include "_inl.hpp"
 #include "ymq_proxy.hpp"
-#include "ymq_listernner.hpp"
+#include "ymq_listenner.hpp"
 #include "ymq_connection.hpp"
 
 namespace ymq
@@ -30,7 +31,7 @@ namespace ymq
         //if(url[0] == '@')
         if(url[0] != '>')
         {
-            return new ymq_listernner(url);
+            return new ymq_listenner(url);
         }
         else
         {
