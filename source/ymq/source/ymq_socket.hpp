@@ -29,6 +29,7 @@ namespace ymq
     public:
         ymq_socket()
         {
+            sock_ = 0;
         }
 
         virtual ~ymq_socket()
@@ -37,16 +38,18 @@ namespace ymq
 
         virtual bool start()
         {
-            sock_ = socket(PF_INET, SOCK_STREAM, 0);
-            if (sock_ == -1)
+            if(sock_<=0)
             {
-                std::cerr << "socket()　failed:" << errno << std::endl;
-                return false;
+                sock_ = socket(PF_INET, SOCK_STREAM, 0);
+                if (sock_ == -1)
+                {
+                    std::cerr << "socket()　failed:" << errno << std::endl;
+                    return false;
+                }
+
+                int set = 1;
+                setsockopt(sock_, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
             }
-
-            int set = 1;
-            setsockopt(sock_, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
-
             return true;
         }
 

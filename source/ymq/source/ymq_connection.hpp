@@ -60,28 +60,18 @@ class ymq_connection : public ymq_socket
   private:
     bool connect()
     {
-        if(sock_<=0)
-        {
-            sock_ = socket(PF_INET, SOCK_STREAM, 0);
-            if (sock_ == -1)
-            {
-                std::cerr << "socket()　failed:" << errno << std::endl;
-                return false;
-            }
-
-            int set = 1;
-            setsockopt(sock_, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
-        }
-
         struct sockaddr_in addr;
         addr.sin_len = sizeof(addr);
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port_);
         addr.sin_addr.s_addr = inet_addr(ip_.c_str());
+        /* Set all bits of the padding field to 0 */
+        memset(addr.sin_zero, '\0', sizeof addr.sin_zero);  
 
         if (-1 == ::connect(sock_, (sockaddr*)&addr, sizeof(addr)))
         {
-            printf("Client: connect() - Failed to connect. errno(%d).\n", errno);
+            int errnum = errno;
+            printf("Client: connect() - %s(errno=%d).\n", strerror(errnum), errnum);
             return false;
         }
         

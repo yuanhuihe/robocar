@@ -49,7 +49,7 @@ class ymq_listenner : public ymq_socket
         this->kq_ = kqueue();
         
         /* Create listener on port*/
-        if(!create_listener(listen_port_))
+        if(!create_listener(port_))
         {
             return false;
         }
@@ -98,7 +98,6 @@ class ymq_listenner : public ymq_socket
         running_ = true;
         while (running_)
         {
-            //ret = accept(sock_, NULL, NULL);
             ret = kevent(kq_, NULL, 0, events, MAX_EVENT_COUNT, NULL);
             if(-1==ret)
             {
@@ -118,15 +117,17 @@ class ymq_listenner : public ymq_socket
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port);
         addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        /* Set all bits of the padding field to 0 */
+        memset(addr.sin_zero, '\0', sizeof addr.sin_zero);  
 
-        int ret = ::bind(sock_, (struct sockaddr *)&addr, sizeof(struct sockaddr));
+        int ret = ::bind(sock_, (struct sockaddr *)&addr, sizeof(addr));
         if (ret == -1)
         {
             std::cerr << "bind()　failed:" << errno << std::endl;
             return false;
         }
 
-        if( ::listen(sock_,5) == -1)
+        if( ::listen(sock_, LISTEN_BACKLOG) == -1)
         {
             std::cerr << " listen()　failed:" << errno << std::endl;
             return false;
@@ -182,9 +183,12 @@ class ymq_listenner : public ymq_socket
 
     void accept_conn(int kq, int connSize)
     {
+        struct sockaddr peer_addr;
+        socklen_t peer_addr_size = sizeof(struct sockaddr);
+
         for (int i = 0; i < connSize; i++)
         {
-            int client = accept(sock_, NULL, NULL);
+            int client = ::accept(sock_, (struct sockaddr *) &peer_addr, &peer_addr_size);
             if (client == -1)
             {
                 std::cerr << "Accept failed. ";
@@ -205,25 +209,34 @@ class ymq_listenner : public ymq_socket
 
     void receive_data(int sock, int availBytes)
     {
-        int bytes = ::recv(sock, buf_, availBytes, 0);
-        if (bytes == 0 || bytes == -1)
+        int bytes = 0;
+        int total_bytes = 0;
+        while(total_bytes<availBytes)
         {
-            std::lock_guard<std::mutex> l(mtx_);
-            auto s = std::find(std::begin(clients_fd_), std::end(clients_fd_), sock);
-            if (s != std::end(clients_fd_))
+            bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0);
+            if (bytes == 0 || bytes == -1)
             {
-                clients_fd_.erase(s);
+                std::lock_guard<std::mutex> l(mtx_);
+                auto s = std::find(std::begin(clients_fd_), std::end(clients_fd_), sock);
+                if (s != std::end(clients_fd_))
+                {
+                    clients_fd_.erase(s);
+                }
+                unregister_event(kq_, sock);
+                close(sock);
+                std::cerr << "client close or recv failed. ";
+                return;
             }
-            unregister_event(kq_, sock);
-            close(sock);
-            std::cerr << "client close or recv failed. ";
-            return;
+            
+            if(fn_received_data_)
+            {
+                fn_received_data_(buf_, bytes);
+            }
+
+            total_bytes+=bytes;
         }
-        
-        if(fn_received_data_)
-        {
-            fn_received_data_(buf_, bytes);
-        }
+
+        printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
     }
 
   private:
@@ -233,7 +246,6 @@ class ymq_listenner : public ymq_socket
 
     bool running_;
     int kq_;
-    int listen_port_;
     
     char buf_[MAX_RECV_BUFF_SIZE];
     fn_received_data_handle fn_received_data_;
