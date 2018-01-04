@@ -58,6 +58,26 @@ namespace ymq
         }
         return -1;
     }
+    
+    YMQ_API int ymq_set_sock_recv_timeout(ymq_sock_t sock, int timeout)
+    {
+        ymq_socket* s = static_cast<ymq_socket*>(sock);
+        if(s)
+        {
+            return s->set_recv_timeout(timeout);
+        }
+        return -1;
+    }
+
+    YMQ_API int ymq_set_sock_send_timeout(ymq_sock_t sock, int timeout)
+    {
+        ymq_socket* s = static_cast<ymq_socket*>(sock);
+        if(s)
+        {
+            return s->set_send_timeout(timeout);
+        }
+        return -1;
+    }
 
     YMQ_API void ymq_sock_destory(ymq_sock_t& sock)
     {

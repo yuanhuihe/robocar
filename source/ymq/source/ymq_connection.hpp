@@ -74,15 +74,6 @@ class ymq_connection : public ymq_socket
             printf("Client: connect() - %s(errno=%d).\n", strerror(errnum), errnum);
             return false;
         }
-        
-        int timeout = 1000; // ms
-        #ifdef WIN32
-        DWORD t = timeout;
-        setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&t, sizeof(t));
-        #else
-        struct timeval tv = {timeout/1000, 0};
-        setsockopt(sock_, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
-        #endif
 
         return true;
     }

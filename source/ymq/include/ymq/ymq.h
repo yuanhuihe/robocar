@@ -52,6 +52,16 @@ namespace ymq
     YMQ_API int ymq_sock_send(ymq_sock_t s, char* data, int data_len);
 
     /* @brief
+    *   Set receive timeout.
+    */
+    YMQ_API int ymq_set_sock_recv_timeout(ymq_sock_t s, int timeout);
+
+    /* @brief
+    *   Set send timeout.
+    */
+    YMQ_API int ymq_set_sock_send_timeout(ymq_sock_t s, int timeout);
+
+    /* @brief
     *   Destory socket.
     */
     YMQ_API void ymq_sock_destory(ymq_sock_t& sock);

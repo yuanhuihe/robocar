@@ -42,27 +42,25 @@ int main(int /*argc*/, char* /*argv*/[])
 
     auto fn_send = [&sock_push]()
     {
-        int cnt = 1000000;
-        char buff[10240];
+        int cnt = 100000;
+        char buff[1024];
         while(cnt>0)
         {
             ymq_sock_send(sock_push, buff, sizeof(buff));
-
-
-
             cnt--;
         }
     };
 
     auto fn_recv = [&sock_pull]()
     {
-        int cnt = 1000000;
-        char buff[10240];
-        while(cnt>0)
+        ymq_set_sock_recv_timeout(sock_pull, 5000);
+        char buff[1024];
+        while(true)
         {
-            ymq_sock_recv(sock_pull, buff, sizeof(buff));
-
-            cnt--;
+            if(-1 == ymq_sock_recv(sock_pull, buff, sizeof(buff)))
+            {
+                break;
+            }
         }
     };
 

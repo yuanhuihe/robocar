@@ -65,6 +65,36 @@ namespace ymq
         virtual int send(char* data, int data_len) = 0;
         virtual int recv(char* buff, int buff_len) = 0;
 
+        int set_recv_timeout(int timeout)
+        {
+            if(sock_>0 && timeout>=0)
+            {
+                #ifdef WIN32
+                DWORD t = timeout;
+                setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&t, sizeof(t));
+                #else
+                struct timeval tv = {timeout/1000, (timeout%1000)*1000};
+                setsockopt(sock_, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
+                #endif
+            }
+            return -1;
+        }
+
+        int set_send_timeout(int timeout)
+        {
+            if(sock_>0 && timeout>=0)
+            {
+                #ifdef WIN32
+                DWORD t = timeout;
+                setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&t, sizeof(t));
+                #else
+                struct timeval tv = {timeout/1000, (timeout%1000)*1000};
+                setsockopt(sock_, SOL_SOCKET, SO_SNDTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
+                #endif
+            }
+            return -1;
+        }
+
     protected:
         int sock_;
     };
