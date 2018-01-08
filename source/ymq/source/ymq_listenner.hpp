@@ -7,12 +7,12 @@
 #include <mutex>
 #include <vector>
 
-#ifdef WIN32
+#ifdef _WIN32
 
-#elif (defined(APPLE))
+#elif (defined(__APPLE__))
     #include <sys/event.h>
     #include <sys/types.h>
-#elif (defined(LINUX))
+#elif (defined(__linux__))
     #include <sys/epoll.h> 
 #endif
 
@@ -54,12 +54,12 @@ class ymq_listenner : public ymq_socket
 
         if(!ymq_socket::start()) return false;
 
-#ifdef WIN32
+#ifdef _WIN32
         /* Create IOCP handle*/
-#elif (defined(APPLE))
+#elif (defined(__APPLE__))
         /* Create kqueue. */
         this->kq_ = kqueue();
-#elif (defined(LINUX))
+#elif (defined(__linux__))
         this->kq_ = create_epoll1(0);
 #endif
         
@@ -94,7 +94,7 @@ class ymq_listenner : public ymq_socket
 
     virtual int send(char* data, int data_len)
     {
-        int client_index = 0;
+        size_t client_index = 0;
         int sent_len = 0;
         int total_sent = 0;
         int sock = 0;
@@ -125,29 +125,29 @@ class ymq_listenner : public ymq_socket
 
     virtual int recv(char* buff, int buff_len)
     {
-
+        return -1;
     }
 
   private:
     void process_event()
     {
         running_ = true;
-#ifdef WIN32
+#ifdef _WIN32
         /* IOCP event handle*/
-#elif (defined(APPLE))
+#elif (defined(__APPLE__))
     {
         struct kevent *events = new struct kevent[MAX_SOCKET_EVENT_COUNT];
-        int ret = 0;
+        int ev_cnt = 0;
         while (running_)
         {
-            ret = kevent(kq_, NULL, 0, events, MAX_SOCKET_EVENT_COUNT, NULL);
-            if(-1==ret)
+            ev_cnt = kevent(kq_, NULL, 0, events, MAX_SOCKET_EVENT_COUNT, NULL);
+            if(-1==ev_cnt)
             {
                 continue;
             }
 
             // handle events
-            for (int i = 0; i < nevents; i++)
+            for (int i = 0; i < ev_cnt; i++)
             {
                 int sock = events[i].ident;
                 int data = events[i].data;
@@ -157,7 +157,7 @@ class ymq_listenner : public ymq_socket
                     int conn_cnt = data;
                     for (int i = 0; i < conn_cnt; i++)
                     {
-                        accept_conn(data);
+                        accept_conn();
                     }
                 }
                 else
@@ -169,7 +169,7 @@ class ymq_listenner : public ymq_socket
         }
         delete[] events;
     }
-#elif (defined(LINUX))
+#elif (defined(__linux__))
     {
         int timeout = 1000; // ms
         int nfds;  
@@ -186,10 +186,10 @@ class ymq_listenner : public ymq_socket
             for(i=0;i<nfds;++i)  
             {  
                 if(events[i].data.fd==sock_)
-                {  
-                    accept_conn(); 
-                }  
-                else if( events[i].events&EPOLLIN ) // received data, read socket  
+                {
+                    accept_conn();
+                }
+                else if( events[i].events&EPOLLIN ) // received data, read socket
                 {
                     if (events[i].data.fd < 0)
                         continue;
@@ -201,23 +201,19 @@ class ymq_listenner : public ymq_socket
                     ev.data.ptr = md;     //md is the data will be sent
                     ev.events=EPOLLOUT|EPOLLET;  
                     epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);// modify fd state flag, write event will be triged next tune
-                    */
-                    
-                }  
-                else if(events[i].events&EPOLLOUT) //has data need to be sent，write socket  
-                {  
-
-
-
+                    */   
+                }
+                else if(events[i].events&EPOLLOUT) //has data need to be sent，write socket
+                {
                     /*
                     struct myepoll_data* md = (myepoll_data*)events[i].data.ptr;    // get data  
                     sockfd = md->fd;
                     send( sockfd, md->ptr, strlen((char*)md->ptr), 0 );        // send data
-                    ev.data.fd=sockfd;  
-                    ev.events=EPOLLIN|EPOLLET;  
+                    ev.data.fd=sockfd;
+                    ev.events=EPOLLIN|EPOLLET;
                     epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev); //modify fd state flag, wait for next tune to read data
                     */
-                }  
+                }
                 else  
                 {
 
@@ -258,9 +254,9 @@ class ymq_listenner : public ymq_socket
 
     bool register_event(int fd)
     {
-#ifdef WIN32
+#ifdef _WIN32
 
-#elif (defined(APPLE))
+#elif (defined(__APPLE__))
         /* Initialize kevent structure. */
         struct kevent event;
         EV_SET(&event, fd, EVFILT_READ, EV_ADD|EV_ENABLE, 0, 0, NULL);
@@ -271,7 +267,7 @@ class ymq_listenner : public ymq_socket
         {
             return false;
         }
-#elif (defined(LINUX))
+#elif (defined(__linux__))
         struct epoll_event event;  
         event.data.fd = fd;  
         event.events = EPOLLIN | EPOLLET;  
@@ -287,9 +283,9 @@ class ymq_listenner : public ymq_socket
 
     bool unregister_event(int fd)
     {
-#ifdef WIN32
+#ifdef _WIN32
 
-#elif (defined(APPLE))
+#elif (defined(__APPLE__))
         struct kevent event;
         EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
         int s = kevent(kq_, &event, 1, NULL, 0, NULL);
@@ -297,7 +293,7 @@ class ymq_listenner : public ymq_socket
         {
             return false;
         }
-#elif (defined(LINUX))
+#elif (defined(__linux__))
         struct epoll_event event;  
         event.data.fd = fd;  
         event.events = EPOLLIN | EPOLLET;  
@@ -338,9 +334,9 @@ class ymq_listenner : public ymq_socket
 
     void receive_data(int sock, int availBytes)
     {
-#ifdef WIN32
+#ifdef _WIN32
 
-#elif (defined(APPLE))
+#elif (defined(__APPLE__))
         int bytes = 0;
         int total_bytes = 0;
         while(total_bytes<availBytes)
@@ -362,7 +358,7 @@ class ymq_listenner : public ymq_socket
         }
 
         printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
-#elif (defined(LINUX))
+#elif (defined(__linux__))
 
         int bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0);
         if(bytes>0)

@@ -1,5 +1,5 @@
-﻿#ifndef _INL__HPP_
-#define _INL__HPP_
+﻿#ifndef _INL_HPP_
+#define _INL_HPP_
 
 #include <functional>           // std::bind
 using namespace std::placeholders;
@@ -14,4 +14,4 @@ namespace ymq
     typedef std::function<void(int)> fn_sock_received_data_handle;
 
 } // namespace ymq
-#endif //!_INL__HPP_
+#endif //!_INL_HPP_
