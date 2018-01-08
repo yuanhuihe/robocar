@@ -5,12 +5,6 @@
 #include <thread>
 #include <iostream>
 
-//#ifdef _UNIX
-#include <sys/event.h>
-#include <sys/types.h>
-//#else
-//#endif
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/event.h>
@@ -69,13 +63,15 @@ namespace ymq
         {
             if(sock_>0 && timeout>=0)
             {
-                #ifdef WIN32
+            #ifdef WIN32
                 DWORD t = timeout;
                 setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&t, sizeof(t));
-                #else
+            #else
                 struct timeval tv = {timeout/1000, (timeout%1000)*1000};
                 setsockopt(sock_, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
-                #endif
+            #endif
+
+                return 0;
             }
             return -1;
         }
@@ -84,13 +80,15 @@ namespace ymq
         {
             if(sock_>0 && timeout>=0)
             {
-                #ifdef WIN32
+            #ifdef WIN32
                 DWORD t = timeout;
                 setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&t, sizeof(t));
-                #else
+            #else
                 struct timeval tv = {timeout/1000, (timeout%1000)*1000};
                 setsockopt(sock_, SOL_SOCKET, SO_SNDTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
-                #endif
+            #endif
+
+                return 0;
             }
             return -1;
         }

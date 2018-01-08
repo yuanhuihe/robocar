@@ -7,6 +7,15 @@
 #include <mutex>
 #include <vector>
 
+#ifdef WIN32
+
+#elif (defined(APPLE))
+    #include <sys/event.h>
+    #include <sys/types.h>
+#elif (defined(LINUX))
+    #include <sys/epoll.h> 
+#endif
+
 namespace ymq
 {
 class ymq_listenner : public ymq_socket
@@ -45,8 +54,14 @@ class ymq_listenner : public ymq_socket
 
         if(!ymq_socket::start()) return false;
 
+#ifdef WIN32
+        /* Create IOCP handle*/
+#elif (defined(APPLE))
         /* Create kqueue. */
         this->kq_ = kqueue();
+#elif (defined(LINUX))
+        this->kq_ = create_epoll1(0);
+#endif
         
         /* Create listener on port*/
         if(!create_listener(port_))
@@ -55,7 +70,7 @@ class ymq_listenner : public ymq_socket
         }
 
         /*Register events on kqueue*/
-        register_event(kq_, sock_);
+        register_event(sock_);
         
         /*Start events thread*/
         obj_thread_ = new std::thread(&ymq_listenner::process_event, this);
@@ -79,10 +94,33 @@ class ymq_listenner : public ymq_socket
 
     virtual int send(char* data, int data_len)
     {
-        for(auto sock : clients_fd_)
+        int client_index = 0;
+        int sent_len = 0;
+        int total_sent = 0;
+        int sock = 0;
+        while(client_index < clients_fd_.size())
         {
-            ::send(sock, data, data_len, 0);
+            sock = clients_fd_[client_index];
+            total_sent = 0;
+            while(total_sent<data_len)
+            {
+                sent_len = ::send(sock, data, data_len, 0);
+                if(sent_len>0)
+                {
+                    total_sent += sent_len;
+                }
+                else
+                {
+                    remove_client(sock);
+                    client_index--;
+                    break;
+                }
+            }
+
+            // next client
+            client_index++;
         }
+        return data_len;
     }
 
     virtual int recv(char* buff, int buff_len)
@@ -93,21 +131,103 @@ class ymq_listenner : public ymq_socket
   private:
     void process_event()
     {
-        struct kevent *events = new struct kevent[MAX_EVENT_COUNT];
-        int ret = 0;
         running_ = true;
+#ifdef WIN32
+        /* IOCP event handle*/
+#elif (defined(APPLE))
+    {
+        struct kevent *events = new struct kevent[MAX_SOCKET_EVENT_COUNT];
+        int ret = 0;
         while (running_)
         {
-            ret = kevent(kq_, NULL, 0, events, MAX_EVENT_COUNT, NULL);
+            ret = kevent(kq_, NULL, 0, events, MAX_SOCKET_EVENT_COUNT, NULL);
             if(-1==ret)
             {
                 continue;
             }
 
-            handle_events(kq_, events, ret);
-        }
+            // handle events
+            for (int i = 0; i < nevents; i++)
+            {
+                int sock = events[i].ident;
+                int data = events[i].data;
 
+                if (sock == sock_)
+                {
+                    int conn_cnt = data;
+                    for (int i = 0; i < conn_cnt; i++)
+                    {
+                        accept_conn(data);
+                    }
+                }
+                else
+                {
+                    int data_size = data;
+                    receive_data(sock, data_size);
+                }
+            }
+        }
         delete[] events;
+    }
+#elif (defined(LINUX))
+    {
+        int timeout = 1000; // ms
+        int nfds;  
+        struct epoll_event* events = new struct epoll_event[ MAX_SOCKET_EVENT_COUNT];
+        while(running_)
+        {
+            nfds = epoll_wait(kq_, events, LISTEN_BACKLOG, timeout);  
+            if(-1==nfds)
+            {
+                continue;
+            }
+
+            // handle events
+            for(i=0;i<nfds;++i)  
+            {  
+                if(events[i].data.fd==sock_)
+                {  
+                    accept_conn(); 
+                }  
+                else if( events[i].events&EPOLLIN ) // received data, read socket  
+                {
+                    if (events[i].data.fd < 0)
+                        continue;
+                        
+                    receive_data(events[i].data.fd, -1);
+
+                    /*
+                    n = read(sockfd, line, MAXLINE)) < 0    // read data
+                    ev.data.ptr = md;     //md is the data will be sent
+                    ev.events=EPOLLOUT|EPOLLET;  
+                    epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);// modify fd state flag, write event will be triged next tune
+                    */
+                    
+                }  
+                else if(events[i].events&EPOLLOUT) //has data need to be sent，write socket  
+                {  
+
+
+
+                    /*
+                    struct myepoll_data* md = (myepoll_data*)events[i].data.ptr;    // get data  
+                    sockfd = md->fd;
+                    send( sockfd, md->ptr, strlen((char*)md->ptr), 0 );        // send data
+                    ev.data.fd=sockfd;  
+                    ev.events=EPOLLIN|EPOLLET;  
+                    epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev); //modify fd state flag, wait for next tune to read data
+                    */
+                }  
+                else  
+                {
+
+
+                }
+            }
+        }
+        delete[] events;
+    }  
+#endif
     }
 
     bool create_listener(int port)
@@ -136,79 +256,91 @@ class ymq_listenner : public ymq_socket
         return true;
     }
 
-    void handle_events(int kq, struct kevent *events, int nevents)
+    bool register_event(int fd)
     {
-        for (int i = 0; i < nevents; i++)
-        {
-            int sock = events[i].ident;
-            int data = events[i].data;
+#ifdef WIN32
 
-            if (sock == sock_)
-                accept_conn(kq, data);
-            else
-                receive_data(sock, data);
-        }
-    }
-
-    bool register_event(int kq, int fd)
-    {
+#elif (defined(APPLE))
         /* Initialize kevent structure. */
-        struct kevent changes[1];
-        EV_SET(&changes[0], fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
+        struct kevent event;
+        EV_SET(&event, fd, EVFILT_READ, EV_ADD|EV_ENABLE, 0, 0, NULL);
 
-        /* Attach event to the	kqueue.	*/
-        int ret = kevent(kq, changes, 1, NULL, 0, NULL);
-        if (ret == -1)
+        /* Attach event to the kqueue. */
+        int s = kevent(kq_, &event, 1, NULL, 0, NULL);
+        if (s == -1)
         {
             return false;
         }
+#elif (defined(LINUX))
+        struct epoll_event event;  
+        event.data.fd = fd;  
+        event.events = EPOLLIN | EPOLLET;  
+        int s = epoll_ctl (kq_, EPOLL_CTL_ADD, fd, &event);  
+        if (s == -1)  
+        {
+            return false;
+        }  
+#endif
 
         return true;
     }
 
-    bool unregister_event(int kq, int fd)
+    bool unregister_event(int fd)
     {
-        struct kevent changes[1];
-        EV_SET(&changes[0], fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
+#ifdef WIN32
 
-        /* Attach event to the	kqueue.	*/
-        int ret = kevent(kq, changes, 1, NULL, 0, NULL);
-        if (ret == -1)
+#elif (defined(APPLE))
+        struct kevent event;
+        EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
+        int s = kevent(kq_, &event, 1, NULL, 0, NULL);
+        if (s == -1)
         {
             return false;
         }
+#elif (defined(LINUX))
+        struct epoll_event event;  
+        event.data.fd = fd;  
+        event.events = EPOLLIN | EPOLLET;  
+        int s = epoll_ctl (kq_, EPOLL_CTL_DEL, fd, &event);  
+        if (s == -1)  
+        {
+            return false;
+        }
+#endif
 
         return true;
     }
 
-    void accept_conn(int kq, int connSize)
+    bool accept_conn()
     {
         struct sockaddr peer_addr;
         socklen_t peer_addr_size = sizeof(struct sockaddr);
 
-        for (int i = 0; i < connSize; i++)
+        int client = ::accept(sock_, (struct sockaddr *) &peer_addr, &peer_addr_size);
+        if (client == -1)
         {
-            int client = ::accept(sock_, (struct sockaddr *) &peer_addr, &peer_addr_size);
-            if (client == -1)
-            {
-                std::cerr << "Accept failed. ";
-                continue;
-            }
-
-            if (!register_event(kq, client))
-            {
-                close(client);
-                std::cerr << "Register client failed. ";
-                return;
-            }
-
-            std::lock_guard<std::mutex> l(mtx_);
-            clients_fd_.push_back(client);
+            std::cerr << "Accept failed. ";
+            return false;
         }
+
+        if (!register_event(client))
+        {
+            close(client);
+            std::cerr << "Register client failed. ";
+            return false;
+        }
+
+        std::lock_guard<std::mutex> l(mtx_);
+        clients_fd_.push_back(client);
+
+        return true;
     }
 
     void receive_data(int sock, int availBytes)
     {
+#ifdef WIN32
+
+#elif (defined(APPLE))
         int bytes = 0;
         int total_bytes = 0;
         while(total_bytes<availBytes)
@@ -216,14 +348,7 @@ class ymq_listenner : public ymq_socket
             bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0);
             if (bytes == 0 || bytes == -1)
             {
-                std::lock_guard<std::mutex> l(mtx_);
-                auto s = std::find(std::begin(clients_fd_), std::end(clients_fd_), sock);
-                if (s != std::end(clients_fd_))
-                {
-                    clients_fd_.erase(s);
-                }
-                unregister_event(kq_, sock);
-                close(sock);
+                remove_client(sock);
                 std::cerr << "client close or recv failed. ";
                 return;
             }
@@ -237,15 +362,59 @@ class ymq_listenner : public ymq_socket
         }
 
         printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
+#elif (defined(LINUX))
+
+        int bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0);
+        if(bytes>0)
+        {
+        struct epoll_event event;  
+
+
+        n = read(sockfd, line, MAXLINE)) < 0    //读  
+        ev.data.ptr = md;     //md为自定义类型，添加数据  
+        ev.events=EPOLLOUT|EPOLLET;  
+        epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);//修改标识符，等待下一个循环时发送数据，异步处理的精髓  
+        while(total_bytes<availBytes)
+        {
+            if (bytes == 0 || bytes == -1)
+            {
+                remove_client(sock);
+                std::cerr << "client close or recv failed. ";
+                return;
+            }
+            
+            if(fn_received_data_)
+            {
+                fn_received_data_(buf_, bytes);
+            }
+
+            total_bytes+=bytes;
+        }
+
+        printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
+
+#endif
+    }
+
+    void remove_client(int sock)
+    {
+        std::lock_guard<std::mutex> l(mtx_);
+        auto s = std::find(std::begin(clients_fd_), std::end(clients_fd_), sock);
+        if (s != std::end(clients_fd_))
+        {
+            clients_fd_.erase(s);
+        }
+        unregister_event(sock);
+        close(sock);
     }
 
   private:
+    int kq_;
+    bool running_;
+
     std::string url_;
     std::string ip_;
     int port_;
-
-    bool running_;
-    int kq_;
     
     char buf_[MAX_RECV_BUFF_SIZE];
     fn_received_data_handle fn_received_data_;

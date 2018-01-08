@@ -42,7 +42,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     auto fn_send = [&sock_push]()
     {
-        int cnt = 100000;
+        int cnt = 1000;
         char buff[1024];
         while(cnt>0)
         {
