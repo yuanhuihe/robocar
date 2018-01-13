@@ -16,7 +16,7 @@ namespace ymq
 class ymq_connection : public ymq_socket
 {
   public:
-    ymq_connection(char* url)
+    ymq_connection(const char* url)
     : url_(url)
     {
         this->is_conn_ = false;

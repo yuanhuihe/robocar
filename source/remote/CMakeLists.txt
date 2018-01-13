@@ -4,8 +4,6 @@
 # 
 
 # find_package(THIRDPARTY REQUIRED)
-find_package(ZMQ REQUIRED)
-find_package(CZMQ REQUIRED)
 
 # 
 # Library name and options
@@ -118,8 +116,6 @@ set_target_properties(${target}
 
 target_include_directories(${target}
     PRIVATE
-        ${ZMQ_INCLUDE_DIR}
-		${CZMQ_INCLUDE_DIR}
 	    ${PROJECT_BINARY_DIR}/source/include
         ${CMAKE_CURRENT_BINARY_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -143,9 +139,7 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-		${ZMQ_LIBRARY}
-		${CZMQ_LIBRARY}
-        #${META_PROJECT_NAME}::AutoMatch
+        ${META_PROJECT_NAME}::ymq
     PUBLIC
         ${DEFAULT_LIBRARIES}
 

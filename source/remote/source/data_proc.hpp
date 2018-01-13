@@ -6,10 +6,11 @@
 #include <iostream>
 #include <thread>
 #include "_inl.hpp"
-#include "czmq.h"
 #include "ProducerConsumerQueue.h"
 #include "DataFramePool.h"
 #include "spdlog/spdlog.h"
+#include "ymq/ymq.h"
+using namespace ymq;
 
 namespace Remote
 {
@@ -72,14 +73,15 @@ namespace Remote
         {
             //  Connect application sockets to proxy
             std::string url = ">" + recv_url;
-            zsock_t *recv_scok = zsock_new_pull (url.c_str());
+            ymq_sock_t recv_scok = ymq_new_sock(url.c_str());
             assert (recv_scok);
-            char* id;
-            char* data;
-            size_t len;
+            ymq_set_sock_recv_timeout(recv_scok, 1000);
+
+            char* data = new char[4096];
+            size_t len = 4096;
             while(running)
             {
-                int rc = zsock_recv(recv_scok, "sb", &id, &data, &len);
+                int rc = ymq_sock_recv(recv_scok, data, len);
                 if(rc==-1)
                 {
                     continue;
@@ -93,11 +95,8 @@ namespace Remote
                     queue_proc_.write(frame);
                     cv.notify_all();
                 }
-
-
-                zstr_free(&id);
-                zstr_free(&data);
             }
+            delete[] data;
         }
 
         /**
@@ -109,7 +108,7 @@ namespace Remote
         {
             //  Connect application sockets to proxy
             std::string url = ">" + send_url;
-            zsock_t *send_sock = zsock_new_push (url.c_str());
+            ymq_sock_t send_sock = ymq_new_sock (url.c_str());
             assert (send_sock);
 
             char id[64];
@@ -124,7 +123,7 @@ namespace Remote
                     proc_data(frame);
 
                     // send to sender proxy
-                    zsock_send(send_sock, "sb", id_.c_str(), &frame->data, &frame->len);
+                    ymq_send(send_sock, "sb", id_.c_str(), &frame->data, &frame->len);
 
                     DataFramePool<TransFrame>::ReleaseFrame(frame);
                 }

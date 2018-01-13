@@ -48,11 +48,11 @@ namespace ymq
             pusher.send(data, len);
         }
 
-        virtual int send(char* data, int data_len)
+        virtual int send(char* /*data*/, int /*data_len*/)
         {
 
         }
-        virtual int recv(char* buff, int buff_len)
+        virtual int recv(char* /*buff*/, int /*buff_len*/)
         {
             
         }

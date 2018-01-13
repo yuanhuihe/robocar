@@ -39,17 +39,22 @@ namespace ymq
     /* @brief
     *   Create a ymq socket.
     */
-    YMQ_API ymq_sock_t ymq_new_sock(char* url);
+    YMQ_API ymq_sock_t ymq_new_sock(const char* url);
 
     /* @brief
     *   Receive data on socket.
     */
-    YMQ_API int ymq_sock_recv(ymq_sock_t s, char* buff, int buff_len);
+    YMQ_API int ymq_sock_recv(ymq_sock_t sock, char* buff, int buff_len);
+
+    /* @brief
+    *   Receive data on socket.
+    */
+    YMQ_API int ymq_sock_recv_ref(ymq_sock_t sock, char** data, int* len);
 
     /* @brief
     *   Send data by socket.
     */
-    YMQ_API int ymq_sock_send(ymq_sock_t s, char* data, int data_len);
+    YMQ_API int ymq_sock_send(ymq_sock_t s, char* data, int len);
 
     /* @brief
     *   Set receive timeout.

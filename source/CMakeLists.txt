@@ -17,6 +17,7 @@ else(WIN32)
     configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/${META_PROJECT_NAME}/${META_PROJECT_NAME}-version.h)
 endif(WIN32)
 
+
 # 
 # Sub-projects
 # 

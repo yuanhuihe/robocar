@@ -26,7 +26,7 @@ namespace ymq
 
 
     /**************************** ymq socket **********************************/
-    YMQ_API ymq_sock_t ymq_new_sock(char* url)
+    YMQ_API ymq_sock_t ymq_new_sock(const char* url)
     {
         //if(url[0] == '@')
         if(url[0] != '>')
@@ -49,12 +49,18 @@ namespace ymq
         return -1;
     }
 
-    YMQ_API int ymq_sock_send(ymq_sock_t sock, char* data, int data_len)
+    YMQ_API int ymq_sock_recv_ref(ymq_sock_t /*sock*/, char** /*data*/, int* /*len*/)
+    {
+        // TBD
+        return -1;
+    }
+
+    YMQ_API int ymq_sock_send(ymq_sock_t sock, char* data, int len)
     {
         ymq_socket* s = static_cast<ymq_socket*>(sock);
         if(s)
         {
-            return s->send(data, data_len);
+            return s->send(data, len);
         }
         return -1;
     }

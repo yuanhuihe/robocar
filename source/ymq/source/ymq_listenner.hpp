@@ -6,6 +6,7 @@
 #include <functional>
 #include <mutex>
 #include <vector>
+#include <thread>
 
 #ifdef _WIN32
 
@@ -21,9 +22,9 @@ namespace ymq
 class ymq_listenner : public ymq_socket
 {
   public:
-    ymq_listenner(char* url)
+    ymq_listenner(const char* url)
     {
-        this->kq_ = 0;
+        this->event_pool_fd_ = 0;
         this->running_ = false;
         this->obj_thread_ = nullptr;
 
@@ -56,11 +57,12 @@ class ymq_listenner : public ymq_socket
 
 #ifdef _WIN32
         /* Create IOCP handle*/
+        this->event_pool_fd_ = -1;  // TBD
 #elif (defined(__APPLE__))
         /* Create kqueue. */
-        this->kq_ = kqueue();
+        this->event_pool_fd_ = kqueue();
 #elif (defined(__linux__))
-        this->kq_ = create_epoll1(0);
+        this->event_pool_fd_ = create_epoll1(0);
 #endif
         
         /* Create listener on port*/
@@ -85,7 +87,7 @@ class ymq_listenner : public ymq_socket
         running_ = false;
         if (obj_thread_)
         {
-            close(kq_);
+            close(event_pool_fd_);
             obj_thread_->join();
             delete obj_thread_;
             obj_thread_ = nullptr;
@@ -123,8 +125,9 @@ class ymq_listenner : public ymq_socket
         return data_len;
     }
 
-    virtual int recv(char* buff, int buff_len)
+    virtual int recv(char* /*buff*/, int /*buff_len*/)
     {
+        // TBD
         return -1;
     }
 
@@ -140,7 +143,7 @@ class ymq_listenner : public ymq_socket
         int ev_cnt = 0;
         while (running_)
         {
-            ev_cnt = kevent(kq_, NULL, 0, events, MAX_SOCKET_EVENT_COUNT, NULL);
+            ev_cnt = kevent(event_pool_fd_, NULL, 0, events, MAX_SOCKET_EVENT_COUNT, NULL);
             if(-1==ev_cnt)
             {
                 continue;
@@ -176,7 +179,7 @@ class ymq_listenner : public ymq_socket
         struct epoll_event* events = new struct epoll_event[ MAX_SOCKET_EVENT_COUNT];
         while(running_)
         {
-            nfds = epoll_wait(kq_, events, LISTEN_BACKLOG, timeout);  
+            nfds = epoll_wait(event_pool_fd_, events, LISTEN_BACKLOG, timeout);  
             if(-1==nfds)
             {
                 continue;
@@ -255,6 +258,9 @@ class ymq_listenner : public ymq_socket
     bool register_event(int fd)
     {
 #ifdef _WIN32
+        // TBD
+
+
 
 #elif (defined(__APPLE__))
         /* Initialize kevent structure. */
@@ -262,7 +268,7 @@ class ymq_listenner : public ymq_socket
         EV_SET(&event, fd, EVFILT_READ, EV_ADD|EV_ENABLE, 0, 0, NULL);
 
         /* Attach event to the kqueue. */
-        int s = kevent(kq_, &event, 1, NULL, 0, NULL);
+        int s = kevent(event_pool_fd_, &event, 1, NULL, 0, NULL);
         if (s == -1)
         {
             return false;
@@ -271,7 +277,7 @@ class ymq_listenner : public ymq_socket
         struct epoll_event event;  
         event.data.fd = fd;  
         event.events = EPOLLIN | EPOLLET;  
-        int s = epoll_ctl (kq_, EPOLL_CTL_ADD, fd, &event);  
+        int s = epoll_ctl (event_pool_fd_, EPOLL_CTL_ADD, fd, &event);  
         if (s == -1)  
         {
             return false;
@@ -288,7 +294,7 @@ class ymq_listenner : public ymq_socket
 #elif (defined(__APPLE__))
         struct kevent event;
         EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
-        int s = kevent(kq_, &event, 1, NULL, 0, NULL);
+        int s = kevent(event_pool_fd_, &event, 1, NULL, 0, NULL);
         if (s == -1)
         {
             return false;
@@ -297,7 +303,7 @@ class ymq_listenner : public ymq_socket
         struct epoll_event event;  
         event.data.fd = fd;  
         event.events = EPOLLIN | EPOLLET;  
-        int s = epoll_ctl (kq_, EPOLL_CTL_DEL, fd, &event);  
+        int s = epoll_ctl (event_pool_fd_, EPOLL_CTL_DEL, fd, &event);  
         if (s == -1)  
         {
             return false;
@@ -356,7 +362,6 @@ class ymq_listenner : public ymq_socket
 
             total_bytes+=bytes;
         }
-
         printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
 #elif (defined(__linux__))
 
@@ -364,7 +369,6 @@ class ymq_listenner : public ymq_socket
         if(bytes>0)
         {
         struct epoll_event event;  
-
 
         n = read(sockfd, line, MAXLINE)) < 0    //读  
         ev.data.ptr = md;     //md为自定义类型，添加数据  
@@ -386,7 +390,6 @@ class ymq_listenner : public ymq_socket
 
             total_bytes+=bytes;
         }
-
         printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
 
 #endif
@@ -405,7 +408,7 @@ class ymq_listenner : public ymq_socket
     }
 
   private:
-    int kq_;
+    int event_pool_fd_;
     bool running_;
 
     std::string url_;

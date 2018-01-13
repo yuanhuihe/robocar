@@ -2,7 +2,6 @@
 
 namespace Remote
 {
-
     // defined of all the broker url
     struct proxy_url
     {
@@ -14,7 +13,7 @@ namespace Remote
         std::string proxy_sender_out_;  // [outer]proxy send out
         std::string client_recver_in_;  // [outer]pub recv in
         std::string client_sender_out_; // [outer]pub send out
-    };                                  
+    };                      
 
 // Server
 #define SERVER_PROXY_RECV_FONTEND   "tcp://*:6011"
