@@ -6,7 +6,7 @@ endif()
 
 # Example applications
 add_subdirectory(test_gpio)
-add_subdirectory(test_ymq)
+add_subdirectory(test_rmq)
 
 
 

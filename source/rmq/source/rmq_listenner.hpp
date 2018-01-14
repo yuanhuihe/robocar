@@ -1,8 +1,8 @@
-﻿#ifndef YMQ_LISTENNER_HPP_
-#define YMQ_LISTENNER_HPP_
+﻿#ifndef RMQ_LISTENNER_HPP_
+#define RMQ_LISTENNER_HPP_
 
 #include "_inl.hpp"
-#include "ymq_socket.hpp"
+#include "rmq_socket.hpp"
 #include <functional>
 #include <mutex>
 #include <vector>
@@ -17,12 +17,12 @@
     #include <sys/epoll.h> 
 #endif
 
-namespace ymq
+namespace rmq
 {
-class ymq_listenner : public ymq_socket
+class rmq_listenner : public rmq_socket
 {
   public:
-    ymq_listenner(const char* url)
+    rmq_listenner(const char* url)
     {
         this->event_pool_fd_ = 0;
         this->running_ = false;
@@ -39,7 +39,7 @@ class ymq_listenner : public ymq_socket
         std::string str_port = url_.substr(p2, url_.length()-p2);
         port_ = atoi(str_port.c_str());
     }
-    virtual ~ymq_listenner()
+    virtual ~rmq_listenner()
     {
         stop();
     }
@@ -53,7 +53,7 @@ class ymq_listenner : public ymq_socket
     {
         stop();
 
-        if(!ymq_socket::start()) return false;
+        if(!rmq_socket::start()) return false;
 
 #ifdef _WIN32
         /* Create IOCP handle*/
@@ -75,14 +75,14 @@ class ymq_listenner : public ymq_socket
         register_event(sock_);
         
         /*Start events thread*/
-        obj_thread_ = new std::thread(&ymq_listenner::process_event, this);
+        obj_thread_ = new std::thread(&rmq_listenner::process_event, this);
 
         return true;
     }
 
     virtual void stop()
     {
-        ymq_socket::stop();
+        rmq_socket::stop();
 
         running_ = false;
         if (obj_thread_)
@@ -422,6 +422,6 @@ class ymq_listenner : public ymq_socket
     std::mutex mtx_;
     std::vector<int> clients_fd_;
 };
-} // namespace ymq
+} // namespace rmq
 
-#endif //!YMQ_LISTENNER_HPP_
+#endif //!RMQ_LISTENNER_HPP_

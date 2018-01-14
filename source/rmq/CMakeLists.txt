@@ -10,7 +10,7 @@
 # 
 
 # Target name
-set(target ymq)
+set(target rmq)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")

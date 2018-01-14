@@ -1,5 +1,5 @@
-﻿#ifndef YMQ_SOCK_HPP_
-#define YMQ_SOCK_HPP_
+﻿#ifndef RMQ_SOCK_HPP_
+#define RMQ_SOCK_HPP_
 
 
 #include <thread>
@@ -7,29 +7,32 @@
 
 #include <errno.h>
 #include <sys/types.h>
+#include <unistd.h> // for 'close'
 
 #ifdef WIN32
 #include <winsock.h>
-#else
+#elif defined(__APPLE__) 
 #include <sys/socket.h>
 #include <sys/event.h>
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unistd.h> // for 'close'
+#elif defined(__linux__) 
+#include <sys/socket.h>
+#include <sys/event.h>
 #endif
 
-namespace ymq
+namespace rmq
 {
-    class ymq_socket
+    class rmq_socket
     {
     public:
-        ymq_socket()
+        rmq_socket()
         {
             sock_ = 0;
         }
 
-        virtual ~ymq_socket()
+        virtual ~rmq_socket()
         {
         }
 
@@ -104,5 +107,5 @@ namespace ymq
         int sock_;
     };
 
-} // namespace ymq
-#endif //!YMQ_SOCK_HPP_
+} // namespace rmq
+#endif //!RMQ_SOCK_HPP_

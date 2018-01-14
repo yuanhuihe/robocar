@@ -1,8 +1,8 @@
-﻿#ifndef YMQ_CONNECTION_HPP_
-#define YMQ_CONNECTION_HPP_
+﻿#ifndef RMQ_CONNECTION_HPP_
+#define RMQ_CONNECTION_HPP_
 
 #include "_inl.hpp"
-#include "ymq_socket.hpp"
+#include "rmq_socket.hpp"
 
 #ifdef WIN32
 #include <winsock.h>
@@ -11,12 +11,12 @@
 #include <sys/socket.h>
 #endif
 
-namespace ymq
+namespace rmq
 {
-class ymq_connection : public ymq_socket
+class rmq_connection : public rmq_socket
 {
   public:
-    ymq_connection(const char* url)
+    rmq_connection(const char* url)
     : url_(url)
     {
         this->is_conn_ = false;
@@ -32,7 +32,7 @@ class ymq_connection : public ymq_socket
 
         start();
     }
-    virtual ~ymq_connection()
+    virtual ~rmq_connection()
     {
         stop();
     }
@@ -41,14 +41,14 @@ class ymq_connection : public ymq_socket
     {
         stop();
 
-        if(!ymq_socket::start()) return false;
+        if(!rmq_socket::start()) return false;
 
         return (is_conn_ = connect());
     }
 
     virtual void stop()
     {
-        ymq_socket::stop();
+        rmq_socket::stop();
     }
 
     virtual int send(char* data, int data_len)
@@ -88,6 +88,6 @@ class ymq_connection : public ymq_socket
     int port_;
     bool is_conn_;
 };
-} // namespace ymq
+} // namespace rmq
 
-#endif //!YMQ_CONNECTION_HPP_
+#endif //!RMQ_CONNECTION_HPP_

@@ -123,7 +123,7 @@ namespace Remote
                     proc_data(frame);
 
                     // send to sender proxy
-                    ymq_send(send_sock, "sb", id_.c_str(), &frame->data, &frame->len);
+                    ymq_sock_send(send_sock, frame->data, frame->len);
 
                     DataFramePool<TransFrame>::ReleaseFrame(frame);
                 }

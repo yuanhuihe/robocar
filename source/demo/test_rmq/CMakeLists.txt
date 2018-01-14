@@ -6,7 +6,7 @@
 #find_package(ZMQ REQUIRED)
 
 # Target name
-set(target test_ymq)
+set(target test_rmq)
 
 # Exit here if required dependencies are not met
 message(STATUS "Demo: ${target}")
@@ -62,7 +62,7 @@ target_include_directories(${target}
 target_link_libraries(${target}
     PRIVATE
         ${DEFAULT_LIBRARIES}
-        ${META_PROJECT_NAME}::ymq
+        ${META_PROJECT_NAME}::rmq
     )
 
 # 

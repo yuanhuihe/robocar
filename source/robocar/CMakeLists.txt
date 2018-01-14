@@ -76,7 +76,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darw
     target_link_libraries(${target}
         PRIVATE
             ${DEFAULT_LIBRARIES}
-            ${META_PROJECT_NAME}::remote
+            ${META_PROJECT_NAME}::rmq
             ${META_PROJECT_NAME}::executive
         )
 else ()
@@ -88,7 +88,7 @@ else ()
             -lrt          # shm_open
             -lcrypt       # crypt
             ${DEFAULT_LIBRARIES}
-            ${META_PROJECT_NAME}::remote
+            ${META_PROJECT_NAME}::rmq
             ${META_PROJECT_NAME}::executive
         )
 endif ()
