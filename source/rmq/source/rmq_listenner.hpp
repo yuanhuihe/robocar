@@ -138,7 +138,6 @@ class rmq_listenner : public rmq_socket
 #ifdef _WIN32
         /* IOCP event handle*/
 #elif (defined(__APPLE__))
-    {
         struct kevent *events = new struct kevent[MAX_SOCKET_EVENT_COUNT];
         int ev_cnt = 0;
         while (running_)
@@ -171,9 +170,7 @@ class rmq_listenner : public rmq_socket
             }
         }
         delete[] events;
-    }
 #elif (defined(__linux__))
-    {
         int timeout = 1000; // ms
         int nfds;  
         struct epoll_event* events = new struct epoll_event[ MAX_SOCKET_EVENT_COUNT];
@@ -225,7 +222,6 @@ class rmq_listenner : public rmq_socket
             }
         }
         delete[] events;
-    }  
 #endif
     }
 
@@ -368,30 +364,30 @@ class rmq_listenner : public rmq_socket
         int bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0);
         if(bytes>0)
         {
-        struct epoll_event event;  
+            struct epoll_event event;  
 
-        n = read(sockfd, line, MAXLINE)) < 0    //读  
-        ev.data.ptr = md;     //md为自定义类型，添加数据  
-        ev.events=EPOLLOUT|EPOLLET;  
-        epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);//修改标识符，等待下一个循环时发送数据，异步处理的精髓  
-        while(total_bytes<availBytes)
-        {
-            if (bytes == 0 || bytes == -1)
+            n = read(sockfd, line, MAXLINE)) < 0    //读  
+            ev.data.ptr = md;     //md为自定义类型，添加数据  
+            ev.events=EPOLLOUT|EPOLLET;  
+            epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);//修改标识符，等待下一个循环时发送数据，异步处理的精髓  
+            while(total_bytes<availBytes)
             {
-                remove_client(sock);
-                std::cerr << "client close or recv failed. ";
-                return;
-            }
-            
-            if(fn_received_data_)
-            {
-                fn_received_data_(buf_, bytes);
-            }
+                if (bytes == 0 || bytes == -1)
+                {
+                    remove_client(sock);
+                    std::cerr << "client close or recv failed. ";
+                    return;
+                }
+                
+                if(fn_received_data_)
+                {
+                    fn_received_data_(buf_, bytes);
+                }
 
-            total_bytes+=bytes;
+                total_bytes+=bytes;
+            }
         }
         printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
-
 #endif
     }
 

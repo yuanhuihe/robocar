@@ -48,8 +48,10 @@ namespace rmq
                     return false;
                 }
 
+#ifdef __APPLE__
                 int set = 1;
                 setsockopt(sock_, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
+#endif
             }
             return true;
         }
