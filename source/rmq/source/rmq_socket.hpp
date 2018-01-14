@@ -7,6 +7,8 @@
 
 #include <errno.h>
 #include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <unistd.h> // for 'close'
 
 #ifdef WIN32
@@ -15,11 +17,10 @@
 #include <sys/socket.h>
 #include <sys/event.h>
 #include <sys/time.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #elif defined(__linux__) 
 #include <sys/socket.h>
-#include <sys/event.h>
+#include <sys/epoll.h>
+#include <fcntl.h> 
 #endif
 
 namespace rmq
