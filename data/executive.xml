@@ -5,21 +5,15 @@
 			<range mini="0" max="100"/>
 			<default>70</default>
 		</speed>
-		<action name="AT_MoveForward">
+		<action name="Head Shook">
 			<gpio>
 				<pin id="37" value="1"/>
 				<pin id="35" value="0"/>
 			</gpio>
 		</action>
-		<action name="AT_MoveBackward">
+		<action name="Head Nod">
 			<gpio>
 				<pin id="37" value="0"/>
-				<pin id="35" value="1"/>
-			</gpio>
-		</action>
-		<action name="AT_Leftward">
-			<gpio>
-				<pin id="37" value="1"/>
 				<pin id="35" value="1"/>
 			</gpio>
 		</action>
@@ -33,21 +27,15 @@
 			<range mini="0" max="100"/>
 			<default>50</default>
 		</speed>
-		<action name="AT_HeadNod">
+		<action name="Move Foreward">
 			<gpio>
 				<pin id="33" value="1"/>
 				<pin id="31" value="0"/>
 			</gpio>
 		</action>
-		<action name="AT_HeadShook1">
+		<action name="Turn Left">
 			<gpio>
 				<pin id="33" value="0"/>
-				<pin id="31" value="1"/>
-			</gpio>
-		</action>
-		<action name="AT_HeadShook2">
-			<gpio>
-				<pin id="33" value="1"/>
 				<pin id="31" value="1"/>
 			</gpio>
 		</action>
