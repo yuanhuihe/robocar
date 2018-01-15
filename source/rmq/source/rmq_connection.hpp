@@ -65,7 +65,9 @@ class rmq_connection : public rmq_socket
     bool connect()
     {
         struct sockaddr_in addr;
+#ifdef __APPLE__
         addr.sin_len = sizeof(addr);
+#endif
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port_);
         addr.sin_addr.s_addr = inet_addr(ip_.c_str());

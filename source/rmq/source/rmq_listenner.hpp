@@ -7,14 +7,20 @@
 #include <mutex>
 #include <vector>
 #include <thread>
+#include <string.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h> // for 'close'
 
 #ifdef _WIN32
 
 #elif (defined(__APPLE__))
-    #include <sys/event.h>
-    #include <sys/types.h>
+#include <sys/event.h>
+#include <sys/types.h>
 #elif (defined(__linux__))
-    #include <sys/epoll.h> 
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <fcntl.h> 
 #endif
 
 namespace rmq
@@ -62,7 +68,7 @@ class rmq_listenner : public rmq_socket
         /* Create kqueue. */
         this->event_pool_fd_ = kqueue();
 #elif (defined(__linux__))
-        this->event_pool_fd_ = create_epoll1(0);
+        this->event_pool_fd_ = epoll_create(0);
 #endif
         
         /* Create listener on port*/
@@ -183,7 +189,7 @@ class rmq_listenner : public rmq_socket
             }
 
             // handle events
-            for(i=0;i<nfds;++i)  
+            for(int i=0;i<nfds;++i)  
             {  
                 if(events[i].data.fd==sock_)
                 {
@@ -228,7 +234,9 @@ class rmq_listenner : public rmq_socket
     bool create_listener(int port)
     {
         struct sockaddr_in addr;
+#ifdef __APPLE__
         addr.sin_len = sizeof(addr);
+#endif
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port);
         addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -336,11 +344,12 @@ class rmq_listenner : public rmq_socket
 
     void receive_data(int sock, int availBytes)
     {
+        int bytes = 0;
+        int total_bytes = 0;
+
 #ifdef _WIN32
 
 #elif (defined(__APPLE__))
-        int bytes = 0;
-        int total_bytes = 0;
         while(total_bytes<availBytes)
         {
             bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0);
@@ -360,47 +369,47 @@ class rmq_listenner : public rmq_socket
         }
         printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
 #elif (defined(__linux__))
-
-        int bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0);
-        if(bytes>0)
-        {
-            struct epoll_event event;  
-
-            n = read(sockfd, line, MAXLINE)) < 0    //读  
-            ev.data.ptr = md;     //md为自定义类型，添加数据  
-            ev.events=EPOLLOUT|EPOLLET;  
-            epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);//修改标识符，等待下一个循环时发送数据，异步处理的精髓  
-            while(total_bytes<availBytes)
+        while((bytes = ::recv(sock, buf_, MAX_RECV_BUFF_SIZE, 0))>0)
+		{
+            if(fn_received_data_)
             {
-                if (bytes == 0 || bytes == -1)
-                {
-                    remove_client(sock);
-                    std::cerr << "client close or recv failed. ";
-                    return;
-                }
-                
-                if(fn_received_data_)
-                {
-                    fn_received_data_(buf_, bytes);
-                }
-
-                total_bytes+=bytes;
+                fn_received_data_(buf_, bytes);
             }
+
+            total_bytes+=bytes;
+		}
+        if (bytes == -1)
+        {
+            remove_client(sock);
+            std::cerr << "client close or recv failed. ";
+            return;
         }
         printf("availBytes=%d, recv=%d\n", availBytes, total_bytes);
+
+		/*
+        struct epoll_event event; 
+        ev.data.ptr = md;
+        ev.events=EPOLLOUT|EPOLLET;  
+        epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);
+		*/
 #endif
     }
 
     void remove_client(int sock)
     {
         std::lock_guard<std::mutex> l(mtx_);
-        auto s = std::find(std::begin(clients_fd_), std::end(clients_fd_), sock);
-        if (s != std::end(clients_fd_))
+		int i=0;
+        while(i<clients_fd_.size())
         {
-            clients_fd_.erase(s);
+            if(clients_fd_[i] == sock)
+            {
+                clients_fd_.erase(clients_fd_.begin()+i);
+                unregister_event(sock);
+                close(sock);
+                continue;
+            }
+	        i++;
         }
-        unregister_event(sock);
-        close(sock);
     }
 
   private:
