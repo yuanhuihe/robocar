@@ -7,20 +7,28 @@
 
 #include <errno.h>
 #include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h> // for 'close'
 
 #ifdef WIN32
 #include <winsock.h>
 #elif defined(__APPLE__) 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h> // for 'close'
 #include <sys/socket.h>
 #include <sys/event.h>
 #include <sys/time.h>
 #elif defined(__linux__) 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h> // for 'close'
 #include <sys/socket.h>
 #include <sys/epoll.h>
 #include <fcntl.h> 
+#endif
+
+#ifdef WIN32
+// link with Ws2_32.lib
+#pragma comment(lib,"Ws2_32.lib")
 #endif
 
 namespace rmq

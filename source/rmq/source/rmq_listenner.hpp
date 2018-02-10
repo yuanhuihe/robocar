@@ -8,16 +8,19 @@
 #include <vector>
 #include <thread>
 #include <string.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h> // for 'close'
 
 #ifdef _WIN32
 
 #elif (defined(__APPLE__))
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h> // for 'close'
 #include <sys/event.h>
 #include <sys/types.h>
 #elif (defined(__linux__))
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h> // for 'close'
 #include <sys/socket.h>
 #include <sys/epoll.h>
 #include <fcntl.h> 
@@ -93,7 +96,11 @@ class rmq_listenner : public rmq_socket
         running_ = false;
         if (obj_thread_)
         {
+#ifdef WIN32
+            closesocket(event_pool_fd_);
+#else
             close(event_pool_fd_);
+#endif
             obj_thread_->join();
             delete obj_thread_;
             obj_thread_ = nullptr;
@@ -320,7 +327,7 @@ class rmq_listenner : public rmq_socket
     bool accept_conn()
     {
         struct sockaddr peer_addr;
-        socklen_t peer_addr_size = sizeof(struct sockaddr);
+        int peer_addr_size = sizeof(struct sockaddr);
 
         int client = ::accept(sock_, (struct sockaddr *) &peer_addr, &peer_addr_size);
         if (client == -1)
@@ -331,7 +338,11 @@ class rmq_listenner : public rmq_socket
 
         if (!register_event(client))
         {
+#ifdef WIN32
+            closesocket(client);
+#else
             close(client);
+#endif
             std::cerr << "Register client failed. ";
             return false;
         }
@@ -405,7 +416,11 @@ class rmq_listenner : public rmq_socket
             {
                 clients_fd_.erase(clients_fd_.begin()+i);
                 unregister_event(sock);
+#ifdef WIN32
+                closesocket(sock);
+#else
                 close(sock);
+#endif
                 continue;
             }
 	        i++;

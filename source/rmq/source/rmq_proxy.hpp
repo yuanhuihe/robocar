@@ -50,11 +50,11 @@ namespace rmq
 
         virtual int send(char* /*data*/, int /*data_len*/)
         {
-
+            return -1;
         }
         virtual int recv(char* /*buff*/, int /*buff_len*/)
         {
-            
+            return -1;
         }
     };
 
