@@ -327,7 +327,7 @@ class rmq_listenner : public rmq_socket
     bool accept_conn()
     {
         struct sockaddr peer_addr;
-        int peer_addr_size = sizeof(struct sockaddr);
+        unsigned int peer_addr_size = sizeof(struct sockaddr);
 
         int client = ::accept(sock_, (struct sockaddr *) &peer_addr, &peer_addr_size);
         if (client == -1)
