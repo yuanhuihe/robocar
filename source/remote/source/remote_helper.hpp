@@ -43,25 +43,26 @@ namespace Remote
 
             set_proxy_url(url_);
 
-            // 1. proxy read
-            data_read_proxy = zactor_new(zproxy, NULL);
+            // 1. proxy receier
+            /* data proxy for publish data*/
+            data_recv_proxy = zactor_new(zproxy, NULL);
             if (data_read_proxy)
             {
-                zstr_sendx(data_read_proxy, "FRONTEND", "PULL", p_url.proxy_recver_in_.c_str(), NULL);
-                zsock_wait(data_read_proxy);
-                zstr_sendx(data_read_proxy, "BACKEND", "PUSH", p_url.proxy_recver_out_.c_str(), NULL);
-                zsock_wait(data_read_proxy);
+                zstr_sendx(data_recv_proxy, "FRONTEND", "PULL", p_url.proxy_recver_in_.c_str(), NULL);
+                zsock_wait(data_recv_proxy);
+                zstr_sendx(data_recv_proxy, "BACKEND", "PUSH", p_url.proxy_recver_out_.c_str(), NULL);
+                zsock_wait(data_recv_proxy);
             }
 
-            // 2. proxy forward
+            // 2. proxy sender
             /* another data proxy for publish data*/
-            data_forward_proxy = zactor_new(zproxy, NULL);
+            data_send_proxy = zactor_new(zproxy, NULL);
             if (data_forward_proxy)
             {
-                zstr_sendx(data_forward_proxy, "FRONTEND", "PULL", p_url.proxy_sender_in_.c_str(), NULL);
-                zsock_wait(data_forward_proxy);
-                zstr_sendx(data_forward_proxy, "BACKEND", "PUSH", p_url.proxy_sender_out_.c_str(), NULL);
-                zsock_wait(data_forward_proxy);
+                zstr_sendx(data_send_proxy, "FRONTEND", "PULL", p_url.proxy_sender_in_.c_str(), NULL);
+                zsock_wait(data_send_proxy);
+                zstr_sendx(data_send_proxy, "BACKEND", "PUSH", p_url.proxy_sender_out_.c_str(), NULL);
+                zsock_wait(data_send_proxy);
             }
 
             process_data();
@@ -71,8 +72,8 @@ namespace Remote
         {
             dp.stop();
 
-            zactor_destroy(&data_read_proxy);
-            zactor_destroy(&data_forward_proxy);
+            zactor_destroy(&data_recvproxy);
+            zactor_destroy(&data_send_proxy);
         }
 
     private:
@@ -95,8 +96,8 @@ namespace Remote
         }
 
     private:
-        zactor_t* data_read_proxy;
-        zactor_t* data_forward_proxy;
+        zactor_t* data_recv_proxy;
+        zactor_t* data_send_proxy;
         proxy_url p_url;
         std::string id_;
 
