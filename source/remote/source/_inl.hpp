@@ -16,16 +16,16 @@ namespace Remote
     };                      
 
 // Server
-#define SERVER_PROXY_RECV_FONTEND   "tcp://*:6011"
-#define SERVER_PROXY_RECV_BACKEND   "inproc://robo_remote_channel:6601"     // [proxy] recv frontend
-#define SERVER_PROXY_SEND_FONTEND   "inproc://robo_remote_channel:6602"     // [proxy] send backend
-#define SERVER_PROXY_SEND_BACKEND   "tcp://*:6012"
+#define SERVER_PROXY_RECV_FONTEND   "tcp://*:8801"
+#define SERVER_PROXY_RECV_BACKEND   "inproc://robo_remote_channel:8101"     // [proxy] recv frontend
+#define SERVER_PROXY_SEND_FONTEND   "inproc://robo_remote_channel:8102"     // [proxy] send backend
+#define SERVER_PROXY_SEND_BACKEND   "tcp://*:8802"
 
 // Client
-#define CLIENT_PROXY_RECV_FONTEND   "inproc://robo_remote_channel:7011"
-#define CLIENT_PROXY_RECV_BACKEND   "inproc://robo_remote_channel:7701"     // [proxy] recv frontend
-#define CLIENT_PROXY_SEND_FONTEND   "inproc://robo_remote_channel:7702"     // [proxy] send backend
-#define CLIENT_PROXY_SEND_BACKEND   "inproc://robo_remote_channel:7012"
+#define CLIENT_PROXY_RECV_FONTEND   "inproc://robo_remote_channel:8901"
+#define CLIENT_PROXY_RECV_BACKEND   "inproc://robo_remote_channel:8201"     // [proxy] recv frontend
+#define CLIENT_PROXY_SEND_FONTEND   "inproc://robo_remote_channel:8202"     // [proxy] send backend
+#define CLIENT_PROXY_SEND_BACKEND   "inproc://robo_remote_channel:8902"
 
 
 
