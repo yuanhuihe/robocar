@@ -9,7 +9,7 @@
 #include <string>       // std::string
 #include <string.h>     // memxxx/strlen()
 
-#include "remote.hpp"
+#include "remote.h"
 #include <executive/executive.h>
 
 void showTips(std::vector<Driver::Action*>& actList)
@@ -87,7 +87,7 @@ int main(int /*argc*/, char* /*argv*/[])
     std::cout << "========================================" << std::endl;
 
     std::cout << " >> Staring remote model ..." << std::endl;
-    Remote remote;
+    remote Remote::remote;
     remote.start();
     std::cout << " >> OK" << std::endl;
 
