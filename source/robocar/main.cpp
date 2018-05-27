@@ -9,7 +9,7 @@
 #include <string>       // std::string
 #include <string.h>     // memxxx/strlen()
 
-#include "remote.h"
+#include "remote/remote.h"
 #include <executive/executive.h>
 
 void showTips(std::vector<Driver::Action*>& actList)
