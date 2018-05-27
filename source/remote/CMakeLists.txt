@@ -4,6 +4,8 @@
 # 
 
 # find_package(THIRDPARTY REQUIRED)
+find_package(czmq REQUIRED)
+find_package(MemQueue REQUIRED)
 
 # 
 # Library name and options

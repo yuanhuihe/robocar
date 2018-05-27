@@ -41,7 +41,7 @@ set(IDE_FOLDER "Tests")
 
 # Demos
 set(IDE_FOLDER "Demo")
-add_subdirectory(demo)
+#add_subdirectory(demo)
 
 
 # 

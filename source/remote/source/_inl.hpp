@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <zmq.h>
 
 namespace Remote
 {

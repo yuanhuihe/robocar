@@ -5,7 +5,7 @@
 #include <memory>
 #include <iostream>
 #include "_inl.hpp"
-#include "ymq/ymq.h"
+#include <czmq.h>
 #include "data_proc.hpp"
 #include "spdlog/spdlog.h"
 
@@ -16,8 +16,8 @@ namespace Remote
     public:
         remoteHelper(std::string id)
             : dp(id)
-            , data_read_proxy(nullptr)
-            , data_forward_proxy(nullptr)
+            , data_recv_proxy(nullptr)
+            , data_send_proxy(nullptr)
         {
             id_ = id;
         }
@@ -46,7 +46,7 @@ namespace Remote
             // 1. proxy receier
             /* data proxy for publish data*/
             data_recv_proxy = zactor_new(zproxy, NULL);
-            if (data_read_proxy)
+            if (data_recv_proxy)
             {
                 zstr_sendx(data_recv_proxy, "FRONTEND", "PULL", p_url.proxy_recver_in_.c_str(), NULL);
                 zsock_wait(data_recv_proxy);
@@ -57,7 +57,7 @@ namespace Remote
             // 2. proxy sender
             /* another data proxy for publish data*/
             data_send_proxy = zactor_new(zproxy, NULL);
-            if (data_forward_proxy)
+            if (data_send_proxy)
             {
                 zstr_sendx(data_send_proxy, "FRONTEND", "PULL", p_url.proxy_sender_in_.c_str(), NULL);
                 zsock_wait(data_send_proxy);
@@ -72,7 +72,7 @@ namespace Remote
         {
             dp.stop();
 
-            zactor_destroy(&data_recvproxy);
+            zactor_destroy(&data_recv_proxy);
             zactor_destroy(&data_send_proxy);
         }
 
