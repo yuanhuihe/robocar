@@ -139,7 +139,7 @@ target_include_directories(${target}
 
 target_link_libraries(${target}
     PRIVATE
-        ${META_PROJECT_NAME}::ymq
+        #${META_PROJECT_NAME}::ymq
     PUBLIC
         ${DEFAULT_LIBRARIES}
 
